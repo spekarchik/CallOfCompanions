@@ -1,0 +1,13 @@
+{
+  "itemGroup.safeleash": "Example Mod Tab",
+  "block.safeleash.example_block": "Example Block",
+  "item.safeleash.example_item": "Example Item",
+
+  "safeleash.configuration.title": "Safe Leash Configs",
+  "safeleash.configuration.section.safeleash.common.toml": "Safe Leash Configs",
+  "safeleash.configuration.section.safeleash.common.toml.title": "Safe Leash Configs",
+  "safeleash.configuration.items": "Item List",
+  "safeleash.configuration.logDirtBlock": "Log Dirt Block",
+  "safeleash.configuration.magicNumberIntroduction": "Magic Number Text",
+  "safeleash.configuration.magicNumber": "Magic Number"
+}
