@@ -6,7 +6,7 @@ public class EventRegistry
 {
     public static void registerEvents()
     {
-        register(new LivingEntityEvents());
+        register(new PlayerInteractionEvents());
     }
 
     private static void register(IEventHandler eventHandler)

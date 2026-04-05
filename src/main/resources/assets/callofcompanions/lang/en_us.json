@@ -1,13 +1,12 @@
 {
-  "itemGroup.safeleash": "Example Mod Tab",
-  "block.safeleash.example_block": "Example Block",
-  "item.safeleash.example_item": "Example Item",
+  "language": "English",
+  "language.region": "United States",
+  "language.code": "en_us",
+  "author": "Sergey Pekarchik",
 
-  "safeleash.configuration.title": "Safe Leash Configs",
-  "safeleash.configuration.section.safeleash.common.toml": "Safe Leash Configs",
-  "safeleash.configuration.section.safeleash.common.toml.title": "Safe Leash Configs",
-  "safeleash.configuration.items": "Item List",
-  "safeleash.configuration.logDirtBlock": "Log Dirt Block",
-  "safeleash.configuration.magicNumberIntroduction": "Magic Number Text",
-  "safeleash.configuration.magicNumber": "Magic Number"
+  "itemGroup.callofcompanions": "Call of Companions",
+  "itemGroup.main_tab": "Call of Companions",
+
+  "item.callofcompanions.call_crystal": "Call Crystal",
+  "item.callofcompanions.call_crystal.desc1": "{} (Owner: {})"
 }
