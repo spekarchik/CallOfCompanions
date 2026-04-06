@@ -31,15 +31,29 @@ public class CompanionData
 
     public boolean add(CompanionEntry companionEntry)
     {
-        if (companions.size() >= MAX_COMPANIONS || companions.contains(companionEntry)) return false;
+        if (companions.size() >= MAX_COMPANIONS && !companions.contains(companionEntry))
+            return false;
+
+        if (companions.contains(companionEntry))
+            companions.remove(companionEntry);
 
         companions.add(companionEntry);
         return true;
     }
 
+    public void remove(CompanionEntry companionEntry)
+    {
+        companions.remove(companionEntry);
+    }
+
     public List<CompanionEntry> getCompanions()
     {
         return List.copyOf(companions);
+    }
+
+    public CompanionData copy()
+    {
+        return new CompanionData(List.copyOf(companions));
     }
 
     @Override

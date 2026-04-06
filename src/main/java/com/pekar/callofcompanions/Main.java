@@ -40,6 +40,7 @@ public class Main
 
         NeoForge.EVENT_BUS.register(this);
         EventRegistry.registerEvents();
+        EventRegistry.registerEventsOnModBus(modEventBus);
     }
 
     private void initializeRegistry()

@@ -1,5 +1,5 @@
 package com.pekar.callofcompanions.events;
 
-interface IEventHandler
+public interface IEventHandler
 {
 }

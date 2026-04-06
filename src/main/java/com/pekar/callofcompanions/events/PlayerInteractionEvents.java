@@ -2,6 +2,7 @@ package com.pekar.callofcompanions.events;
 
 import com.pekar.callofcompanions.data.CompanionData;
 import com.pekar.callofcompanions.data.CompanionEntry;
+import com.pekar.callofcompanions.data.PositionStatus;
 import com.pekar.callofcompanions.data.DataRegistry;
 import com.pekar.callofcompanions.items.ItemRegistry;
 import net.minecraft.world.InteractionResult;
@@ -35,7 +36,16 @@ public class PlayerInteractionEvents implements IEventHandler
 
                 var name = target.getDisplayName().getString();
                 var companionType = target.getType().getDescription().getString();
-                var entry = new CompanionEntry(target.getUUID(), name, companionType, player.getUUID(), player.getDisplayName().getString());
+                var entry = new CompanionEntry(
+                        target.getUUID(),
+                        name,
+                        companionType,
+                        target.level().dimension(),
+                        target.blockPosition(),
+                        PositionStatus.FRESH,
+                        player.getUUID(),
+                        player.getDisplayName().getString());
+
                 companions.add(entry);
                 itemStack.remove(DataRegistry.COMPANIONS);
                 itemStack.set(DataRegistry.COMPANIONS, new CompanionData(companions.getCompanions()));
