@@ -20,6 +20,7 @@ class NearTeleportAnimalController extends SummonLoadedAnimalController
         var task = new CompanionEntryTask(
                 delay,
                 companionEntry,
+                player,
                 (ticks, entry) -> {
                     if (ticks % 20 == 0)
                     {
@@ -30,18 +31,18 @@ class NearTeleportAnimalController extends SummonLoadedAnimalController
                 },
                 entry -> {
                     boolean teleported = tryTeleportAnimalTo(level, entry.uuid(), teleportPos);
-                    System.out.println("  Trying near teleporting...");
                     if (teleported)
                     {
                         playTeleportSound(level, animal);
                         showAnimalTeleportParticles(level, animal);
                         updateCompanionPos(level, companionData, companionEntry);
-                        saveStackChanges(player, callCrystalStack, companionData);
+                        System.out.println("  Near teleported.");
                     }
                     else
                     {
                         playAnimalNotRespondSound(level, teleportPos);
                         showAnimalNotRespondParticles(level, teleportPos);
+                        System.out.println("  Near teleport: not found.");
                     }
                 },
                 _ -> {
@@ -50,7 +51,7 @@ class NearTeleportAnimalController extends SummonLoadedAnimalController
                     showAnimalNotRespondParticles(level, teleportPos);
                 }
         );
-        CompanionEntryScheduler.UPDATE_POS_TASKS.add(task);
-        System.out.println("  Near teleporting for " + companionEntry.type());
+        CompanionEntryScheduler.TELEPORT_TASKS.add(task);
+        System.out.println("  Near teleport for " + companionEntry.type());
     }
 }

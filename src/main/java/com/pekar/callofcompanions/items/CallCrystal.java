@@ -3,8 +3,12 @@ package com.pekar.callofcompanions.items;
 import com.pekar.callofcompanions.controllers.SummonAnimalContext;
 import com.pekar.callofcompanions.controllers.SummonAnimalController;
 import com.pekar.callofcompanions.controllers.SummonAnimalControllerFactory;
+import com.pekar.callofcompanions.data.CompanionData;
 import com.pekar.callofcompanions.data.DataRegistry;
 import com.pekar.callofcompanions.data.PositionStatus;
+import com.pekar.callofcompanions.network.SaveCompanionsPacket;
+import com.pekar.callofcompanions.scheduler.CompanionEntryScheduler;
+import com.pekar.callofcompanions.scheduler.TaskEndListener;
 import com.pekar.callofcompanions.tooltip.ITooltip;
 import com.pekar.callofcompanions.tooltip.ITooltipProvider;
 import com.pekar.callofcompanions.tooltip.TextStyle;
@@ -57,7 +61,7 @@ public class CallCrystal extends ModItem implements ITooltipProvider
             }
 
             if (companionsUpdated)
-                SummonAnimalController.saveStackChanges(serverPlayer, stack, companions);
+                saveStackChanges(serverPlayer, stack, companions);
         }
 
         return sidedSuccess(level.isClientSide());
@@ -72,8 +76,9 @@ public class CallCrystal extends ModItem implements ITooltipProvider
         if (player == null || context.getHand() != InteractionHand.MAIN_HAND) return InteractionResult.FAIL;
 
         var stack = context.getItemInHand();
-        var companionData = stack.get(DataRegistry.COMPANIONS);
-        if (companionData == null || companionData.getCompanions().isEmpty()) return InteractionResult.FAIL;
+        var savedCompanionData = stack.get(DataRegistry.COMPANIONS);
+        if (savedCompanionData == null || savedCompanionData.getCompanions().isEmpty()) return InteractionResult.FAIL;
+        var companionData = savedCompanionData.copy();
         var level = context.getLevel();
 
         if (context.getClickedFace() != Direction.UP || player.getCooldowns().isOnCooldown(stack)) return InteractionResult.FAIL;
@@ -83,11 +88,23 @@ public class CallCrystal extends ModItem implements ITooltipProvider
         if (player instanceof ServerPlayer serverPlayer)
         {
             var serverLevel = serverPlayer.level();
-            var companionList = companionData.getCompanions();
-            var iterator = companionList.iterator();
             var clickPos = context.getClickedPos();
             playSummonSound(serverLevel, player.blockPosition());
             showSummonParticles(serverLevel, clickPos);
+
+            var taskEndListener = new TaskEndListener()
+            {
+                @Override
+                public void onAllTasksEnd()
+                {
+                    saveStackChanges(serverPlayer, stack, companionData);
+                }
+            };
+
+            CompanionEntryScheduler.listen(serverPlayer, taskEndListener);
+
+            var companionList = companionData.getCompanions();
+            var iterator = companionList.iterator();
 
             while (iterator.hasNext())
             {
@@ -108,6 +125,15 @@ public class CallCrystal extends ModItem implements ITooltipProvider
         }
 
         return sidedSuccess(player.level().isClientSide());
+    }
+
+    private void saveStackChanges(ServerPlayer serverPlayer, ItemStack stack, CompanionData companions)
+    {
+        System.out.println("  Saving...");
+        var companionsCopy = companions.copy();
+        stack.remove(DataRegistry.COMPANIONS);
+        stack.set(DataRegistry.COMPANIONS, companionsCopy);
+        new SaveCompanionsPacket(companionsCopy).sendToPlayer(serverPlayer);
     }
 
     private void showSummonParticles(ServerLevel serverLevel, BlockPos clickPos)

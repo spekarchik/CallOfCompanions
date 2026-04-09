@@ -18,6 +18,7 @@ class VanillaTeleportAnimalController extends SummonLoadedAnimalController
         var task = new CompanionEntryTask(
                 delay,
                 companionEntry,
+                player,
                 (ticks, entry) -> {
                     if (ticks % 20 == 0)
                         showCrystalIsActiveParticles(player);
@@ -33,18 +34,19 @@ class VanillaTeleportAnimalController extends SummonLoadedAnimalController
                     return false;
                 },
                 entry -> {
+                    System.out.println("  Vanilla teleport .");
                     setGoal(animal, player);
                     playTeleportSound(level, animal);
                     showAnimalTeleportParticles(level, animal);
                     updateCompanionPos(level, companionData, entry);
-                    saveStackChanges(player, callCrystalStack, companionData);
                 },
                 entry -> {
+                    System.out.println("  Vanilla teleport cancelled.");
                     playAnimalNotRespondSound(level, teleportPos);
                     showAnimalNotRespondParticles(level, teleportPos);
                 }
         );
         CompanionEntryScheduler.UPDATE_POS_TASKS.add(task);
-        System.out.println("  Ignoring teleporting for " + companionEntry.type());
+        System.out.println("  Vanilla teleport for " + companionEntry.type());
     }
 }

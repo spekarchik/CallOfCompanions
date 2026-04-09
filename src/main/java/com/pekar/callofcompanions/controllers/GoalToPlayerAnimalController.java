@@ -19,6 +19,7 @@ class GoalToPlayerAnimalController extends SummonLoadedAnimalController
         var task = new CompanionEntryTask(
                 300,
                 companionEntry,
+                player,
                 (ticks, _) -> {
                     if (ticks % 20 == 0)
                     {
@@ -29,13 +30,15 @@ class GoalToPlayerAnimalController extends SummonLoadedAnimalController
                     return false;
                 },
                 entry -> {
+                    System.out.println("  Goal reached.");
                     showAnimalTeleportParticles(level, animal);
                     updateCompanionPos(level, companionData, entry);
-                    saveStackChanges(player, callCrystalStack, companionData);
                 },
-                null
+                _ -> {
+                    System.out.println("  Goal cancelled.");
+                }
         );
         CompanionEntryScheduler.UPDATE_POS_TASKS.add(task);
-        System.out.println("  Already at goal for " + companionEntry.type());
+        System.out.println("  Goal for " + companionEntry.type());
     }
 }

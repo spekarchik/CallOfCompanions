@@ -28,23 +28,24 @@ class FarTeleportAnimalController extends SummonAnimalController
         var delayTask = new CompanionEntryTask(
                 postponeTicks,
                 companionEntry,
+                player,
                 (ticks, _) -> {
                     if (ticks % 20 == 0)
                         showCrystalIsActiveParticles(player);
                     return false;
                 },
                 entry -> {
-                    System.out.println("  Teleporting...");
+                    System.out.println("  FarTeleport: teleporting...");
                     createTeleportTask(teleportPos, entry);
                 },
                 _ -> {
                     showAnimalNotRespondParticles(level, teleportPos);
                     playAnimalNotRespondSound(level, teleportPos);
-                    System.out.println("  Postpone cancelled.");
+                    System.out.println("  FarTeleport: Postpone cancelled.");
                 });
 
         CompanionEntryScheduler.DELAY_TASKS.add(delayTask);
-        System.out.println("  Far teleporting for " + companionEntry.type());
+        System.out.println("  Far teleport for " + companionEntry.type());
     }
 
     private void createTeleportTask(BlockPos teleportPos, CompanionEntry companionEntry)
@@ -59,6 +60,7 @@ class FarTeleportAnimalController extends SummonAnimalController
         var task = new CompanionEntryTask(
                 100,
                 companionEntry,
+                player,
                 (ticks, entry) -> {
                     if (ticks % 40 == 1)
                     {
@@ -75,7 +77,7 @@ class FarTeleportAnimalController extends SummonAnimalController
                         showParticles(level, teleportPos, ParticleTypes.PORTAL);
                         if (level.getEntity(entry.uuid()) instanceof Animal animal)
                             playTeleportSound(level, animal);
-                        System.out.println("  Teleported.");
+                        System.out.println("  Far Teleported.");
                     }
                     else
                     {
@@ -83,11 +85,10 @@ class FarTeleportAnimalController extends SummonAnimalController
                         showAnimalNotRespondParticles(level, teleportPos);
                         var name = buildAnimalName(entry.type(), entry.name());
                         player.sendSystemMessage(Component.translatable("message.callofcompanions.not_found", name));
-                        System.out.println("  Not found.");
+                        System.out.println("  Far teleport: Not found.");
                     }
 
                     updateCompanionPos(level, companionData, entry);
-                    saveStackChanges(player, callCrystalStack, companionData);
                     level.getChunkSource().removeTicketWithRadius(TicketType.PORTAL, chunkPos, 2);
                 },
                 _ ->
@@ -95,7 +96,7 @@ class FarTeleportAnimalController extends SummonAnimalController
                     level.getChunkSource().removeTicketWithRadius(TicketType.PORTAL, chunkPos, 2);
                     playAnimalNotRespondSound(level, teleportPos);
                     showAnimalNotRespondParticles(level, teleportPos);
-                    System.out.println("  Teleport cancelled.");
+                    System.out.println("  Far Teleport cancelled.");
                 });
 
         CompanionEntryScheduler.TELEPORT_TASKS.add(task);

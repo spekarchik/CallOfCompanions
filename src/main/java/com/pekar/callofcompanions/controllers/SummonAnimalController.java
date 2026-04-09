@@ -2,8 +2,6 @@ package com.pekar.callofcompanions.controllers;
 
 import com.pekar.callofcompanions.data.CompanionData;
 import com.pekar.callofcompanions.data.CompanionEntry;
-import com.pekar.callofcompanions.data.DataRegistry;
-import com.pekar.callofcompanions.network.SaveCompanionsPacket;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.core.particles.SimpleParticleType;
@@ -102,14 +100,6 @@ public abstract class SummonAnimalController
 
         var newEntry = companion.getWith(entity.blockPosition());
         companions.add(newEntry);
-    }
-
-    public static void saveStackChanges(ServerPlayer serverPlayer, ItemStack stack, CompanionData companions)
-    {
-        var companionsCopy = companions.copy();
-        stack.remove(DataRegistry.COMPANIONS);
-        stack.set(DataRegistry.COMPANIONS, companionsCopy);
-        new SaveCompanionsPacket(companionsCopy).sendToPlayer(serverPlayer);
     }
 
     public static String buildAnimalName(String animalType, String animalName)

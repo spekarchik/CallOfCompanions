@@ -37,13 +37,12 @@ public class SummonAnimalControllerFactory
     private static TeleportType teleportType(ServerPlayer serverPlayer, Animal animal)
     {
         final double MAX_DIST_FOR_GOAL_SQR = 32 * 32;
-        final double MAX_DIST_FOR_NEAR_TELEPORT = 128 * 128;
 
         if (animal == null) return TeleportType.FAR_TELEPORT;
         if (animal.is(EntityRegistry.ANIMALS_CAN_TELEPORT_TO_PLAYER)) return TeleportType.TELEPORT_BY_VANILLA;
 
         var distanceSqr = serverPlayer.distanceToSqr(animal);
         if (distanceSqr < MAX_DIST_FOR_GOAL_SQR) return TeleportType.GOAL_TO_PLAYER;
-        return distanceSqr < MAX_DIST_FOR_NEAR_TELEPORT ? TeleportType.NEAR_TELEPORT : TeleportType.FAR_TELEPORT;
+        return TeleportType.NEAR_TELEPORT;
     }
 }

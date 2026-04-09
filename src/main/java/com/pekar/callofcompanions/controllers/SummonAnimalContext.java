@@ -11,7 +11,8 @@ public record SummonAnimalContext(ServerPlayer player,
                                   Animal animal,
                                   CompanionData companionData,
                                   CompanionEntry companionEntry,
-                                  ItemStack callCrystalStack)
+                                  ItemStack callCrystalStack
+                                  )
 {
     public ServerLevel level()
     {

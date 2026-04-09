@@ -70,6 +70,7 @@ public class PlayerEvents implements IEventHandler
         {
             if (event.getSlot().getType() == EquipmentSlot.Type.HAND)
             {
+                System.out.println("  Equipment changed.");
                 CompanionEntryScheduler.DELAY_TASKS.clearFor(serverPlayer);
                 CompanionEntryScheduler.TELEPORT_TASKS.clearFor(serverPlayer);
                 CompanionEntryScheduler.UPDATE_POS_TASKS.clearFor(serverPlayer);
