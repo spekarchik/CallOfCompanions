@@ -1,20 +1,20 @@
 package com.pekar.callofcompanions.scheduler.base;
 
+import java.util.function.BiFunction;
 import java.util.function.Consumer;
-import java.util.function.Function;
 
 public class ScheduledTask<T> implements IScheduledTask
 {
     private final T object;
     private final Consumer<T> doOnComplete;
     private final Consumer<T> doOnCancel;
-    private final Function<T, Boolean> doOnTick;
+    private final BiFunction<Integer, T, Boolean> doOnTick;
     private int counter;
     private boolean isCompleted;
 
     public ScheduledTask(int ticks, T object, Consumer<T> doOnComplete)
     {
-        this(ticks, object, (Function<T, Boolean>) null, doOnComplete);
+        this(ticks, object, (BiFunction<Integer, T, Boolean>) null, doOnComplete);
     }
 
     public ScheduledTask(int ticks, T object, Consumer<T> doOnComplete, Consumer<T> doOnCancel)
@@ -22,12 +22,12 @@ public class ScheduledTask<T> implements IScheduledTask
         this(ticks, object, null, doOnComplete, doOnCancel);
     }
 
-    public ScheduledTask(int ticks, T object, Function<T, Boolean> doOnTick, Consumer<T> doOnComplete)
+    public ScheduledTask(int ticks, T object, BiFunction<Integer, T, Boolean> doOnTick, Consumer<T> doOnComplete)
     {
         this(ticks, object, doOnTick, doOnComplete, null);
     }
 
-    public ScheduledTask(int ticks, T object, Function<T, Boolean> doOnTick, Consumer<T> doOnComplete, Consumer<T> doOnCancel)
+    public ScheduledTask(int ticks, T object, BiFunction<Integer, T, Boolean> doOnTick, Consumer<T> doOnComplete, Consumer<T> doOnCancel)
     {
         this.counter = ticks;
         this.object = object;
@@ -67,7 +67,7 @@ public class ScheduledTask<T> implements IScheduledTask
     {
         if (!isCompleted())
         {
-            var result = doOnTick.apply(object);
+            var result = doOnTick.apply(counter, object);
             if (result) execute();
         }
     }

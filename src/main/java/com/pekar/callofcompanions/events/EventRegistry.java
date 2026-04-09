@@ -8,8 +8,9 @@ public class EventRegistry
 {
     public static void registerEvents()
     {
-        register(new PlayerInteractionEvents());
+        register(new PlayerEvents());
         register(new TickEvents());
+        register(new WorldEvents());
     }
 
     public static void registerEventsOnModBus(IEventBus modEventBus)

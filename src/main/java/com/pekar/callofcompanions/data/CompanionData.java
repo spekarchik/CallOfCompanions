@@ -41,11 +41,6 @@ public class CompanionData
         return true;
     }
 
-    public void remove(CompanionEntry companionEntry)
-    {
-        companions.remove(companionEntry);
-    }
-
     public List<CompanionEntry> getCompanions()
     {
         return List.copyOf(companions);

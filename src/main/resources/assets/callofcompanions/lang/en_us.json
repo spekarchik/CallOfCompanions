@@ -8,5 +8,7 @@
   "itemGroup.main_tab": "Call of Companions",
 
   "item.callofcompanions.call_crystal": "Call Crystal",
-  "item.callofcompanions.call_crystal.desc1": "{} (Owner: {}) {}"
+  "item.callofcompanions.call_crystal.desc1": "{} (Owner: {}) {}",
+
+  "message.callofcompanions.not_found": "%s has not responded."
 }
