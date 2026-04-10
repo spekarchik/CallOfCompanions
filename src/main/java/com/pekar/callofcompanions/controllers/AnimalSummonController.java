@@ -21,7 +21,7 @@ import net.minecraft.world.level.levelgen.Heightmap;
 
 import java.util.UUID;
 
-public abstract class SummonAnimalController
+public abstract class AnimalSummonController
 {
     protected final ServerPlayer player;
     protected final ServerLevel level;
@@ -29,7 +29,7 @@ public abstract class SummonAnimalController
     protected final CompanionEntry companionEntry;
     protected final ItemStack callCrystalStack;
 
-    protected SummonAnimalController(SummonAnimalContext context)
+    protected AnimalSummonController(SummonAnimalContext context)
     {
         this.player = context.player();
         this.level = context.level();

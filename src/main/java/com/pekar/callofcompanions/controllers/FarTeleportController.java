@@ -14,9 +14,9 @@ import net.minecraft.world.level.Level;
 
 import java.util.UUID;
 
-class FarTeleportAnimalController extends SummonAnimalController
+class FarTeleportController extends AnimalSummonController
 {
-    protected FarTeleportAnimalController(SummonAnimalContext context)
+    protected FarTeleportController(SummonAnimalContext context)
     {
         super(context);
     }

@@ -2,8 +2,8 @@ package com.pekar.callofcompanions.items;
 
 import com.pekar.callofcompanions.controllers.CallCrystalHelper;
 import com.pekar.callofcompanions.controllers.SummonAnimalContext;
-import com.pekar.callofcompanions.controllers.SummonAnimalController;
-import com.pekar.callofcompanions.controllers.SummonAnimalControllerFactory;
+import com.pekar.callofcompanions.controllers.AnimalSummonController;
+import com.pekar.callofcompanions.controllers.AnimalSummonFactory;
 import com.pekar.callofcompanions.data.CompanionData;
 import com.pekar.callofcompanions.data.DataRegistry;
 import com.pekar.callofcompanions.data.PositionStatus;
@@ -69,7 +69,7 @@ public class CallCrystal extends ModItem implements ITooltipProvider
             while (iterator.hasNext())
             {
                 var companion = iterator.next();
-                SummonAnimalController.updateCompanionPos(serverLevel, companionData, companion);
+                AnimalSummonController.updateCompanionPos(serverLevel, companionData, companion);
                 companionsUpdated = true;
             }
 
@@ -98,7 +98,7 @@ public class CallCrystal extends ModItem implements ITooltipProvider
 
         var level = context.getLevel();
         var clickPos = context.getClickedPos();
-        if (!SummonAnimalController.isSafe(level, clickPos.above())) return InteractionResult.FAIL;
+        if (!AnimalSummonController.isSafe(level, clickPos.above())) return InteractionResult.FAIL;
 
         if (player.experienceLevel < 1)
         {
@@ -160,7 +160,7 @@ public class CallCrystal extends ModItem implements ITooltipProvider
                         stack
                 );
 
-                SummonAnimalControllerFactory.get(summonContext).run(clickPos);
+                AnimalSummonFactory.get(summonContext).run(clickPos);
             }
         }
 
@@ -211,7 +211,7 @@ public class CallCrystal extends ModItem implements ITooltipProvider
 
         for (var companion : companionData.companions())
         {
-            var name = SummonAnimalController.buildAnimalName(companion.type(), companion.name());
+            var name = AnimalSummonController.buildAnimalName(companion.type(), companion.name());
             var status = companion.positionStatus() == PositionStatus.LOST ? "" : "✓";
 
             tooltip.addLine(getDescriptionId(), 1)

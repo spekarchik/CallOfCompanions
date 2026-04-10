@@ -4,9 +4,9 @@ import com.pekar.callofcompanions.scheduler.CompanionEntryScheduler;
 import com.pekar.callofcompanions.scheduler.CompanionEntryTask;
 import net.minecraft.core.BlockPos;
 
-class NearTeleportAnimalController extends SummonLoadedAnimalController
+class NearTeleportController extends LoadedAnimalSummonController
 {
-    protected NearTeleportAnimalController(SummonAnimalContext context)
+    protected NearTeleportController(SummonAnimalContext context)
     {
         super(context);
     }

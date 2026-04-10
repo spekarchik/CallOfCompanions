@@ -4,9 +4,9 @@ import com.pekar.callofcompanions.scheduler.CompanionEntryScheduler;
 import com.pekar.callofcompanions.scheduler.CompanionEntryTask;
 import net.minecraft.core.BlockPos;
 
-class GoalToPlayerAnimalController extends SummonLoadedAnimalController
+class FollowPlayerController extends LoadedAnimalSummonController
 {
-    protected GoalToPlayerAnimalController(SummonAnimalContext context)
+    protected FollowPlayerController(SummonAnimalContext context)
     {
         super(context);
     }

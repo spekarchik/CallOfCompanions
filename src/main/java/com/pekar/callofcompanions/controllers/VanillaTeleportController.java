@@ -4,9 +4,9 @@ import com.pekar.callofcompanions.scheduler.CompanionEntryScheduler;
 import com.pekar.callofcompanions.scheduler.CompanionEntryTask;
 import net.minecraft.core.BlockPos;
 
-class VanillaTeleportAnimalController extends SummonLoadedAnimalController
+class VanillaTeleportController extends LoadedAnimalSummonController
 {
-    protected VanillaTeleportAnimalController(SummonAnimalContext context)
+    protected VanillaTeleportController(SummonAnimalContext context)
     {
         super(context);
     }
