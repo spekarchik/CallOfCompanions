@@ -81,18 +81,19 @@ public class CallCrystal extends ModItem implements ITooltipProvider
         if (savedCompanionData == null || savedCompanionData.companions().isEmpty()) return InteractionResult.FAIL;
         if (context.getClickedFace() != Direction.UP || player.getCooldowns().isOnCooldown(stack)) return InteractionResult.FAIL;
 
+        var level = context.getLevel();
+        var clickPos = context.getClickedPos();
+        if (!SummonAnimalController.isSafe(level, clickPos.above())) return InteractionResult.FAIL;
+
         player.getCooldowns().addCooldown(stack, USE_CRYSTAL_COOLDOWN);
 
         var companionData = savedCompanionData.copy();
-        var dataId = companionData.uuid();
-        var level = context.getLevel();
 
         if (player instanceof ServerPlayer serverPlayer)
         {
             stack.set(DataComponents.ENCHANTMENT_GLINT_OVERRIDE, true);
 
             var serverLevel = serverPlayer.level();
-            var clickPos = context.getClickedPos();
             playSummonSound(serverLevel, player.blockPosition());
             showSummonParticles(serverLevel, clickPos);
 
@@ -176,7 +177,7 @@ public class CallCrystal extends ModItem implements ITooltipProvider
         var companionData = stack.get(DataRegistry.COMPANIONS);
         if (companionData == null) return;
 
-        tooltip.addText("id: " + companionData.uuid());
+        tooltip.addText("id: " + companionData.uuid()); // TODO: remove
 
         for (var companion : companionData.companions())
         {
