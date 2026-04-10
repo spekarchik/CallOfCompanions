@@ -6,7 +6,10 @@ import com.pekar.callofcompanions.data.DataRegistry;
 import com.pekar.callofcompanions.data.PositionStatus;
 import com.pekar.callofcompanions.items.ItemRegistry;
 import com.pekar.callofcompanions.scheduler.CompanionEntryScheduler;
+import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.sounds.SoundEvents;
+import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.entity.TamableAnimal;
@@ -41,6 +44,11 @@ public class PlayerEvents implements IEventHandler
 
             if (target instanceof Animal animal && (isTameAnimal || isTamedHorse))
             {
+                if (event.getLevel() instanceof ServerLevel serverLevel)
+                {
+                    playAddAnimalSound(serverLevel, animal);
+                }
+
                 var companionData = itemStack.getOrDefault(DataRegistry.COMPANIONS, new CompanionData());
                 var id = itemStack.get(DataRegistry.CRYSTAL_ID);
                 if (id == null)
@@ -66,6 +74,11 @@ public class PlayerEvents implements IEventHandler
                 event.setCancellationResult(event.getSide() == LogicalSide.CLIENT ? InteractionResult.SUCCESS : InteractionResult.SUCCESS_SERVER);
             }
         }
+    }
+
+    private void playAddAnimalSound(ServerLevel level, Animal animal)
+    {
+        level.playSound(null, animal.blockPosition(), SoundEvents.PLAYER_LEVELUP, SoundSource.PLAYERS, 0.1F, 1.6F);
     }
 
     @SubscribeEvent

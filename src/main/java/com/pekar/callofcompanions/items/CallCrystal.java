@@ -55,6 +55,8 @@ public class CallCrystal extends ModItem implements ITooltipProvider
 
         if (level instanceof ServerLevel serverLevel && player instanceof ServerPlayer serverPlayer)
         {
+            playUpdateCrystalSound(serverLevel, player.blockPosition());
+
             var companionList = companionData.companions();
             var iterator = companionList.iterator();
             boolean companionsUpdated = false;
@@ -169,6 +171,11 @@ public class CallCrystal extends ModItem implements ITooltipProvider
     private void playSummonSound(ServerLevel level, BlockPos pos)
     {
         level.playSound(null, pos, SoundEvents.AMETHYST_CLUSTER_HIT, SoundSource.PLAYERS, 1.0F, 1.0F);
+    }
+
+    private void playUpdateCrystalSound(ServerLevel level, BlockPos pos)
+    {
+        level.playSound(null, pos, SoundEvents.AMETHYST_BLOCK_CHIME, SoundSource.PLAYERS, 4.0F, 0.6F);
     }
 
     @Override
