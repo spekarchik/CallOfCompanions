@@ -1,26 +1,30 @@
 package com.pekar.callofcompanions.network;
 
+import com.pekar.callofcompanions.controllers.CallCrystalHelper;
 import com.pekar.callofcompanions.data.CompanionData;
 import com.pekar.callofcompanions.data.DataRegistry;
-import com.pekar.callofcompanions.items.ItemRegistry;
 import com.pekar.callofcompanions.network.base.IPacket;
 import com.pekar.callofcompanions.network.base.ServerToClientPacket;
+import net.minecraft.core.UUIDUtil;
 import net.minecraft.nbt.NbtOps;
 import net.minecraft.network.FriendlyByteBuf;
-import net.minecraft.world.item.ItemStack;
 import net.neoforged.neoforge.network.handling.IPayloadContext;
+
+import java.util.UUID;
 
 public class SaveCompanionsPacket extends ServerToClientPacket
 {
+    private final UUID crystalId;
     private final CompanionData companionData;
 
     public SaveCompanionsPacket()
     {
-        this(null);
+        this(null, null);
     }
 
-    public SaveCompanionsPacket(CompanionData companionData)
+    public SaveCompanionsPacket(UUID crystalId, CompanionData companionData)
     {
+        this.crystalId = crystalId;
         this.companionData = companionData;
     }
 
@@ -28,13 +32,12 @@ public class SaveCompanionsPacket extends ServerToClientPacket
     public void onReceive(IPayloadContext context)
     {
         var player = context.player();
-        ItemStack stack;
         for (var itemStack : player.getInventory().getNonEquipmentItems())
         {
-            if (!itemStack.is(ItemRegistry.CALL_CRYSTAL)) continue;
-            var data = itemStack.get(DataRegistry.COMPANIONS);
-            if (data == null || !data.uuid().equals(companionData.uuid())) continue;
+            if (!CallCrystalHelper.hasSameId(itemStack, crystalId)) continue;
 
+            itemStack.remove(DataRegistry.CRYSTAL_ID);
+            itemStack.set(DataRegistry.CRYSTAL_ID, crystalId);
             itemStack.remove(DataRegistry.COMPANIONS);
             itemStack.set(DataRegistry.COMPANIONS, companionData);
             break;
@@ -44,8 +47,9 @@ public class SaveCompanionsPacket extends ServerToClientPacket
     @Override
     public void encode(FriendlyByteBuf buffer)
     {
-        var tag = CompanionData.CODEC.encodeStart(NbtOps.INSTANCE, companionData).getOrThrow();
-        buffer.writeNbt(tag);
+        buffer.writeUUID(crystalId);
+        var data = CompanionData.CODEC.encodeStart(NbtOps.INSTANCE, companionData).getOrThrow();
+        buffer.writeNbt(data);
     }
 
     @Override
@@ -57,8 +61,9 @@ public class SaveCompanionsPacket extends ServerToClientPacket
     @Override
     public IPacket decode(FriendlyByteBuf buffer)
     {
-        var tag = buffer.readNbt();
-        var data = CompanionData.CODEC.parse(NbtOps.INSTANCE, tag).getOrThrow();
-        return new SaveCompanionsPacket(data);
+        var id = buffer.readUUID();
+        var dataTag = buffer.readNbt();
+        var data = CompanionData.CODEC.parse(NbtOps.INSTANCE, dataTag).getOrThrow();
+        return new SaveCompanionsPacket(id, data);
     }
 }

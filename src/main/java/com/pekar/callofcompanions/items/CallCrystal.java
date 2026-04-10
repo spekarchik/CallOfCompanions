@@ -1,5 +1,6 @@
 package com.pekar.callofcompanions.items;
 
+import com.pekar.callofcompanions.controllers.CallCrystalHelper;
 import com.pekar.callofcompanions.controllers.SummonAnimalContext;
 import com.pekar.callofcompanions.controllers.SummonAnimalController;
 import com.pekar.callofcompanions.controllers.SummonAnimalControllerFactory;
@@ -31,6 +32,7 @@ import net.minecraft.world.item.component.TooltipDisplay;
 import net.minecraft.world.item.context.UseOnContext;
 import net.minecraft.world.level.Level;
 
+import java.util.UUID;
 import java.util.function.Consumer;
 
 public class CallCrystal extends ModItem implements ITooltipProvider
@@ -48,6 +50,8 @@ public class CallCrystal extends ModItem implements ITooltipProvider
         var stack = player.getItemInHand(hand);
         var companionData = stack.get(DataRegistry.COMPANIONS);
         if (companionData == null || companionData.companions().isEmpty()) return InteractionResult.FAIL;
+        var crystalId = stack.get(DataRegistry.CRYSTAL_ID);
+        if (crystalId == null) return InteractionResult.FAIL;
 
         if (level instanceof ServerLevel serverLevel && player instanceof ServerPlayer serverPlayer)
         {
@@ -62,7 +66,7 @@ public class CallCrystal extends ModItem implements ITooltipProvider
             }
 
             if (companionsUpdated)
-                saveStackChanges(serverPlayer, stack, companionData);
+                saveStackChanges(serverPlayer, stack, crystalId, companionData);
         }
 
         return sidedSuccess(level.isClientSide());
@@ -79,6 +83,9 @@ public class CallCrystal extends ModItem implements ITooltipProvider
         var stack = context.getItemInHand();
         var savedCompanionData = stack.get(DataRegistry.COMPANIONS);
         if (savedCompanionData == null || savedCompanionData.companions().isEmpty()) return InteractionResult.FAIL;
+        var crystalId = stack.get(DataRegistry.CRYSTAL_ID);
+        if (crystalId == null) return InteractionResult.FAIL;
+
         if (context.getClickedFace() != Direction.UP || player.getCooldowns().isOnCooldown(stack)) return InteractionResult.FAIL;
 
         var level = context.getLevel();
@@ -104,12 +111,10 @@ public class CallCrystal extends ModItem implements ITooltipProvider
                 {
                     for (var itemStack : serverPlayer.getInventory().getNonEquipmentItems())
                     {
-                        if (!itemStack.is(ItemRegistry.CALL_CRYSTAL)) continue;
-                        var data = itemStack.get(DataRegistry.COMPANIONS);
-                        if (data == null || !data.uuid().equals(companionData.uuid())) continue;
+                        if (!CallCrystalHelper.hasSameId(itemStack, crystalId)) continue;
 
                         itemStack.set(DataComponents.ENCHANTMENT_GLINT_OVERRIDE, false);
-                        saveStackChanges(serverPlayer, itemStack, companionData);
+                        saveStackChanges(serverPlayer, itemStack, crystalId, companionData);
                         break;
                     }
                 }
@@ -141,12 +146,13 @@ public class CallCrystal extends ModItem implements ITooltipProvider
         return sidedSuccess(player.level().isClientSide());
     }
 
-    private void saveStackChanges(ServerPlayer serverPlayer, ItemStack stack, CompanionData companionData)
+    private void saveStackChanges(ServerPlayer serverPlayer, ItemStack stack, UUID crystalId, CompanionData companionData)
     {
         System.out.println("  Saving...");
+        var data = companionData.copy();
         stack.remove(DataRegistry.COMPANIONS);
-        stack.set(DataRegistry.COMPANIONS, companionData.copy());
-        new SaveCompanionsPacket(companionData.copy()).sendToPlayer(serverPlayer);
+        stack.set(DataRegistry.COMPANIONS, data);
+        new SaveCompanionsPacket(crystalId, data).sendToPlayer(serverPlayer);
     }
 
     private void showSummonParticles(ServerLevel serverLevel, BlockPos clickPos)
@@ -176,8 +182,6 @@ public class CallCrystal extends ModItem implements ITooltipProvider
     {
         var companionData = stack.get(DataRegistry.COMPANIONS);
         if (companionData == null) return;
-
-        tooltip.addText("id: " + companionData.uuid()); // TODO: remove
 
         for (var companion : companionData.companions())
         {

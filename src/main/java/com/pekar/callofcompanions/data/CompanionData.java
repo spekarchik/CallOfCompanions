@@ -59,7 +59,7 @@ public class CompanionData
 
     public CompanionData copy()
     {
-        return new CompanionData(uuid, List.copyOf(companions));
+        return new CompanionData(UUID.randomUUID(), List.copyOf(companions));
     }
 
     @Override

@@ -21,6 +21,8 @@ import net.neoforged.neoforge.event.entity.living.LivingEquipmentChangeEvent;
 import net.neoforged.neoforge.event.entity.player.PlayerEvent;
 import net.neoforged.neoforge.event.entity.player.PlayerInteractEvent;
 
+import java.util.UUID;
+
 public class PlayerEvents implements IEventHandler
 {
     @SubscribeEvent
@@ -40,6 +42,9 @@ public class PlayerEvents implements IEventHandler
             if (target instanceof Animal animal && (isTameAnimal || isTamedHorse))
             {
                 var companionData = itemStack.getOrDefault(DataRegistry.COMPANIONS, new CompanionData());
+                var id = itemStack.get(DataRegistry.CRYSTAL_ID);
+                if (id == null)
+                    itemStack.set(DataRegistry.CRYSTAL_ID, UUID.randomUUID());
 
                 var name = target.getDisplayName().getString();
                 var companionType = target.getType().getDescription().getString();
@@ -70,10 +75,8 @@ public class PlayerEvents implements IEventHandler
         {
             if (event.getSlot().getType() == EquipmentSlot.Type.HAND)
             {
-                var fromComponent = event.getFrom().get(DataRegistry.COMPANIONS);
-                var fromUuid = fromComponent != null ? fromComponent.uuid() : null;
-                var toComponent = event.getTo().get(DataRegistry.COMPANIONS);
-                var toUuid = toComponent != null ? toComponent.uuid() : null;
+                var fromUuid = event.getFrom().get(DataRegistry.CRYSTAL_ID);
+                var toUuid = event.getTo().get(DataRegistry.CRYSTAL_ID);
 
                 if ((fromUuid == null && toUuid == null) || (fromUuid != null && fromUuid.equals(toUuid))) return;
 
