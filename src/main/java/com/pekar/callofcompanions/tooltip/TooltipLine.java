@@ -20,6 +20,13 @@ public class TooltipLine implements IMutableTooltipLine
         this.ignoreEmptyLines = ignoreEmptyLines;
     }
 
+    TooltipLine(Tooltip tooltip, String text)
+    {
+        this.tooltip = tooltip;
+        this.component = Component.literal(text);
+        this.ignoreEmptyLines = false;
+    }
+
     TooltipLine(Tooltip tooltip)
     {
         this.tooltip = tooltip;

@@ -42,6 +42,12 @@ public class Tooltip implements ITooltip
     }
 
     @Override
+    public void addText(String text)
+    {
+        tooltipComponent.accept(new TooltipLine(this, text).getComponent());
+    }
+
+    @Override
     public IMutableTooltipLine addLineById(String descriptionId)
     {
         return new TooltipLine(this, descriptionId, ignoreEmptyLines);
