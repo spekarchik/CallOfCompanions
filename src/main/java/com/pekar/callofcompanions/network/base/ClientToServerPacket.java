@@ -1,13 +1,16 @@
 package com.pekar.callofcompanions.network.base;
 
-import com.pekar.callofcompanions.Main;
+import com.mojang.logging.LogUtils;
 import net.minecraft.client.Minecraft;
 import net.minecraft.network.protocol.common.ServerboundCustomPayloadPacket;
 import net.neoforged.neoforge.network.handling.IPayloadContext;
 import net.neoforged.neoforge.network.handling.ServerPayloadContext;
+import org.slf4j.Logger;
 
 public abstract class ClientToServerPacket extends Packet implements IClientToServerPacket
 {
+    private static final Logger LOGGER = LogUtils.getLogger();
+
     protected ClientToServerPacket()
     {}
 
@@ -21,7 +24,7 @@ public abstract class ClientToServerPacket extends Packet implements IClientToSe
         }
         else
         {
-            Main.LOGGER.warn("Unable to send packet to server: connection is null");
+            LOGGER.warn("Unable to send packet to server: connection is null");
         }
     }
 

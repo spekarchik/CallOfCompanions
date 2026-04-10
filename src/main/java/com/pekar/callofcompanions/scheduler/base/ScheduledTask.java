@@ -1,10 +1,13 @@
 package com.pekar.callofcompanions.scheduler.base;
 
+import com.mojang.logging.LogUtils;
 import java.util.function.BiFunction;
 import java.util.function.Consumer;
+import org.slf4j.Logger;
 
 public class ScheduledTask<T> implements IScheduledTask
 {
+    private static final Logger LOGGER = LogUtils.getLogger();
     private final T object;
     private final Consumer<T> doOnComplete;
     private final Consumer<T> doOnCancel;
@@ -49,6 +52,10 @@ public class ScheduledTask<T> implements IScheduledTask
         if (!isCompleted())
         {
             doOnComplete.accept(object);
+            LOGGER.debug("Scheduled task completed: taskType={}, objectType={}, remainingTicks={}",
+                    getClass().getSimpleName(),
+                    object != null ? object.getClass().getSimpleName() : "null",
+                    counter);
             isCompleted = true;
         }
     }
@@ -59,6 +66,10 @@ public class ScheduledTask<T> implements IScheduledTask
         if (!isCompleted())
         {
             if (doOnCancel != null) doOnCancel.accept(object);
+            LOGGER.debug("Scheduled task cancelled: taskType={}, objectType={}, remainingTicks={}",
+                    getClass().getSimpleName(),
+                    object != null ? object.getClass().getSimpleName() : "null",
+                    counter);
             isCompleted = true;
         }
     }

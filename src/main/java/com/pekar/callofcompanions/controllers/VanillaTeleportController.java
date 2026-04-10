@@ -1,11 +1,15 @@
 package com.pekar.callofcompanions.controllers;
 
+import com.mojang.logging.LogUtils;
 import com.pekar.callofcompanions.scheduler.CompanionEntryScheduler;
 import com.pekar.callofcompanions.scheduler.CompanionEntryTask;
 import net.minecraft.core.BlockPos;
+import org.slf4j.Logger;
 
 class VanillaTeleportController extends LoadedAnimalSummonController
 {
+    private static final Logger LOGGER = LogUtils.getLogger();
+
     protected VanillaTeleportController(SummonAnimalContext context)
     {
         super(context);
@@ -26,13 +30,13 @@ class VanillaTeleportController extends LoadedAnimalSummonController
                     }
                     else if (ticks == 9)
                     {
-                        System.out.println("  Ordered to stand: " + entry.type());
+                        LOGGER.debug("Vanilla teleport pre-step: order companion to stand, companionType={}, companionId={}", entry.type(), entry.uuid());
                         orderToStand(animal);
                     }
                     return false;
                 },
                 entry -> {
-                    System.out.println("  Vanilla teleport .");
+                    LOGGER.debug("Vanilla teleport completing: companionType={}, companionId={}", entry.type(), entry.uuid());
                     if (animal.distanceToSqr(player) > 12 * 12)
                     {
                         tryTeleportAnimalTo(level, animal.getUUID(), teleportPos);
@@ -43,12 +47,12 @@ class VanillaTeleportController extends LoadedAnimalSummonController
                     updateCompanionPos(level, companionData, entry);
                 },
                 entry -> {
-                    System.out.println("  Vanilla teleport cancelled.");
+                    LOGGER.debug("Vanilla teleport cancelled: companionType={}, companionId={}", companionEntry.type(), companionEntry.uuid());
                     playAnimalNotRespondSound(level, teleportPos);
                     showAnimalNotRespondParticles(level, teleportPos);
                 }
         );
         CompanionEntryScheduler.UPDATE_POS_TASKS.add(task);
-        System.out.println("  Vanilla teleport for " + companionEntry.type());
+        LOGGER.debug("Vanilla teleport scheduled: companionType={}, companionId={}, delayTicks={}", companionEntry.type(), companionEntry.uuid(), delay);
     }
 }

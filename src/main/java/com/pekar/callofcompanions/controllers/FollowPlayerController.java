@@ -1,11 +1,15 @@
 package com.pekar.callofcompanions.controllers;
 
+import com.mojang.logging.LogUtils;
 import com.pekar.callofcompanions.scheduler.CompanionEntryScheduler;
 import com.pekar.callofcompanions.scheduler.CompanionEntryTask;
 import net.minecraft.core.BlockPos;
+import org.slf4j.Logger;
 
 class FollowPlayerController extends LoadedAnimalSummonController
 {
+    private static final Logger LOGGER = LogUtils.getLogger();
+
     protected FollowPlayerController(SummonAnimalContext context)
     {
         super(context);
@@ -29,15 +33,15 @@ class FollowPlayerController extends LoadedAnimalSummonController
                     return false;
                 },
                 entry -> {
-                    System.out.println("  Goal reached.");
+                    LOGGER.debug("Follow-player task completed: companionType={}, companionId={}", entry.type(), entry.uuid());
                     showAnimalTeleportParticles(level, animal);
                     updateCompanionPos(level, companionData, entry);
                 },
                 _ -> {
-                    System.out.println("  Goal cancelled.");
+                    LOGGER.debug("Follow-player task cancelled: companionType={}, companionId={}", companionEntry.type(), companionEntry.uuid());
                 }
         );
         CompanionEntryScheduler.UPDATE_POS_TASKS.add(task);
-        System.out.println("  Goal for " + companionEntry.type());
+        LOGGER.debug("Follow-player task scheduled: companionType={}, companionId={}, timeoutTicks={}", companionEntry.type(), companionEntry.uuid(), 300);
     }
 }

@@ -1,5 +1,6 @@
 package com.pekar.callofcompanions.controllers;
 
+import com.mojang.logging.LogUtils;
 import com.pekar.callofcompanions.data.CompanionData;
 import com.pekar.callofcompanions.data.CompanionEntry;
 import net.minecraft.core.BlockPos;
@@ -18,11 +19,14 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.levelgen.Heightmap;
+import org.slf4j.Logger;
 
 import java.util.UUID;
 
 public abstract class AnimalSummonController
 {
+    private static final Logger LOGGER = LogUtils.getLogger();
+
     protected final ServerPlayer player;
     protected final ServerLevel level;
     protected final CompanionData companionData;
@@ -100,7 +104,7 @@ public abstract class AnimalSummonController
     protected boolean tryTeleportAnimalTo(Level level, UUID uuid, BlockPos pos)
     {
         var entity = level.getEntity(uuid);
-        System.out.println("  Trying to teleport. Is null: " + (entity == null));
+        LOGGER.debug("Teleport attempt started: entityId={}, loaded={}", uuid, entity != null);
         if (entity instanceof Animal animal)
         {
             orderToStand(animal);

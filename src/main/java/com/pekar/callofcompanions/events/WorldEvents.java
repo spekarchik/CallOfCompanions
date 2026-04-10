@@ -16,6 +16,6 @@ public class WorldEvents implements IEventHandler
         CompanionEntryScheduler.DELAY_TASKS.clear();
         CompanionEntryScheduler.TELEPORT_TASKS.clear();
         CompanionEntryScheduler.UPDATE_POS_TASKS.clear();
-        LOGGER.debug("UuidScheduledTask cleared.");
+        LOGGER.debug("Tasks cleared.");
     }
 }

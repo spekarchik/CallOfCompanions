@@ -1,5 +1,6 @@
 package com.pekar.callofcompanions.events;
 
+import com.mojang.logging.LogUtils;
 import com.pekar.callofcompanions.data.CompanionData;
 import com.pekar.callofcompanions.data.CompanionEntry;
 import com.pekar.callofcompanions.data.DataRegistry;
@@ -23,11 +24,14 @@ import net.neoforged.neoforge.event.entity.living.LivingDeathEvent;
 import net.neoforged.neoforge.event.entity.living.LivingEquipmentChangeEvent;
 import net.neoforged.neoforge.event.entity.player.PlayerEvent;
 import net.neoforged.neoforge.event.entity.player.PlayerInteractEvent;
+import org.slf4j.Logger;
 
 import java.util.UUID;
 
 public class PlayerEvents implements IEventHandler
 {
+    private static final Logger LOGGER = LogUtils.getLogger();
+
     @SubscribeEvent
     public void onPlayerInteractionEvent(PlayerInteractEvent.EntityInteractSpecific event)
     {
@@ -93,7 +97,7 @@ public class PlayerEvents implements IEventHandler
 
                 if ((fromUuid == null && toUuid == null) || (fromUuid != null && fromUuid.equals(toUuid))) return;
 
-                System.out.println("  Equipment changed.");
+                LOGGER.debug("Player equipment changed: clear scheduled companion tasks, player={}", serverPlayer.getName().getString());
                 CompanionEntryScheduler.DELAY_TASKS.clearFor(serverPlayer);
                 CompanionEntryScheduler.TELEPORT_TASKS.clearFor(serverPlayer);
                 CompanionEntryScheduler.UPDATE_POS_TASKS.clearFor(serverPlayer);

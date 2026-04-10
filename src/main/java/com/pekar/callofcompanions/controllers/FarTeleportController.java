@@ -1,5 +1,6 @@
 package com.pekar.callofcompanions.controllers;
 
+import com.mojang.logging.LogUtils;
 import com.pekar.callofcompanions.data.CompanionEntry;
 import com.pekar.callofcompanions.scheduler.CompanionEntryScheduler;
 import com.pekar.callofcompanions.scheduler.CompanionEntryTask;
@@ -11,11 +12,14 @@ import net.minecraft.server.level.TicketType;
 import net.minecraft.world.entity.animal.Animal;
 import net.minecraft.world.level.ChunkPos;
 import net.minecraft.world.level.Level;
+import org.slf4j.Logger;
 
 import java.util.UUID;
 
 class FarTeleportController extends AnimalSummonController
 {
+    private static final Logger LOGGER = LogUtils.getLogger();
+
     protected FarTeleportController(SummonAnimalContext context)
     {
         super(context);
@@ -31,17 +35,17 @@ class FarTeleportController extends AnimalSummonController
                 player,
                 null,
                 entry -> {
-                    System.out.println("  FarTeleport: teleporting...");
+                    LOGGER.debug("Far teleport delay completed: companionType={}, companionId={}", entry.type(), entry.uuid());
                     createTeleportTask(teleportPos, entry);
                 },
                 _ -> {
                     showAnimalNotRespondParticles(level, teleportPos);
                     playAnimalNotRespondSound(level, teleportPos);
-                    System.out.println("  FarTeleport: Postpone cancelled.");
+                    LOGGER.debug("Far teleport delay cancelled: companionType={}, companionId={}", companionEntry.type(), companionEntry.uuid());
                 });
 
         CompanionEntryScheduler.DELAY_TASKS.add(delayTask);
-        System.out.println("  Far teleport for " + companionEntry.type());
+        LOGGER.debug("Far teleport scheduled: companionType={}, companionId={}, delayTicks={}", companionEntry.type(), companionEntry.uuid(), postponeTicks);
     }
 
     private void createTeleportTask(BlockPos teleportPos, CompanionEntry companionEntry)
@@ -72,7 +76,7 @@ class FarTeleportController extends AnimalSummonController
                         showParticles(level, teleportPos, ParticleTypes.PORTAL);
                         if (level.getEntity(entry.uuid()) instanceof Animal animal)
                             playTeleportSound(level, animal);
-                        System.out.println("  Far Teleported.");
+                        LOGGER.debug("Far teleport completed: companionType={}, companionId={}", entry.type(), entry.uuid());
                     }
                     else
                     {
@@ -80,7 +84,7 @@ class FarTeleportController extends AnimalSummonController
                         showAnimalNotRespondParticles(level, teleportPos);
                         var name = buildAnimalName(entry.type(), entry.name());
                         player.sendSystemMessage(Component.translatable("message.callofcompanions.not_found", name));
-                        System.out.println("  Far teleport: Not found.");
+                        LOGGER.debug("Far teleport failed: companion not found, companionType={}, companionId={}", entry.type(), entry.uuid());
                     }
 
                     updateCompanionPos(level, companionData, entry);
@@ -91,7 +95,7 @@ class FarTeleportController extends AnimalSummonController
                     level.getChunkSource().removeTicketWithRadius(TicketType.PORTAL, chunkPos, 2);
                     playAnimalNotRespondSound(level, teleportPos);
                     showAnimalNotRespondParticles(level, teleportPos);
-                    System.out.println("  Far Teleport cancelled.");
+                    LOGGER.debug("Far teleport cancelled: companionType={}, companionId={}", companionEntry.type(), companionEntry.uuid());
                 });
 
         CompanionEntryScheduler.TELEPORT_TASKS.add(task);

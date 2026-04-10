@@ -1,5 +1,6 @@
 package com.pekar.callofcompanions.items;
 
+import com.mojang.logging.LogUtils;
 import com.pekar.callofcompanions.controllers.CallCrystalHelper;
 import com.pekar.callofcompanions.controllers.SummonAnimalContext;
 import com.pekar.callofcompanions.controllers.AnimalSummonController;
@@ -31,12 +32,15 @@ import net.minecraft.world.item.TooltipFlag;
 import net.minecraft.world.item.component.TooltipDisplay;
 import net.minecraft.world.item.context.UseOnContext;
 import net.minecraft.world.level.Level;
+import org.slf4j.Logger;
 
 import java.util.UUID;
 import java.util.function.Consumer;
 
 public class CallCrystal extends ModItem implements ITooltipProvider
 {
+    private static final Logger LOGGER = LogUtils.getLogger();
+
     public CallCrystal(Properties properties)
     {
         super(properties);
@@ -169,7 +173,10 @@ public class CallCrystal extends ModItem implements ITooltipProvider
 
     private void saveStackChanges(ServerPlayer serverPlayer, ItemStack stack, UUID crystalId, CompanionData companionData)
     {
-        System.out.println("  Saving...");
+        LOGGER.debug("Saving call crystal companion data: player={}, crystalId={}, companionCount={}",
+                serverPlayer.getName().getString(),
+                crystalId,
+                companionData.companions().size());
         var data = companionData.copy();
         stack.remove(DataRegistry.COMPANIONS);
         stack.set(DataRegistry.COMPANIONS, data);
