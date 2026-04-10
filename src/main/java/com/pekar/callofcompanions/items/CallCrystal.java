@@ -43,6 +43,12 @@ public class CallCrystal extends ModItem implements ITooltipProvider
     }
 
     @Override
+    public boolean shouldCauseReequipAnimation(ItemStack oldStack, ItemStack newStack, boolean slotChanged)
+    {
+        return slotChanged;
+    }
+
+    @Override
     public InteractionResult use(Level level, Player player, InteractionHand hand)
     {
         if (hand != InteractionHand.MAIN_HAND) return InteractionResult.FAIL;
