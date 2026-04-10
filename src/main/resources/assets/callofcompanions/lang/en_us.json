@@ -10,5 +10,6 @@
   "item.callofcompanions.call_crystal": "Call Crystal",
   "item.callofcompanions.call_crystal.desc1": "{} (Owner: {}) {}",
 
-  "message.callofcompanions.not_found": "%s has not responded."
+  "message.callofcompanions.not_found": "%s has not responded.",
+  "message.callofcompanions.not_enough_xp": "Not enough XP to call animals."
 }

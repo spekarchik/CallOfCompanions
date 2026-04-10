@@ -94,6 +94,19 @@ public class CallCrystal extends ModItem implements ITooltipProvider
         var clickPos = context.getClickedPos();
         if (!SummonAnimalController.isSafe(level, clickPos.above())) return InteractionResult.FAIL;
 
+        if (player.experienceLevel < 1)
+        {
+            if (player instanceof ServerPlayer serverPlayer)
+                serverPlayer.sendOverlayMessage(Component.translatable("message.callofcompanions.not_enough_xp"));
+
+            return InteractionResult.FAIL;
+        }
+
+        if (player instanceof ServerPlayer serverPlayer)
+        {
+            serverPlayer.giveExperienceLevels(-1);
+        }
+
         player.getCooldowns().addCooldown(stack, USE_CRYSTAL_COOLDOWN);
 
         var companionData = savedCompanionData.copy();
