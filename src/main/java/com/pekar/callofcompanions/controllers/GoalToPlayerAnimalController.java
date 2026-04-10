@@ -23,7 +23,6 @@ class GoalToPlayerAnimalController extends SummonLoadedAnimalController
                 (ticks, _) -> {
                     if (ticks % 20 == 0)
                     {
-                        showCrystalIsActiveParticles(player);
                         setGoal(animal, player);
                         return animal.distanceToSqr(player) < 9;
                     }

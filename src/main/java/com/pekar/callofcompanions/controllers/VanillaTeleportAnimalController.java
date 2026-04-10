@@ -20,21 +20,23 @@ class VanillaTeleportAnimalController extends SummonLoadedAnimalController
                 companionEntry,
                 player,
                 (ticks, entry) -> {
-                    if (ticks % 20 == 0)
-                        showCrystalIsActiveParticles(player);
-
                     if (ticks == 29)
                     {
                         showAnimalTeleportParticles(level, animal);
                     }
                     else if (ticks == 9)
                     {
+                        System.out.println("  Ordered to stand: " + entry.type());
                         orderToStand(animal);
                     }
                     return false;
                 },
                 entry -> {
                     System.out.println("  Vanilla teleport .");
+                    if (animal.distanceToSqr(player) > 12 * 12)
+                    {
+                        tryTeleportAnimalTo(level, animal.getUUID(), teleportPos);
+                    }
                     setGoal(animal, player);
                     playTeleportSound(level, animal);
                     showAnimalTeleportParticles(level, animal);

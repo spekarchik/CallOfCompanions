@@ -39,7 +39,7 @@ public class PlayerEvents implements IEventHandler
 
             if (target instanceof Animal animal && (isTameAnimal || isTamedHorse))
             {
-                var companions = itemStack.getOrDefault(DataRegistry.COMPANIONS, new CompanionData());
+                var companionData = itemStack.getOrDefault(DataRegistry.COMPANIONS, new CompanionData());
 
                 var name = target.getDisplayName().getString();
                 var companionType = target.getType().getDescription().getString();
@@ -53,9 +53,9 @@ public class PlayerEvents implements IEventHandler
                         player.getUUID(),
                         player.getDisplayName().getString());
 
-                companions.add(entry);
+                companionData.add(entry);
                 itemStack.remove(DataRegistry.COMPANIONS);
-                itemStack.set(DataRegistry.COMPANIONS, new CompanionData(companions.getCompanions()));
+                itemStack.set(DataRegistry.COMPANIONS, companionData.copy());
 
                 event.setCanceled(true);
                 event.setCancellationResult(event.getSide() == LogicalSide.CLIENT ? InteractionResult.SUCCESS : InteractionResult.SUCCESS_SERVER);
@@ -70,6 +70,13 @@ public class PlayerEvents implements IEventHandler
         {
             if (event.getSlot().getType() == EquipmentSlot.Type.HAND)
             {
+                var fromComponent = event.getFrom().get(DataRegistry.COMPANIONS);
+                var fromUuid = fromComponent != null ? fromComponent.uuid() : null;
+                var toComponent = event.getTo().get(DataRegistry.COMPANIONS);
+                var toUuid = toComponent != null ? toComponent.uuid() : null;
+
+                if ((fromUuid == null && toUuid == null) || (fromUuid != null && fromUuid.equals(toUuid))) return;
+
                 System.out.println("  Equipment changed.");
                 CompanionEntryScheduler.DELAY_TASKS.clearFor(serverPlayer);
                 CompanionEntryScheduler.TELEPORT_TASKS.clearFor(serverPlayer);

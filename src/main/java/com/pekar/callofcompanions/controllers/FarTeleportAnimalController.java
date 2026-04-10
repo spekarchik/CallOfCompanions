@@ -29,11 +29,7 @@ class FarTeleportAnimalController extends SummonAnimalController
                 postponeTicks,
                 companionEntry,
                 player,
-                (ticks, _) -> {
-                    if (ticks % 20 == 0)
-                        showCrystalIsActiveParticles(player);
-                    return false;
-                },
+                null,
                 entry -> {
                     System.out.println("  FarTeleport: teleporting...");
                     createTeleportTask(teleportPos, entry);
@@ -64,7 +60,6 @@ class FarTeleportAnimalController extends SummonAnimalController
                 (ticks, entry) -> {
                     if (ticks % 40 == 1)
                     {
-                        showCrystalIsActiveParticles(player);
                         showParticles(level, teleportPos, ParticleTypes.PORTAL);
                     }
                     return checkEntityLoaded(level, entry.uuid());

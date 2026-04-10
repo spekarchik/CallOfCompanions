@@ -24,7 +24,6 @@ class NearTeleportAnimalController extends SummonLoadedAnimalController
                 (ticks, entry) -> {
                     if (ticks % 20 == 0)
                     {
-                        showCrystalIsActiveParticles(player);
                         showAnimalTeleportParticles(level, animal);
                     }
                     return false;

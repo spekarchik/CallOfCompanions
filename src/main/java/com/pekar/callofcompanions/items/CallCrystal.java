@@ -14,6 +14,7 @@ import com.pekar.callofcompanions.tooltip.ITooltipProvider;
 import com.pekar.callofcompanions.tooltip.TextStyle;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
+import net.minecraft.core.component.DataComponents;
 import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.network.chat.Component;
 import net.minecraft.server.level.ServerLevel;
@@ -45,23 +46,23 @@ public class CallCrystal extends ModItem implements ITooltipProvider
         if (hand != InteractionHand.MAIN_HAND) return InteractionResult.FAIL;
 
         var stack = player.getItemInHand(hand);
-        var companions = stack.get(DataRegistry.COMPANIONS);
-        if (companions == null || companions.getCompanions().isEmpty()) return InteractionResult.FAIL;
+        var companionData = stack.get(DataRegistry.COMPANIONS);
+        if (companionData == null || companionData.companions().isEmpty()) return InteractionResult.FAIL;
 
         if (level instanceof ServerLevel serverLevel && player instanceof ServerPlayer serverPlayer)
         {
-            var companionList = companions.getCompanions();
+            var companionList = companionData.companions();
             var iterator = companionList.iterator();
             boolean companionsUpdated = false;
             while (iterator.hasNext())
             {
                 var companion = iterator.next();
-                SummonAnimalController.updateCompanionPos(serverLevel, companions, companion);
+                SummonAnimalController.updateCompanionPos(serverLevel, companionData, companion);
                 companionsUpdated = true;
             }
 
             if (companionsUpdated)
-                saveStackChanges(serverPlayer, stack, companions);
+                saveStackChanges(serverPlayer, stack, companionData);
         }
 
         return sidedSuccess(level.isClientSide());
@@ -77,16 +78,19 @@ public class CallCrystal extends ModItem implements ITooltipProvider
 
         var stack = context.getItemInHand();
         var savedCompanionData = stack.get(DataRegistry.COMPANIONS);
-        if (savedCompanionData == null || savedCompanionData.getCompanions().isEmpty()) return InteractionResult.FAIL;
-        var companionData = savedCompanionData.copy();
-        var level = context.getLevel();
-
+        if (savedCompanionData == null || savedCompanionData.companions().isEmpty()) return InteractionResult.FAIL;
         if (context.getClickedFace() != Direction.UP || player.getCooldowns().isOnCooldown(stack)) return InteractionResult.FAIL;
 
         player.getCooldowns().addCooldown(stack, USE_CRYSTAL_COOLDOWN);
 
+        var companionData = savedCompanionData.copy();
+        var dataId = companionData.uuid();
+        var level = context.getLevel();
+
         if (player instanceof ServerPlayer serverPlayer)
         {
+            stack.set(DataComponents.ENCHANTMENT_GLINT_OVERRIDE, true);
+
             var serverLevel = serverPlayer.level();
             var clickPos = context.getClickedPos();
             playSummonSound(serverLevel, player.blockPosition());
@@ -97,13 +101,22 @@ public class CallCrystal extends ModItem implements ITooltipProvider
                 @Override
                 public void onAllTasksEnd()
                 {
-                    saveStackChanges(serverPlayer, stack, companionData);
+                    for (var itemStack : serverPlayer.getInventory().getNonEquipmentItems())
+                    {
+                        if (!itemStack.is(ItemRegistry.CALL_CRYSTAL)) continue;
+                        var data = itemStack.get(DataRegistry.COMPANIONS);
+                        if (data == null || !data.uuid().equals(companionData.uuid())) continue;
+
+                        itemStack.set(DataComponents.ENCHANTMENT_GLINT_OVERRIDE, false);
+                        saveStackChanges(serverPlayer, itemStack, companionData);
+                        break;
+                    }
                 }
             };
 
             CompanionEntryScheduler.listen(serverPlayer, taskEndListener);
 
-            var companionList = companionData.getCompanions();
+            var companionList = companionData.companions();
             var iterator = companionList.iterator();
 
             while (iterator.hasNext())
@@ -127,13 +140,12 @@ public class CallCrystal extends ModItem implements ITooltipProvider
         return sidedSuccess(player.level().isClientSide());
     }
 
-    private void saveStackChanges(ServerPlayer serverPlayer, ItemStack stack, CompanionData companions)
+    private void saveStackChanges(ServerPlayer serverPlayer, ItemStack stack, CompanionData companionData)
     {
         System.out.println("  Saving...");
-        var companionsCopy = companions.copy();
         stack.remove(DataRegistry.COMPANIONS);
-        stack.set(DataRegistry.COMPANIONS, companionsCopy);
-        new SaveCompanionsPacket(companionsCopy).sendToPlayer(serverPlayer);
+        stack.set(DataRegistry.COMPANIONS, companionData.copy());
+        new SaveCompanionsPacket(companionData.copy()).sendToPlayer(serverPlayer);
     }
 
     private void showSummonParticles(ServerLevel serverLevel, BlockPos clickPos)
@@ -161,10 +173,12 @@ public class CallCrystal extends ModItem implements ITooltipProvider
     @Override
     public void addTooltip(ItemStack stack, TooltipContext context, ITooltip tooltip, TooltipFlag flag)
     {
-        var companions = stack.get(DataRegistry.COMPANIONS);
-        if (companions == null) return;
+        var companionData = stack.get(DataRegistry.COMPANIONS);
+        if (companionData == null) return;
 
-        for (var companion : companions.getCompanions())
+        tooltip.addText("id: " + companionData.uuid());
+
+        for (var companion : companionData.companions())
         {
             var name = SummonAnimalController.buildAnimalName(companion.type(), companion.name());
             var status = companion.positionStatus() == PositionStatus.LOST ? "" : "✓";

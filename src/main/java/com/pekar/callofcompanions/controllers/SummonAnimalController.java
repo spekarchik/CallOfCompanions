@@ -53,19 +53,6 @@ public abstract class SummonAnimalController
         );
     }
 
-    protected void showCrystalIsActiveParticles(ServerPlayer player)
-    {
-        var level = player.level();
-        var pos = player.blockPosition();
-        level.sendParticles(
-                ParticleTypes.WITCH,
-                pos.getX(), pos.getY(), pos.getZ(),
-                3,
-                1.5, 0.5, 1.5,
-                0.01
-        );
-    }
-
     protected void showAnimalTeleportParticles(ServerLevel serverLevel, Animal animal)
     {
         var pos = animal.blockPosition();

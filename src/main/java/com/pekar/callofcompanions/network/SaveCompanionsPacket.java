@@ -29,24 +29,15 @@ public class SaveCompanionsPacket extends ServerToClientPacket
     {
         var player = context.player();
         ItemStack stack;
-        var mainHandItem = player.getMainHandItem();
-        if (mainHandItem.is(ItemRegistry.CALL_CRYSTAL))
+        for (var itemStack : player.getInventory().getNonEquipmentItems())
         {
-            stack = mainHandItem;
-        }
-        else if (player.getOffhandItem().is(ItemRegistry.CALL_CRYSTAL))
-        {
-            stack = player.getOffhandItem();
-        }
-        else
-        {
-            return;
-        }
+            if (!itemStack.is(ItemRegistry.CALL_CRYSTAL)) continue;
+            var data = itemStack.get(DataRegistry.COMPANIONS);
+            if (data == null || !data.uuid().equals(companionData.uuid())) continue;
 
-        if (stack.has(DataRegistry.COMPANIONS))
-        {
-            stack.remove(DataRegistry.COMPANIONS);
-            stack.set(DataRegistry.COMPANIONS, companionData);
+            itemStack.remove(DataRegistry.COMPANIONS);
+            itemStack.set(DataRegistry.COMPANIONS, companionData);
+            break;
         }
     }
 
