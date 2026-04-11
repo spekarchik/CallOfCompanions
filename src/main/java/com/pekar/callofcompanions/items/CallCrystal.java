@@ -25,7 +25,9 @@ import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
+import net.minecraft.world.entity.TamableAnimal;
 import net.minecraft.world.entity.animal.Animal;
+import net.minecraft.world.entity.animal.equine.AbstractHorse;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.TooltipFlag;
@@ -153,6 +155,13 @@ public class CallCrystal extends ModItem implements ITooltipProvider
                 var companionEntry = iterator.next();
                 var entity = level.getEntity(companionEntry.uuid());
                 Animal animal = entity instanceof Animal a ? a : null;
+
+                if (entity instanceof TamableAnimal tamable && (!tamable.isTame() || !tamable.isOwnedBy(player)))
+                    continue;
+
+                if (entity instanceof AbstractHorse horse && (!horse.isTamed() || horse.getOwner() != player))
+                    continue;
+
 
                 var summonContext = new SummonAnimalContext(
                         serverPlayer,

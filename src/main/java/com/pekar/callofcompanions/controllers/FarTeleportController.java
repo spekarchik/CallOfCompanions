@@ -50,10 +50,11 @@ class FarTeleportController extends AnimalSummonController
 
     private void createTeleportTask(BlockPos teleportPos, CompanionEntry companionEntry)
     {
+        final int LOAD_CHUNK_RADIUS = 2;
         if (!level.dimension().equals(companionEntry.dimension())) return;
 
         var chunkPos = new ChunkPos(SectionPos.blockToSectionCoord(companionEntry.pos().getX()), SectionPos.blockToSectionCoord(companionEntry.pos().getZ()));
-        level.getChunkSource().addTicketWithRadius(TicketType.PORTAL, chunkPos, 2);
+        level.getChunkSource().addTicketWithRadius(TicketType.PORTAL, chunkPos, LOAD_CHUNK_RADIUS);
 
         var task = new CompanionEntryTask(
                 100,
@@ -86,11 +87,11 @@ class FarTeleportController extends AnimalSummonController
                     }
 
                     updateCompanionPos(level, companionData, entry);
-                    level.getChunkSource().removeTicketWithRadius(TicketType.PORTAL, chunkPos, 2);
+                    level.getChunkSource().removeTicketWithRadius(TicketType.PORTAL, chunkPos, LOAD_CHUNK_RADIUS);
                 },
                 _ ->
                 {
-                    level.getChunkSource().removeTicketWithRadius(TicketType.PORTAL, chunkPos, 2);
+                    level.getChunkSource().removeTicketWithRadius(TicketType.PORTAL, chunkPos, LOAD_CHUNK_RADIUS);
                     playAnimalNotRespondSound(level, teleportPos);
                     showAnimalNotRespondParticles(level, teleportPos);
                     LOGGER.debug("Far teleport cancelled: companionType={}, companionId={}", companionEntry.type(), companionEntry.uuid());
