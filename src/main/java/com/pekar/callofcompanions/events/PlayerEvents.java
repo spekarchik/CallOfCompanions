@@ -7,6 +7,7 @@ import com.pekar.callofcompanions.data.DataRegistry;
 import com.pekar.callofcompanions.data.PositionStatus;
 import com.pekar.callofcompanions.items.ItemRegistry;
 import com.pekar.callofcompanions.scheduler.CompanionEntryScheduler;
+import net.minecraft.network.chat.Component;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.sounds.SoundEvents;
@@ -41,20 +42,15 @@ public class PlayerEvents implements IEventHandler
         var itemStack = event.getItemStack();
         var player = event.getEntity();
 
-        boolean isCallCrystal = itemStack.is(ItemRegistry.CALL_CRYSTAL);
-        if (isCallCrystal || itemStack.is(ItemRegistry.DEEP_CALL_CRYSTAL))
+        boolean isDeepCallCrystal = itemStack.is(ItemRegistry.DEEP_CALL_CRYSTAL);
+        if (isDeepCallCrystal || itemStack.is(ItemRegistry.CALL_CRYSTAL))
         {
             boolean isTameAnimal = target instanceof TamableAnimal tamable && tamable.isTame();
             boolean isTamedHorse = target instanceof AbstractHorse horse && horse.isTamed();
 
-            if (target instanceof Animal animal && (isTameAnimal || isTamedHorse))
+            if (target instanceof Animal animal && (isTameAnimal || isTamedHorse || (isDeepCallCrystal && animal.hasCustomName())))
             {
-                if (event.getLevel() instanceof ServerLevel serverLevel)
-                {
-                    playAddAnimalSound(serverLevel, animal);
-                }
-
-                short dataCapacity = isCallCrystal ? DataRegistry.CRYSTAL_DATA_CAPACITY : DataRegistry.DEEP_CRYSTAL_DATA_CAPACITY;
+                short dataCapacity = isDeepCallCrystal ? DataRegistry.DEEP_CRYSTAL_DATA_CAPACITY : DataRegistry.CRYSTAL_DATA_CAPACITY;
                 var companionData = itemStack.getOrDefault(DataRegistry.COMPANIONS, new CompanionData(dataCapacity));
                 var id = itemStack.get(DataRegistry.CRYSTAL_ID);
                 if (id == null)
@@ -72,13 +68,29 @@ public class PlayerEvents implements IEventHandler
                         player.getUUID(),
                         player.getDisplayName().getString());
 
-                companionData.add(entry);
-                itemStack.remove(DataRegistry.COMPANIONS);
-                itemStack.set(DataRegistry.COMPANIONS, companionData.copy());
+                var result = companionData.add(entry);
+                if (result)
+                {
+                    if (event.getLevel() instanceof ServerLevel serverLevel)
+                    {
+                        playAddAnimalSound(serverLevel, animal);
+                    }
 
-                event.setCanceled(true);
-                event.setCancellationResult(event.getSide() == LogicalSide.CLIENT ? InteractionResult.SUCCESS : InteractionResult.SUCCESS_SERVER);
+                    itemStack.remove(DataRegistry.COMPANIONS);
+                    itemStack.set(DataRegistry.COMPANIONS, companionData.copy());
+
+                    event.setCanceled(true);
+                    event.setCancellationResult(event.getSide() == LogicalSide.CLIENT ? InteractionResult.SUCCESS : InteractionResult.SUCCESS_SERVER);
+                    return;
+                }
+                else if (player instanceof ServerPlayer serverPlayer)
+                {
+                    serverPlayer.sendOverlayMessage(Component.translatable("message.callofcompanions.limit_reached"));
+                }
             }
+
+            event.setCanceled(true);
+            event.setCancellationResult(InteractionResult.CONSUME);
         }
     }
 

@@ -13,5 +13,6 @@
   "item.callofcompanions.deep_call_crystal.desc1": "{} (Owner: {}) {}",
 
   "message.callofcompanions.not_found": "%s has not responded.",
-  "message.callofcompanions.not_enough_xp": "Not enough XP to call animals."
+  "message.callofcompanions.not_enough_xp": "Not enough XP to call animals.",
+  "message.callofcompanions.limit_reached": "You have reached the limit of animals you can add."
 }

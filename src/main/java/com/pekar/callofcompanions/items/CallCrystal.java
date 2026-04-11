@@ -110,7 +110,7 @@ public class CallCrystal extends ModItem implements ITooltipProvider
             return InteractionResult.FAIL;
         }
 
-        if (player instanceof ServerPlayer serverPlayer)
+        if (player instanceof ServerPlayer serverPlayer && !serverPlayer.isCreative())
         {
             serverPlayer.giveExperienceLevels(-1);
         }

@@ -37,15 +37,16 @@ public class CompanionData
         this.companions = new ArrayList<>(companions);
     }
 
-    public void add(CompanionEntry companionEntry)
+    public boolean add(CompanionEntry companionEntry)
     {
         if (companions.size() >= capacity && !companions.contains(companionEntry))
-            return;
+            return false;
 
         if (companions.contains(companionEntry))
             companions.remove(companionEntry);
 
         companions.add(companionEntry);
+        return true;
     }
 
     public UUID uuid()
