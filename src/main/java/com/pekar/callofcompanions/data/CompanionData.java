@@ -64,6 +64,11 @@ public class CompanionData
         return new CompanionData(UUID.randomUUID(), capacity, List.copyOf(companions));
     }
 
+    public CompanionData copyWithCapacity(short capacity)
+    {
+        return new CompanionData(UUID.randomUUID(), capacity, List.copyOf(companions));
+    }
+
     @Override
     public boolean equals(Object obj)
     {

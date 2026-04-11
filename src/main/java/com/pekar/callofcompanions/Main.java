@@ -4,9 +4,11 @@ import com.mojang.logging.LogUtils;
 import com.pekar.callofcompanions.data.DataRegistry;
 import com.pekar.callofcompanions.events.EventRegistry;
 import com.pekar.callofcompanions.items.ItemRegistry;
+import com.pekar.callofcompanions.menus.MenuRegistry;
 import com.pekar.callofcompanions.tab.MainTab;
 import net.minecraft.core.component.DataComponentType;
 import net.minecraft.core.registries.Registries;
+import net.minecraft.world.inventory.MenuType;
 import net.minecraft.world.item.CreativeModeTab;
 import net.neoforged.bus.api.IEventBus;
 import net.neoforged.bus.api.SubscribeEvent;
@@ -28,6 +30,7 @@ public class Main
     public static final DeferredRegister<CreativeModeTab> CREATIVE_MODE_TABS = DeferredRegister.create(Registries.CREATIVE_MODE_TAB, MODID);
     public static final DeferredHolder<CreativeModeTab, CreativeModeTab> MAIN_TAB = new MainTab().createTab();
     public static final DeferredRegister<DataComponentType<?>> DATA_COMPONENTS = DeferredRegister.create(Registries.DATA_COMPONENT_TYPE, MODID);
+    public static final DeferredRegister<MenuType<?>> MENUS = DeferredRegister.create(Registries.MENU, MODID);
 
 
     public Main(IEventBus modEventBus, ModContainer modContainer)
@@ -47,6 +50,7 @@ public class Main
     {
         ItemRegistry.initStatic();
         DataRegistry.initStatic();
+        MenuRegistry.initStatic();
     }
 
     // You can use SubscribeEvent and let the Event Bus discover methods to call
