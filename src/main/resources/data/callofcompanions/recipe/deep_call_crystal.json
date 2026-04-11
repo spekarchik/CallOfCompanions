@@ -1,0 +1,15 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "pattern": [
+    "*",
+    "="
+  ],
+  "key": {
+    "=": "minecraft:sculk_shrieker",
+    "*": "callofcompanions:call_crystal"
+  },
+  "result": {
+    "id": "callofcompanions:deep_call_crystal",
+    "count": 1
+  }
+}

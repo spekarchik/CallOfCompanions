@@ -1,0 +1,16 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "pattern": [
+    "AAA",
+    "A*A",
+    "AAA"
+  ],
+  "key": {
+    "A": "minecraft:amethyst_shard",
+    "*": "minecraft:ender_eye"
+  },
+  "result": {
+    "id": "callofcompanions:call_crystal",
+    "count": 1
+  }
+}
