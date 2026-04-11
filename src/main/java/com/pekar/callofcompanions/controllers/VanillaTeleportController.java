@@ -18,7 +18,7 @@ class VanillaTeleportController extends LoadedAnimalSummonController
     @Override
     public void run(BlockPos teleportPos)
     {
-        int delay = level.getRandom().nextIntBetweenInclusive(30, 100);
+        int delay = level.getRandom().nextIntBetweenInclusive(applyDelayFactor(10), applyDelayFactor(100));
         var task = new CompanionEntryTask(
                 delay,
                 companionEntry,

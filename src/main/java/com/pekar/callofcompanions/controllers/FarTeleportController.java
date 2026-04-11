@@ -28,7 +28,7 @@ class FarTeleportController extends AnimalSummonController
     @Override
     public void run(BlockPos teleportPos)
     {
-        int postponeTicks = level.getRandom().nextIntBetweenInclusive(5, 100);
+        int postponeTicks = level.getRandom().nextIntBetweenInclusive(applyDelayFactor(5), applyDelayFactor(100));
         var delayTask = new CompanionEntryTask(
                 postponeTicks,
                 companionEntry,
@@ -54,8 +54,6 @@ class FarTeleportController extends AnimalSummonController
 
         var chunkPos = new ChunkPos(SectionPos.blockToSectionCoord(companionEntry.pos().getX()), SectionPos.blockToSectionCoord(companionEntry.pos().getZ()));
         level.getChunkSource().addTicketWithRadius(TicketType.PORTAL, chunkPos, 2);
-//                    var ticket = new Ticket(TicketType.PORTAL, 2);
-//                    level.getChunkSource().addTicket(ticket, chunkPos);
 
         var task = new CompanionEntryTask(
                 100,

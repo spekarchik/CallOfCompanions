@@ -10,7 +10,7 @@ public class CallCrystalHelper
 {
     public static boolean hasSameId(ItemStack stack, UUID crystalId)
     {
-        if (!stack.is(ItemRegistry.CALL_CRYSTAL)) return false;
+        if (!stack.is(ItemRegistry.CALL_CRYSTALS_TAG)) return false;
 
         var id = stack.get(DataRegistry.CRYSTAL_ID);
         return id != null && id.equals(crystalId);

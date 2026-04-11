@@ -13,38 +13,39 @@ import static com.pekar.callofcompanions.data.CompanionEntry.ENTRY_CODEC;
 
 public class CompanionData
 {
-    private static final int MAX_COMPANIONS = 8;
     private final UUID uuid;
+    private final short capacity;
     private final List<CompanionEntry> companions;
 
     public static final Codec<CompanionData> CODEC = RecordCodecBuilder.create(instance ->
             instance.group(
                     UUIDUtil.CODEC.fieldOf("uuid").forGetter(CompanionData::uuid),
+                    Codec.SHORT.fieldOf("capacity").forGetter(data -> data.capacity),
                     ENTRY_CODEC.listOf().fieldOf("companions").forGetter(CompanionData::companions)
             ).apply(instance, CompanionData::new)
     );
 
-    public CompanionData()
+    public CompanionData(short capacity)
     {
-        this(UUID.randomUUID(), new ArrayList<>());
+        this(UUID.randomUUID(), capacity, new ArrayList<>());
     }
 
-    private CompanionData(UUID uuid, List<CompanionEntry> companions)
+    private CompanionData(UUID uuid, short capacity, List<CompanionEntry> companions)
     {
         this.uuid = uuid;
+        this.capacity = capacity;
         this.companions = new ArrayList<>(companions);
     }
 
-    public boolean add(CompanionEntry companionEntry)
+    public void add(CompanionEntry companionEntry)
     {
-        if (companions.size() >= MAX_COMPANIONS && !companions.contains(companionEntry))
-            return false;
+        if (companions.size() >= capacity && !companions.contains(companionEntry))
+            return;
 
         if (companions.contains(companionEntry))
             companions.remove(companionEntry);
 
         companions.add(companionEntry);
-        return true;
     }
 
     public UUID uuid()
@@ -59,7 +60,7 @@ public class CompanionData
 
     public CompanionData copy()
     {
-        return new CompanionData(UUID.randomUUID(), List.copyOf(companions));
+        return new CompanionData(UUID.randomUUID(), capacity, List.copyOf(companions));
     }
 
     @Override

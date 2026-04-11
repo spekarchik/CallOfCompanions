@@ -1,0 +1,6 @@
+{
+    "parent": "minecraft:item/generated",
+    "textures": {
+        "layer0": "callofcompanions:item/deep_call_crystal_anim"
+    }
+}

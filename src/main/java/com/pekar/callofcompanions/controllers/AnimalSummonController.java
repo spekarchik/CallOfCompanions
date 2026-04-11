@@ -32,6 +32,7 @@ public abstract class AnimalSummonController
     protected final CompanionData companionData;
     protected final CompanionEntry companionEntry;
     protected final ItemStack callCrystalStack;
+    protected final float callDelayFactor;
 
     protected AnimalSummonController(SummonAnimalContext context)
     {
@@ -40,6 +41,7 @@ public abstract class AnimalSummonController
         this.companionData = context.companionData();
         this.companionEntry = context.companionEntry();
         this.callCrystalStack = context.callCrystalStack();
+        this.callDelayFactor = context.callDelayFactor();
     }
 
     protected void setGoal(Animal animal, Player player)
@@ -180,5 +182,10 @@ public abstract class AnimalSummonController
     protected void playAnimalNotRespondSound(ServerLevel level, BlockPos pos)
     {
         level.playSound(null, pos, SoundEvents.FIRE_EXTINGUISH, SoundSource.PLAYERS, 0.5F, 1.0F);
+    }
+
+    protected int applyDelayFactor(int initialDelay)
+    {
+        return (int)(initialDelay * callDelayFactor);
     }
 }

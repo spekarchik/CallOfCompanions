@@ -20,7 +20,7 @@ class NearTeleportController extends LoadedAnimalSummonController
     {
         orderToStand(animal);
         showAnimalTeleportParticles(level, animal);
-        int delay = level.getRandom().nextIntBetweenInclusive(20, 100);
+        int delay = level.getRandom().nextIntBetweenInclusive(applyDelayFactor(10), applyDelayFactor(100));
         var task = new CompanionEntryTask(
                 delay,
                 companionEntry,

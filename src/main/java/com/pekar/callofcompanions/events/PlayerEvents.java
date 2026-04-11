@@ -41,7 +41,8 @@ public class PlayerEvents implements IEventHandler
         var itemStack = event.getItemStack();
         var player = event.getEntity();
 
-        if (itemStack.is(ItemRegistry.CALL_CRYSTAL))
+        boolean isCallCrystal = itemStack.is(ItemRegistry.CALL_CRYSTAL);
+        if (isCallCrystal || itemStack.is(ItemRegistry.DEEP_CALL_CRYSTAL))
         {
             boolean isTameAnimal = target instanceof TamableAnimal tamable && tamable.isTame();
             boolean isTamedHorse = target instanceof AbstractHorse horse && horse.isTamed();
@@ -53,7 +54,8 @@ public class PlayerEvents implements IEventHandler
                     playAddAnimalSound(serverLevel, animal);
                 }
 
-                var companionData = itemStack.getOrDefault(DataRegistry.COMPANIONS, new CompanionData());
+                short dataCapacity = isCallCrystal ? DataRegistry.CRYSTAL_DATA_CAPACITY : DataRegistry.DEEP_CRYSTAL_DATA_CAPACITY;
+                var companionData = itemStack.getOrDefault(DataRegistry.COMPANIONS, new CompanionData(dataCapacity));
                 var id = itemStack.get(DataRegistry.CRYSTAL_ID);
                 if (id == null)
                     itemStack.set(DataRegistry.CRYSTAL_ID, UUID.randomUUID());

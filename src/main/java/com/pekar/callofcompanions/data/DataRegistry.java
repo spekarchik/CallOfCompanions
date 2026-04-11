@@ -10,6 +10,9 @@ import static com.pekar.callofcompanions.Main.DATA_COMPONENTS;
 
 public class DataRegistry
 {
+    public static final short CRYSTAL_DATA_CAPACITY = 4;
+    public static final short DEEP_CRYSTAL_DATA_CAPACITY = 8;
+
     public static final DeferredHolder<DataComponentType<?>, DataComponentType<CompanionData>> COMPANIONS =
             DATA_COMPONENTS.register("companions", () ->
                     DataComponentType.<CompanionData>builder()

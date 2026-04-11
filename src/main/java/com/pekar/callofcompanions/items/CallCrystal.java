@@ -87,8 +87,6 @@ public class CallCrystal extends ModItem implements ITooltipProvider
     @Override
     public InteractionResult useOn(UseOnContext context)
     {
-        final int USE_CRYSTAL_COOLDOWN = 400;
-
         var player = context.getPlayer();
         if (player == null || context.getHand() != InteractionHand.MAIN_HAND) return InteractionResult.FAIL;
 
@@ -117,7 +115,7 @@ public class CallCrystal extends ModItem implements ITooltipProvider
             serverPlayer.giveExperienceLevels(-1);
         }
 
-        player.getCooldowns().addCooldown(stack, USE_CRYSTAL_COOLDOWN);
+        player.getCooldowns().addCooldown(stack, crystalCooldown());
 
         var companionData = savedCompanionData.copy();
 
@@ -161,7 +159,8 @@ public class CallCrystal extends ModItem implements ITooltipProvider
                         animal,
                         companionData,
                         companionEntry,
-                        stack
+                        stack,
+                        callDelayFactor()
                 );
 
                 AnimalSummonFactory.get(summonContext).run(clickPos);
@@ -202,6 +201,16 @@ public class CallCrystal extends ModItem implements ITooltipProvider
     private void playUpdateCrystalSound(ServerLevel level, BlockPos pos)
     {
         level.playSound(null, pos, SoundEvents.AMETHYST_BLOCK_CHIME, SoundSource.PLAYERS, 4.0F, 0.6F);
+    }
+
+    protected int crystalCooldown()
+    {
+        return 600;
+    }
+
+    protected float callDelayFactor()
+    {
+        return 2F;
     }
 
     @Override
