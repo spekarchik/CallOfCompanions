@@ -1,0 +1,27 @@
+{
+  "language": "Polski",
+  "language.region": "Polska",
+  "language.code": "pl_pl",
+  "author": "Sergey Pekarchik",
+
+  "itemGroup.callofcompanions": "Call of Companions",
+  "itemGroup.main_tab": "Call of Companions",
+
+  "item.callofcompanions.call_crystal": "Kryształ przywołania",
+  "item.callofcompanions.call_crystal.desc1": "{} (Właściciel: {}) {}",
+  "item.callofcompanions.call_crystal.desc2": "Zwierzęta: {}/4",
+  "item.callofcompanions.call_crystal.desc3": "Brak odpowiedzi: {}",
+  "item.callofcompanions.call_crystal.desc4": "Powiązuje oswojonych towarzyszy",
+
+  "item.callofcompanions.deep_call_crystal": "Głęboki kryształ przywołania",
+  "item.callofcompanions.deep_call_crystal.desc1": "{} (Właściciel: {}) {}",
+  "item.callofcompanions.deep_call_crystal.desc2": "Zwierzęta: {}/8",
+  "item.callofcompanions.deep_call_crystal.desc3": "Brak odpowiedzi: {}",
+  "item.callofcompanions.deep_call_crystal.desc4": "Powiązuje oswojone lub nazwane zwierzęta",
+
+  "message.callofcompanions.not_found": "%s nie odpowiedział.",
+  "message.callofcompanions.not_enough_xp": "Za mało doświadczenia, aby przywołać zwierzęta.",
+  "message.callofcompanions.limit_reached": "Nie można powiązać więcej towarzyszy z tym kryształem.",
+
+  "description.press_shift": "§Przytrzymaj §9Shift§7, aby zobaczyć szczegóły..."
+}

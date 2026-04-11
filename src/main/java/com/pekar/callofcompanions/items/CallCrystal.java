@@ -1,10 +1,10 @@
 package com.pekar.callofcompanions.items;
 
 import com.mojang.logging.LogUtils;
-import com.pekar.callofcompanions.controllers.CallCrystalHelper;
-import com.pekar.callofcompanions.controllers.SummonAnimalContext;
 import com.pekar.callofcompanions.controllers.AnimalSummonController;
 import com.pekar.callofcompanions.controllers.AnimalSummonFactory;
+import com.pekar.callofcompanions.controllers.CallCrystalHelper;
+import com.pekar.callofcompanions.controllers.SummonAnimalContext;
 import com.pekar.callofcompanions.data.CompanionData;
 import com.pekar.callofcompanions.data.DataRegistry;
 import com.pekar.callofcompanions.data.PositionStatus;
@@ -234,6 +234,8 @@ public class CallCrystal extends ModItem implements ITooltipProvider
         var companionData = stack.get(DataRegistry.COMPANIONS);
         if (companionData == null) return;
 
+        tooltip.ignoreEmptyLines();
+
         for (var companion : companionData.companions())
         {
             var name = AnimalSummonController.buildAnimalName(companion.type(), companion.name());
@@ -243,6 +245,25 @@ public class CallCrystal extends ModItem implements ITooltipProvider
                     .fillWith(name, companion.ownerName(), status)
                     .styledAs(TextStyle.DarkGray, companion.positionStatus() == PositionStatus.LOST)
                     .apply();
+        }
+
+        tooltip.addEmptyLine();
+
+        if (flag.hasShiftDown())
+        {
+            var companions = companionData.companions();
+            tooltip.addLine(getDescriptionId(), 2)
+                    .fillWith(companions.size())
+                    .apply();
+            tooltip.addLine(getDescriptionId(), 3)
+                    .fillWith(companions.stream().filter(c -> c.positionStatus() == PositionStatus.LOST).count())
+                    .apply();
+            tooltip.addLine(getDescriptionId(), 4)
+                    .apply();
+        }
+        else
+        {
+            tooltip.addLineById("description.press_shift").apply();
         }
     }
 }

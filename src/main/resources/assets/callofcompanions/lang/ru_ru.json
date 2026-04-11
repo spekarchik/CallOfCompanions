@@ -1,0 +1,27 @@
+{
+  "language": "Русский",
+  "language.region": "Россия",
+  "language.code": "ru_ru",
+  "author": "Sergey Pekarchik",
+
+  "itemGroup.callofcompanions": "Call of Companions",
+  "itemGroup.main_tab": "Call of Companions",
+
+  "item.callofcompanions.call_crystal": "Кристалл зова",
+  "item.callofcompanions.call_crystal.desc1": "{} (Хозяин: {}) {}",
+  "item.callofcompanions.call_crystal.desc2": "Животные: {}/4",
+  "item.callofcompanions.call_crystal.desc3": "Не откликнулись: {}",
+  "item.callofcompanions.call_crystal.desc4": "Привязывает прирученных спутников",
+
+  "item.callofcompanions.deep_call_crystal": "Глубинный кристалл зова",
+  "item.callofcompanions.deep_call_crystal.desc1": "{} (Хозяин: {}) {}",
+  "item.callofcompanions.deep_call_crystal.desc2": "Животные: {}/8",
+  "item.callofcompanions.deep_call_crystal.desc3": "Не откликнулись: {}",
+  "item.callofcompanions.deep_call_crystal.desc4": "Привязывает прирученных или именованных животных",
+
+  "message.callofcompanions.not_found": "%s не откликнулся.",
+  "message.callofcompanions.not_enough_xp": "Недостаточно опыта для призыва.",
+  "message.callofcompanions.limit_reached": "Нельзя привязать больше спутников к этому кристаллу.",
+
+  "description.press_shift": "§7Удерживайте §9Shift§7 для подробностей..."
+}

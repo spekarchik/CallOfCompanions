@@ -9,10 +9,19 @@
 
   "item.callofcompanions.call_crystal": "Call Crystal",
   "item.callofcompanions.call_crystal.desc1": "{} (Owner: {}) {}",
+  "item.callofcompanions.call_crystal.desc2": "Animals: {}/4",
+  "item.callofcompanions.call_crystal.desc3": "Missing: {}",
+  "item.callofcompanions.call_crystal.desc4": "Binds tamed companions",
+
   "item.callofcompanions.deep_call_crystal": "Deep Call Crystal",
   "item.callofcompanions.deep_call_crystal.desc1": "{} (Owner: {}) {}",
+  "item.callofcompanions.deep_call_crystal.desc2": "Animals: {}/8",
+  "item.callofcompanions.deep_call_crystal.desc3": "Missing: {}",
+  "item.callofcompanions.deep_call_crystal.desc4": "Binds tamed or named animals",
 
-  "message.callofcompanions.not_found": "%s has not responded.",
-  "message.callofcompanions.not_enough_xp": "Not enough XP to call animals.",
-  "message.callofcompanions.limit_reached": "You have reached the limit of animals you can add."
+  "message.callofcompanions.not_found": "%s did not respond.",
+  "message.callofcompanions.not_enough_xp": "Not enough experience to call your companions.",
+  "message.callofcompanions.limit_reached": "You cannot bind any more companions to this crystal.",
+
+  "description.press_shift": "§7Hold §9Shift§7 for details..."
 }
