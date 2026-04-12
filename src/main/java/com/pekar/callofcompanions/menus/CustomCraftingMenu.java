@@ -1,5 +1,6 @@
 package com.pekar.callofcompanions.menus;
 
+import com.pekar.callofcompanions.Config;
 import com.pekar.callofcompanions.data.DataRegistry;
 import com.pekar.callofcompanions.items.ItemRegistry;
 import net.minecraft.world.Container;
@@ -41,7 +42,7 @@ public class CustomCraftingMenu extends CraftingMenu
                     if (companionData != null && !result.isEmpty())
                     {
                         result.set(DataRegistry.CRYSTAL_ID, UUID.randomUUID());
-                        result.set(DataRegistry.COMPANIONS, companionData.copyWithCapacity(DataRegistry.DEEP_CRYSTAL_DATA_CAPACITY));
+                        result.set(DataRegistry.COMPANIONS, companionData.copyWithCapacity((short) Config.DEEP_CRYSTAL_DATA_CAPACITY.getAsInt()));
 
                         // write back the modified result stack
                         resultSlots.setItem(0, result);

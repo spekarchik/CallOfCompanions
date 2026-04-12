@@ -21,10 +21,10 @@ public class Config
     // Radius in chunks to load around a companion when performing a far teleport.
     // WARNING: Increasing this value will make the server load more chunks (costly in memory and CPU).
     // Lower values may cause animals to not be found in remote chunks. Change at your own risk.
-    // Valid range: 1..10 (1 = minimal, 10 = large area).
+    // Valid range: 1..12 (1 = minimal, 12 = large area).
     public static final ModConfigSpec.IntValue FAR_TELEPORT_CHUNK_RADIUS = BUILDER
             .comment("Radius in chunks to load around a companion when doing a far teleport. Change at your own risk; higher values increase server memory/CPU usage.")
-            .defineInRange("far_teleport_chunk_radius", 4, 1, 10);
+            .defineInRange("far_teleport_chunk_radius", 6, 1, 12);
 
     // How many companions a normal Call Crystal can store.
     // Increase at your own risk: higher values may increase memory usage.
@@ -37,6 +37,12 @@ public class Config
     public static final ModConfigSpec.IntValue DEEP_CRYSTAL_DATA_CAPACITY = BUILDER
             .comment("Number of companions a Deep Call Crystal can store.")
             .defineInRange("deep_crystal_data_capacity", 8, 1, 32);
+
+    // When true, Deep Call Crystal will NOT allow adding untamed animals (even if they are named).
+    // Default is false to preserve previous behavior. Set to true to restrict Deep Call Crystals to tamed animals only.
+    public static final ModConfigSpec.BooleanValue DEEP_CRYSTAL_DISALLOW_UNTAMED = BUILDER
+            .comment("If true, Deep Call Crystals cannot add untamed animals (even if named).")
+            .define("deep_crystal_disallow_untamed", false);
 
     static final ModConfigSpec SPEC = BUILDER.build();
 }

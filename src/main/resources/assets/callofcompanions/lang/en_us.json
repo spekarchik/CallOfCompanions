@@ -9,14 +9,14 @@
 
   "item.callofcompanions.call_crystal": "Call Crystal",
   "item.callofcompanions.call_crystal.desc1": "{} (Owner: {}) {}",
-  "item.callofcompanions.call_crystal.desc2": "Animals: {}/4",
+  "item.callofcompanions.call_crystal.desc2": "Animals: {}/{}",
   "item.callofcompanions.call_crystal.desc3": "Missing: {}",
   "item.callofcompanions.call_crystal.desc4": "Binds tamed animals",
 
   "item.callofcompanions.deep_call_crystal": "Deep Call Crystal",
   "item.callofcompanions.deep_call_crystal.desc0": "None",
   "item.callofcompanions.deep_call_crystal.desc1": "{} (Owner: {}) {}",
-  "item.callofcompanions.deep_call_crystal.desc2": "Animals: {}/8",
+  "item.callofcompanions.deep_call_crystal.desc2": "Animals: {}/{}",
   "item.callofcompanions.deep_call_crystal.desc3": "Missing: {}",
   "item.callofcompanions.deep_call_crystal.desc4": "Binds tamed or named animals",
 

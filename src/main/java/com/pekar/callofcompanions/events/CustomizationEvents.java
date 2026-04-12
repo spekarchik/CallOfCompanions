@@ -1,5 +1,6 @@
 package com.pekar.callofcompanions.events;
 
+import com.pekar.callofcompanions.Config;
 import com.pekar.callofcompanions.data.DataRegistry;
 import com.pekar.callofcompanions.items.ItemRegistry;
 import com.pekar.callofcompanions.menus.CustomCraftingMenuProvider;
@@ -56,7 +57,7 @@ public class CustomizationEvents implements IEventHandler
                     {
                         result.set(DataRegistry.CRYSTAL_ID, UUID.randomUUID());
                         result.set(DataRegistry.COMPANIONS,
-                                companionData.copyWithCapacity(DataRegistry.DEEP_CRYSTAL_DATA_CAPACITY));
+                                companionData.copyWithCapacity((short) Config.DEEP_CRYSTAL_DATA_CAPACITY.getAsInt()));
                     }
                     break;
                 }

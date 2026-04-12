@@ -1,6 +1,7 @@
 package com.pekar.callofcompanions.events;
 
 import com.mojang.logging.LogUtils;
+import com.pekar.callofcompanions.Config;
 import com.pekar.callofcompanions.controllers.CallCrystalHelper;
 import com.pekar.callofcompanions.data.CompanionData;
 import com.pekar.callofcompanions.data.CompanionEntry;
@@ -51,48 +52,51 @@ public class PlayerEvents implements IEventHandler
             boolean isTameAnimal = target instanceof TamableAnimal tamable && tamable.isTame();
             boolean isTamedHorse = target instanceof AbstractHorse horse && horse.isTamed();
 
-            if (target instanceof Animal animal && (isTameAnimal || isTamedHorse || (isDeepCallCrystal && animal.hasCustomName())))
+            if (target instanceof Animal animal)
             {
-                short dataCapacity = isDeepCallCrystal ? DataRegistry.DEEP_CRYSTAL_DATA_CAPACITY : DataRegistry.CRYSTAL_DATA_CAPACITY;
-                var companionData = itemStack.getOrDefault(DataRegistry.COMPANIONS, new CompanionData(dataCapacity));
-                var id = itemStack.get(DataRegistry.CRYSTAL_ID);
-                if (id == null)
-                    itemStack.set(DataRegistry.CRYSTAL_ID, UUID.randomUUID());
-
-                var name = target.getDisplayName().getString();
-                var companionType = CallCrystalHelper.getAnimalType(animal);
-                var owner = target instanceof OwnableEntity ownable ? ownable.getOwner() : null;
-                Optional<UUID> ownerId = owner != null ? Optional.of(owner.getUUID()) : Optional.empty();
-                Optional<String> ownerName = owner != null ? Optional.of(owner.getDisplayName().getString()) : Optional.empty();
-
-                var entry = new CompanionEntry(
-                        target.getUUID(),
-                        name,
-                        companionType,
-                        target.level().dimension(),
-                        target.blockPosition(),
-                        PositionStatus.FRESH,
-                        ownerId,
-                        ownerName);
-
-                var result = companionData.add(entry);
-                if (result)
+                if (isTameAnimal || isTamedHorse || (isDeepCallCrystal && Config.DEEP_CRYSTAL_DISALLOW_UNTAMED.isFalse() && animal.hasCustomName()))
                 {
-                    if (event.getLevel() instanceof ServerLevel serverLevel)
+                    short dataCapacity = isDeepCallCrystal ? (short) Config.DEEP_CRYSTAL_DATA_CAPACITY.getAsInt() : (short) Config.CRYSTAL_DATA_CAPACITY.getAsInt();
+                    var companionData = itemStack.getOrDefault(DataRegistry.COMPANIONS, new CompanionData(dataCapacity));
+                    var id = itemStack.get(DataRegistry.CRYSTAL_ID);
+                    if (id == null)
+                        itemStack.set(DataRegistry.CRYSTAL_ID, UUID.randomUUID());
+
+                    var name = target.getDisplayName().getString();
+                    var companionType = CallCrystalHelper.getAnimalType(animal);
+                    var owner = target instanceof OwnableEntity ownable ? ownable.getOwner() : null;
+                    Optional<UUID> ownerId = owner != null ? Optional.of(owner.getUUID()) : Optional.empty();
+                    Optional<String> ownerName = owner != null ? Optional.of(owner.getDisplayName().getString()) : Optional.empty();
+
+                    var entry = new CompanionEntry(
+                            target.getUUID(),
+                            name,
+                            companionType,
+                            target.level().dimension(),
+                            target.blockPosition(),
+                            PositionStatus.FRESH,
+                            ownerId,
+                            ownerName);
+
+                    var result = companionData.add(entry);
+                    if (result)
                     {
-                        playAddAnimalSound(serverLevel, animal);
+                        if (event.getLevel() instanceof ServerLevel serverLevel)
+                        {
+                            playAddAnimalSound(serverLevel, animal);
+                        }
+
+                        itemStack.remove(DataRegistry.COMPANIONS);
+                        itemStack.set(DataRegistry.COMPANIONS, companionData.copy());
+
+                        event.setCanceled(true);
+                        event.setCancellationResult(event.getSide() == LogicalSide.CLIENT ? InteractionResult.SUCCESS : InteractionResult.SUCCESS_SERVER);
+                        return;
                     }
-
-                    itemStack.remove(DataRegistry.COMPANIONS);
-                    itemStack.set(DataRegistry.COMPANIONS, companionData.copy());
-
-                    event.setCanceled(true);
-                    event.setCancellationResult(event.getSide() == LogicalSide.CLIENT ? InteractionResult.SUCCESS : InteractionResult.SUCCESS_SERVER);
-                    return;
-                }
-                else if (player instanceof ServerPlayer serverPlayer)
-                {
-                    serverPlayer.sendOverlayMessage(Component.translatable("message.callofcompanions.limit_reached"));
+                    else if (player instanceof ServerPlayer serverPlayer)
+                    {
+                        serverPlayer.sendOverlayMessage(Component.translatable("message.callofcompanions.limit_reached"));
+                    }
                 }
             }
 

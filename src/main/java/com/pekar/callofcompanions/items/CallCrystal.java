@@ -250,38 +250,45 @@ public class CallCrystal extends ModItem implements ITooltipProvider
     public void addTooltip(ItemStack stack, TooltipContext context, ITooltip tooltip, TooltipFlag flag)
     {
         var companionData = stack.get(DataRegistry.COMPANIONS);
-        if (companionData == null) return;
 
         tooltip.ignoreEmptyLines();
 
-        for (var companion : companionData.companions())
+        if (companionData != null)
         {
-            var name = CallCrystalHelper.buildAnimalName(companion.type(), companion.name());
-            var status = companion.positionStatus() == PositionStatus.LOST ? "" : "✓";
-            var ownerName = companion.ownerName().isPresent()
-                    ? companion.ownerName().get()
-                    : Component.translatable("item.callofcompanions.deep_call_crystal.desc0").getString();
+            for (var companion : companionData.companions())
+            {
+                var name = CallCrystalHelper.buildAnimalName(companion.type(), companion.name());
+                var status = companion.positionStatus() == PositionStatus.LOST ? "" : "✓";
+                var ownerName = companion.ownerName().isPresent()
+                        ? companion.ownerName().get()
+                        : Component.translatable("item.callofcompanions.deep_call_crystal.desc0").getString();
 
-            tooltip.addLine(getDescriptionId(), 1)
-                    .fillWith(name, ownerName, status)
-                    .styledAs(TextStyle.DarkGray, companion.positionStatus() == PositionStatus.LOST)
-                    .apply();
+                tooltip.addLine(getDescriptionId(), 1)
+                        .fillWith(name, ownerName, status)
+                        .styledAs(TextStyle.DarkGray, companion.positionStatus() == PositionStatus.LOST)
+                        .apply();
+            }
         }
 
         tooltip.addEmptyLine();
 
         if (flag.hasShiftDown())
         {
-            var companions = companionData.companions();
+            int companionsAdded = companionData != null ? companionData.companions().size() : 0;
+            int dataCapacity = companionData != null ? companionData.capacity() : crystalDataCapacity();
+            long lostCampanions = companionData != null
+                    ? companionData.companions().stream().filter(c -> c.positionStatus() == PositionStatus.LOST).count()
+                    : 0;
+
             tooltip.addLine(getDescriptionId(), 2)
-                    .fillWith(companions.size())
+                    .fillWith(companionsAdded, dataCapacity)
                     .withFormatting(ChatFormatting.DARK_AQUA, true)
                     .apply();
             tooltip.addLine(getDescriptionId(), 3)
-                    .fillWith(companions.stream().filter(c -> c.positionStatus() == PositionStatus.LOST).count())
+                    .fillWith(lostCampanions)
                     .withFormatting(ChatFormatting.DARK_AQUA, true)
                     .apply();
-            tooltip.addLine(getDescriptionId(), 4)
+            tooltip.addLine(getSummonableAnimalsDescriptionId(), 4)
                     .withFormatting(ChatFormatting.DARK_AQUA, true)
                     .apply();
         }
@@ -289,5 +296,15 @@ public class CallCrystal extends ModItem implements ITooltipProvider
         {
             tooltip.addLineById("description.press_shift").apply();
         }
+    }
+
+    protected String getSummonableAnimalsDescriptionId()
+    {
+        return getDescriptionId();
+    }
+
+    protected int crystalDataCapacity()
+    {
+        return Config.CRYSTAL_DATA_CAPACITY.getAsInt();
     }
 }

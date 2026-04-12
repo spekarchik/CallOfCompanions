@@ -59,6 +59,11 @@ public class CompanionData
         return List.copyOf(companions);
     }
 
+    public int capacity()
+    {
+        return capacity;
+    }
+
     public CompanionData copy()
     {
         return new CompanionData(UUID.randomUUID(), capacity, List.copyOf(companions));
