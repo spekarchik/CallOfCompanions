@@ -10,9 +10,7 @@ import net.minecraft.core.SectionPos;
 import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.network.chat.Component;
 import net.minecraft.server.level.TicketType;
-import net.minecraft.world.entity.TamableAnimal;
 import net.minecraft.world.entity.animal.Animal;
-import net.minecraft.world.entity.animal.equine.AbstractHorse;
 import net.minecraft.world.level.ChunkPos;
 import net.minecraft.world.level.Level;
 import org.slf4j.Logger;
@@ -59,7 +57,7 @@ class FarTeleportController extends AnimalSummonController
         {
             playAnimalNotRespondSound(level, teleportPos);
             showAnimalNotRespondParticles(level, teleportPos);
-            var name = buildAnimalName(companionEntry.type(), companionEntry.name());
+            var name = CallCrystalHelper.buildAnimalName(companionEntry.type(), companionEntry.name());
             player.sendSystemMessage(Component.translatable("message.callofcompanions.wrong_dimension", name));
             LOGGER.debug("Far teleport cancelled: wrong dimension, companionType={}, companionId={}, companionDimension={}", companionEntry.type(), companionEntry.uuid(), companionEntry.dimension());
             return;
@@ -82,7 +80,7 @@ class FarTeleportController extends AnimalSummonController
                 entry ->
                 {
                     var entity = level.getEntity(entry.uuid());
-                    if (!canSummonAnimal(entity, player))
+                    if (!CallCrystalHelper.canSummonAnimal(entity, player))
                     {
                         LOGGER.debug("Far teleport skipped: companion can't be summoned by player, companionType={}, companionId={}, player={}", entry.type(), entry.uuid(), player.getDisplayName());
                         return;
@@ -100,12 +98,12 @@ class FarTeleportController extends AnimalSummonController
                     {
                         playAnimalNotRespondSound(level, teleportPos);
                         showAnimalNotRespondParticles(level, teleportPos);
-                        var name = buildAnimalName(entry.type(), entry.name());
+                        var name = CallCrystalHelper.buildAnimalName(entry.type(), entry.name());
                         player.sendSystemMessage(Component.translatable("message.callofcompanions.not_found", name));
                         LOGGER.debug("Far teleport failed: companion not found, companionType={}, companionId={}", entry.type(), entry.uuid());
                     }
 
-                    updateCompanionPos(level, companionData, entry);
+                    CallCrystalHelper.updateCompanionPos(level, companionData, entry);
                     level.getChunkSource().removeTicketWithRadius(TicketType.PORTAL, chunkPos, LOAD_CHUNK_RADIUS);
                 },
                 _ ->

@@ -1,6 +1,7 @@
 package com.pekar.callofcompanions.events;
 
 import com.mojang.logging.LogUtils;
+import com.pekar.callofcompanions.controllers.CallCrystalHelper;
 import com.pekar.callofcompanions.data.CompanionData;
 import com.pekar.callofcompanions.data.CompanionEntry;
 import com.pekar.callofcompanions.data.DataRegistry;
@@ -59,7 +60,7 @@ public class PlayerEvents implements IEventHandler
                     itemStack.set(DataRegistry.CRYSTAL_ID, UUID.randomUUID());
 
                 var name = target.getDisplayName().getString();
-                var companionType = target.getType().getDescription().getString();
+                var companionType = CallCrystalHelper.getAnimalType(animal);
                 var owner = target instanceof OwnableEntity ownable ? ownable.getOwner() : null;
                 Optional<UUID> ownerId = owner != null ? Optional.of(owner.getUUID()) : Optional.empty();
                 Optional<String> ownerName = owner != null ? Optional.of(owner.getDisplayName().getString()) : Optional.empty();

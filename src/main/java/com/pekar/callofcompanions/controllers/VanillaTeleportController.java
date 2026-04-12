@@ -44,7 +44,7 @@ class VanillaTeleportController extends LoadedAnimalSummonController
                     setGoal(animal, player);
                     playTeleportSound(level, animal);
                     showAnimalTeleportParticles(level, animal);
-                    updateCompanionPos(level, companionData, entry);
+                    CallCrystalHelper.updateCompanionPos(level, companionData, entry);
                 },
                 entry -> {
                     LOGGER.debug("Vanilla teleport cancelled: companionType={}, companionId={}", companionEntry.type(), companionEntry.uuid());

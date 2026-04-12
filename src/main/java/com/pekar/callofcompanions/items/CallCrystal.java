@@ -2,7 +2,6 @@ package com.pekar.callofcompanions.items;
 
 import com.mojang.logging.LogUtils;
 import com.pekar.callofcompanions.Config;
-import com.pekar.callofcompanions.controllers.AnimalSummonController;
 import com.pekar.callofcompanions.controllers.AnimalSummonFactory;
 import com.pekar.callofcompanions.controllers.CallCrystalHelper;
 import com.pekar.callofcompanions.controllers.SummonAnimalContext;
@@ -75,7 +74,7 @@ public class CallCrystal extends ModItem implements ITooltipProvider
             while (iterator.hasNext())
             {
                 var companion = iterator.next();
-                AnimalSummonController.updateCompanionPos(serverLevel, companionData, companion);
+                CallCrystalHelper.updateCompanionPos(serverLevel, companionData, companion);
                 companionsUpdated = true;
             }
 
@@ -105,7 +104,7 @@ public class CallCrystal extends ModItem implements ITooltipProvider
 
         var level = context.getLevel();
         var clickPos = context.getClickedPos();
-        if (!AnimalSummonController.isSafeForDestPoint(level, clickPos.above())) return InteractionResult.FAIL;
+        if (!CallCrystalHelper.isSafeForDestPoint(level, clickPos.above())) return InteractionResult.FAIL;
 
         if (!consumeXp(player)) return InteractionResult.FAIL;
 
@@ -132,7 +131,7 @@ public class CallCrystal extends ModItem implements ITooltipProvider
                 var entity = level.getEntity(companionEntry.uuid());
                 Animal animal = entity instanceof Animal a ? a : null;
 
-                if (!AnimalSummonController.canSummonAnimal(entity, player))
+                if (!CallCrystalHelper.canSummonAnimal(entity, player))
                 {
                     LOGGER.debug("Skipped: companion can't be summoned by player, companionType={}, companionId={}, player={}", companionEntry.type(), companionEntry.uuid(), player.getDisplayName());
                     continue;
@@ -257,7 +256,7 @@ public class CallCrystal extends ModItem implements ITooltipProvider
 
         for (var companion : companionData.companions())
         {
-            var name = AnimalSummonController.buildAnimalName(companion.type(), companion.name());
+            var name = CallCrystalHelper.buildAnimalName(companion.type(), companion.name());
             var status = companion.positionStatus() == PositionStatus.LOST ? "" : "✓";
             var ownerName = companion.ownerName().isPresent()
                     ? companion.ownerName().get()

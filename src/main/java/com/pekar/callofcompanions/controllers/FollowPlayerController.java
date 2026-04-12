@@ -41,7 +41,7 @@ class FollowPlayerController extends LoadedAnimalSummonController
                         playTeleportSound(level, animal);
                         showAnimalTeleportParticles(level, animal);
                     }
-                    updateCompanionPos(level, companionData, entry);
+                    CallCrystalHelper.updateCompanionPos(level, companionData, entry);
                 },
                 _ -> {
                     LOGGER.debug("Follow-player task cancelled: companionType={}, companionId={}", companionEntry.type(), companionEntry.uuid());
