@@ -1,6 +1,7 @@
 package com.pekar.callofcompanions.items;
 
 import com.mojang.logging.LogUtils;
+import com.pekar.callofcompanions.Config;
 import com.pekar.callofcompanions.controllers.AnimalSummonController;
 import com.pekar.callofcompanions.controllers.AnimalSummonFactory;
 import com.pekar.callofcompanions.controllers.CallCrystalHelper;
@@ -14,7 +15,6 @@ import com.pekar.callofcompanions.scheduler.TaskEndListener;
 import com.pekar.callofcompanions.tooltip.ITooltip;
 import com.pekar.callofcompanions.tooltip.ITooltipProvider;
 import com.pekar.callofcompanions.tooltip.TextStyle;
-import com.pekar.callofcompanions.Config;
 import net.minecraft.ChatFormatting;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
@@ -27,9 +27,7 @@ import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
-import net.minecraft.world.entity.TamableAnimal;
 import net.minecraft.world.entity.animal.Animal;
-import net.minecraft.world.entity.animal.equine.AbstractHorse;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.TooltipFlag;
@@ -134,13 +132,10 @@ public class CallCrystal extends ModItem implements ITooltipProvider
                 var entity = level.getEntity(companionEntry.uuid());
                 Animal animal = entity instanceof Animal a ? a : null;
 
-                if (entity instanceof TamableAnimal tamable && (!tamable.isTame() || !tamable.isOwnedBy(player)))
-                    continue;
-
-                if (entity instanceof AbstractHorse horse)
+                if (!AnimalSummonController.canSummonAnimal(entity, player))
                 {
-                    if (horse.isTamed() && horse.getOwner() != null && horse.getOwner() != player) continue;
-                    if (!horse.isTamed() && !horse.hasCustomName()) continue;
+                    LOGGER.debug("Skipped: companion can't be summoned by player, companionType={}, companionId={}, player={}", companionEntry.type(), companionEntry.uuid(), player.getDisplayName());
+                    continue;
                 }
 
                 var summonContext = new SummonAnimalContext(

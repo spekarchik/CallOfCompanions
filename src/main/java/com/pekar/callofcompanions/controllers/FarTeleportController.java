@@ -10,7 +10,9 @@ import net.minecraft.core.SectionPos;
 import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.network.chat.Component;
 import net.minecraft.server.level.TicketType;
+import net.minecraft.world.entity.TamableAnimal;
 import net.minecraft.world.entity.animal.Animal;
+import net.minecraft.world.entity.animal.equine.AbstractHorse;
 import net.minecraft.world.level.ChunkPos;
 import net.minecraft.world.level.Level;
 import org.slf4j.Logger;
@@ -79,6 +81,13 @@ class FarTeleportController extends AnimalSummonController
                 },
                 entry ->
                 {
+                    var entity = level.getEntity(entry.uuid());
+                    if (!canSummonAnimal(entity, player))
+                    {
+                        LOGGER.debug("Far teleport skipped: companion can't be summoned by player, companionType={}, companionId={}, player={}", entry.type(), entry.uuid(), player.getDisplayName());
+                        return;
+                    }
+
                     var result = tryTeleportAnimalTo(level, entry.uuid(), teleportPos);
                     if (result)
                     {

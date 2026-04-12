@@ -12,8 +12,10 @@ import net.minecraft.sounds.SoundEvent;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.tags.BlockTags;
+import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.TamableAnimal;
 import net.minecraft.world.entity.animal.Animal;
+import net.minecraft.world.entity.animal.equine.AbstractHorse;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
@@ -117,6 +119,20 @@ public abstract class AnimalSummonController
         }
 
         return false;
+    }
+
+    public static boolean canSummonAnimal(Entity entity, Player player)
+    {
+        if (entity instanceof TamableAnimal tamable && (!tamable.isTame() || !tamable.isOwnedBy(player)))
+            return false;
+
+        if (entity instanceof AbstractHorse horse)
+        {
+            if (horse.isTamed() && horse.getOwner() != null && horse.getOwner() != player) return false;
+            return horse.isTamed() || horse.hasCustomName();
+        }
+
+        return true;
     }
 
     private BlockPos getRandomPos(BlockPos pos)
