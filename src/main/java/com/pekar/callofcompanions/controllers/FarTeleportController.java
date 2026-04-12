@@ -45,13 +45,22 @@ class FarTeleportController extends AnimalSummonController
                 });
 
         CompanionEntryScheduler.DELAY_TASKS.add(delayTask);
-        LOGGER.debug("Far teleport scheduled: companionType={}, companionId={}, delayTicks={}", companionEntry.type(), companionEntry.uuid(), postponeTicks);
+        LOGGER.debug("Far teleport delay scheduled: companionType={}, companionId={}, delayTicks={}", companionEntry.type(), companionEntry.uuid(), postponeTicks);
     }
 
     private void createTeleportTask(BlockPos teleportPos, CompanionEntry companionEntry)
     {
-        final int LOAD_CHUNK_RADIUS = 2;
-        if (!level.dimension().equals(companionEntry.dimension())) return;
+        final int LOAD_CHUNK_RADIUS = 4;
+
+        if (!level.dimension().equals(companionEntry.dimension()))
+        {
+            playAnimalNotRespondSound(level, teleportPos);
+            showAnimalNotRespondParticles(level, teleportPos);
+            var name = buildAnimalName(companionEntry.type(), companionEntry.name());
+            player.sendSystemMessage(Component.translatable("message.callofcompanions.wrong_dimension", name));
+            LOGGER.debug("Far teleport cancelled: wrong dimension, companionType={}, companionId={}, companionDimension={}", companionEntry.type(), companionEntry.uuid(), companionEntry.dimension());
+            return;
+        }
 
         var chunkPos = new ChunkPos(SectionPos.blockToSectionCoord(companionEntry.pos().getX()), SectionPos.blockToSectionCoord(companionEntry.pos().getZ()));
         level.getChunkSource().addTicketWithRadius(TicketType.PORTAL, chunkPos, LOAD_CHUNK_RADIUS);
@@ -98,6 +107,7 @@ class FarTeleportController extends AnimalSummonController
                 });
 
         CompanionEntryScheduler.TELEPORT_TASKS.add(task);
+        LOGGER.debug("Far teleport task scheduled: companionType={}, companionId={}", companionEntry.type(), companionEntry.uuid());
     }
 
     private boolean checkEntityLoaded(Level level, UUID uuid)

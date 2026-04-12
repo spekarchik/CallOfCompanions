@@ -20,8 +20,10 @@
   "item.callofcompanions.deep_call_crystal.desc4": "Привязывает прирученных или именованных животных",
 
   "message.callofcompanions.not_found": "%s не откликнулся.",
+  "message.callofcompanions.wrong_dimension": "%s слишком далеко и не может откликнуться.",
   "message.callofcompanions.not_enough_xp": "Недостаточно опыта для призыва.",
-  "message.callofcompanions.limit_reached": "Нельзя привязать больше спутников к этому кристаллу.",
+  "message.callofcompanions.limit_reached": "Нельзя привязать больше животных к этому кристаллу.",
+  "message.callofcompanions.companions_updated": "Связь с животными обновлена.",
 
   "description.press_shift": "§7Удерживайте §9Shift§7 для подробностей..."
 }

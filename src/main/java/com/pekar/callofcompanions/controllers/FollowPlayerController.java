@@ -34,6 +34,12 @@ class FollowPlayerController extends LoadedAnimalSummonController
                 },
                 entry -> {
                     LOGGER.debug("Follow-player task completed: companionType={}, companionId={}", entry.type(), entry.uuid());
+                    if (animal.distanceToSqr(player) > 10 * 10)
+                    {
+                        tryTeleportAnimalTo(level, animal.getUUID(), teleportPos);
+                        setGoal(animal, player);
+                        playTeleportSound(level, animal);
+                    }
                     showAnimalTeleportParticles(level, animal);
                     updateCompanionPos(level, companionData, entry);
                 },

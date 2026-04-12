@@ -20,8 +20,10 @@
   "item.callofcompanions.deep_call_crystal.desc4": "Прывязвае прыручаных ці названых жывёл",
 
   "message.callofcompanions.not_found": "%s не адгукнуўся.",
+  "message.callofcompanions.wrong_dimension": "%s занадта далёка і не можа адгукнуцца.",
   "message.callofcompanions.not_enough_xp": "Недастаткова досведу для закліку.",
-  "message.callofcompanions.limit_reached": "Нельга прывязаць больш спадарожнікаў да гэтага крышталя.",
+  "message.callofcompanions.limit_reached": "Нельга прывязаць больш жывёл да гэтага крышталя.",
+  "message.callofcompanions.companions_updated": "Сувязь з жывёламі абноўлена.",
 
   "description.press_shift": "§7Утрымлівайце §9Shift§7 для падрабязнасцей..."
 }

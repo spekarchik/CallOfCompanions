@@ -14,6 +14,7 @@ import com.pekar.callofcompanions.scheduler.TaskEndListener;
 import com.pekar.callofcompanions.tooltip.ITooltip;
 import com.pekar.callofcompanions.tooltip.ITooltipProvider;
 import com.pekar.callofcompanions.tooltip.TextStyle;
+import net.minecraft.ChatFormatting;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.component.DataComponents;
@@ -80,7 +81,10 @@ public class CallCrystal extends ModItem implements ITooltipProvider
             }
 
             if (companionsUpdated)
+            {
                 saveStackChanges(serverPlayer, stack, crystalId, companionData);
+                serverPlayer.sendOverlayMessage(Component.translatable("message.callofcompanions.companions_updated"));
+            }
         }
 
         return sidedSuccess(level.isClientSide());
@@ -102,7 +106,7 @@ public class CallCrystal extends ModItem implements ITooltipProvider
 
         var level = context.getLevel();
         var clickPos = context.getClickedPos();
-        if (!AnimalSummonController.isSafe(level, clickPos.above())) return InteractionResult.FAIL;
+        if (!AnimalSummonController.isSafeForDestPoint(level, clickPos.above())) return InteractionResult.FAIL;
 
         if (player.experienceLevel < 1)
         {
@@ -159,9 +163,11 @@ public class CallCrystal extends ModItem implements ITooltipProvider
                 if (entity instanceof TamableAnimal tamable && (!tamable.isTame() || !tamable.isOwnedBy(player)))
                     continue;
 
-                if (entity instanceof AbstractHorse horse && (!horse.isTamed() || horse.getOwner() != player))
-                    continue;
-
+                if (entity instanceof AbstractHorse horse)
+                {
+                    if (horse.isTamed() && horse.getOwner() != null && horse.getOwner() != player) continue;
+                    if (!horse.isTamed() && !horse.hasCustomName()) continue;
+                }
 
                 var summonContext = new SummonAnimalContext(
                         serverPlayer,
@@ -254,11 +260,14 @@ public class CallCrystal extends ModItem implements ITooltipProvider
             var companions = companionData.companions();
             tooltip.addLine(getDescriptionId(), 2)
                     .fillWith(companions.size())
+                    .withFormatting(ChatFormatting.DARK_AQUA, true)
                     .apply();
             tooltip.addLine(getDescriptionId(), 3)
                     .fillWith(companions.stream().filter(c -> c.positionStatus() == PositionStatus.LOST).count())
+                    .withFormatting(ChatFormatting.DARK_AQUA, true)
                     .apply();
             tooltip.addLine(getDescriptionId(), 4)
+                    .withFormatting(ChatFormatting.DARK_AQUA, true)
                     .apply();
         }
         else

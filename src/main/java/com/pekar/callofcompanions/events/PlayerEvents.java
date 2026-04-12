@@ -104,14 +104,19 @@ public class PlayerEvents implements IEventHandler
     {
         if (event.getEntity() instanceof ServerPlayer serverPlayer)
         {
+            var fromItem = event.getFrom();
+            var toItem = event.getTo();
             if (event.getSlot().getType() == EquipmentSlot.Type.HAND)
             {
-                var fromUuid = event.getFrom().get(DataRegistry.CRYSTAL_ID);
-                var toUuid = event.getTo().get(DataRegistry.CRYSTAL_ID);
+
+                if (!fromItem.is(ItemRegistry.CALL_CRYSTALS_TAG) || !toItem.is(ItemRegistry.CALL_CRYSTALS_TAG)) return;
+
+                var fromUuid = fromItem.get(DataRegistry.CRYSTAL_ID);
+                var toUuid = toItem.get(DataRegistry.CRYSTAL_ID);
 
                 if ((fromUuid == null && toUuid == null) || (fromUuid != null && fromUuid.equals(toUuid))) return;
 
-                LOGGER.debug("Player equipment changed: clear scheduled companion tasks, player={}", serverPlayer.getName().getString());
+                LOGGER.debug("Player equipment changed: clear scheduled companion tasks, player={}, fromId={}, toId={}", serverPlayer.getName().getString(), fromUuid, toUuid);
                 CompanionEntryScheduler.DELAY_TASKS.clearFor(serverPlayer);
                 CompanionEntryScheduler.TELEPORT_TASKS.clearFor(serverPlayer);
                 CompanionEntryScheduler.UPDATE_POS_TASKS.clearFor(serverPlayer);

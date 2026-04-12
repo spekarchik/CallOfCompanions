@@ -20,8 +20,10 @@
   "item.callofcompanions.deep_call_crystal.desc4": "Binds tamed or named animals",
 
   "message.callofcompanions.not_found": "%s did not respond.",
-  "message.callofcompanions.not_enough_xp": "Not enough experience to call your companions.",
-  "message.callofcompanions.limit_reached": "You cannot bind any more companions to this crystal.",
+  "message.callofcompanions.wrong_dimension": "%s is too far away to respond.",
+  "message.callofcompanions.not_enough_xp": "Not enough experience to call your animals.",
+  "message.callofcompanions.limit_reached": "You cannot bind any more animals to this crystal.",
+  "message.callofcompanions.companions_updated": "Link to animals refreshed.",
 
   "description.press_shift": "§7Hold §9Shift§7 for details..."
 }

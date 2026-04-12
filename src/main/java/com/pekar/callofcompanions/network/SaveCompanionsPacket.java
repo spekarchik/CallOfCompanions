@@ -5,7 +5,6 @@ import com.pekar.callofcompanions.data.CompanionData;
 import com.pekar.callofcompanions.data.DataRegistry;
 import com.pekar.callofcompanions.network.base.IPacket;
 import com.pekar.callofcompanions.network.base.ServerToClientPacket;
-import net.minecraft.core.UUIDUtil;
 import net.minecraft.nbt.NbtOps;
 import net.minecraft.network.FriendlyByteBuf;
 import net.neoforged.neoforge.network.handling.IPayloadContext;
