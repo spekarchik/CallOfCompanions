@@ -173,9 +173,11 @@ public class PlayerEvents implements IEventHandler
 
     private static void cancelTasksFor(ServerPlayer player)
     {
+        if (CompanionEntryScheduler.hasTasks(player))
+            player.sendOverlayMessage(Component.translatable("message.callofcompanions.summon_cancelled"));
+
         CompanionEntryScheduler.DELAY_TASKS.clearFor(player);
         CompanionEntryScheduler.TELEPORT_TASKS.clearFor(player);
         CompanionEntryScheduler.UPDATE_POS_TASKS.clearFor(player);
-        player.sendOverlayMessage(Component.translatable("message.callofcompanions.summon_cancelled"));
     }
 }

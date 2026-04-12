@@ -22,6 +22,11 @@ public class CompanionEntryScheduler
         playerTaskEndListeners.put(player.getUUID(), listener);
     }
 
+    public static boolean hasTasks(ServerPlayer player)
+    {
+        return playerTasks.get(player.getUUID()) != null;
+    }
+
     public void add(CompanionEntryTask task)
     {
         tasks.add(task);
@@ -48,7 +53,7 @@ public class CompanionEntryScheduler
         while (iterator.hasNext())
         {
             var task = iterator.next();
-            if (!task.companionEntry().ownerUuid().equals(player.getUUID())) continue;
+            if (!task.initiator().getUUID().equals(player.getUUID())) continue;
 
             task.cancel();
             if (task.isCompleted())
