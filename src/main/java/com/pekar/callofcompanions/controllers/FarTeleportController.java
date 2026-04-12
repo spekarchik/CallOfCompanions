@@ -1,6 +1,7 @@
 package com.pekar.callofcompanions.controllers;
 
 import com.mojang.logging.LogUtils;
+import com.pekar.callofcompanions.Config;
 import com.pekar.callofcompanions.data.CompanionEntry;
 import com.pekar.callofcompanions.scheduler.CompanionEntryScheduler;
 import com.pekar.callofcompanions.scheduler.CompanionEntryTask;
@@ -50,7 +51,7 @@ class FarTeleportController extends AnimalSummonController
 
     private void createTeleportTask(BlockPos teleportPos, CompanionEntry companionEntry)
     {
-        final int LOAD_CHUNK_RADIUS = 4;
+        final int LOAD_CHUNK_RADIUS = Config.FAR_TELEPORT_CHUNK_RADIUS.getAsInt();
 
         if (!level.dimension().equals(companionEntry.dimension()))
         {

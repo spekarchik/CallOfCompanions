@@ -14,6 +14,7 @@ import com.pekar.callofcompanions.scheduler.TaskEndListener;
 import com.pekar.callofcompanions.tooltip.ITooltip;
 import com.pekar.callofcompanions.tooltip.ITooltipProvider;
 import com.pekar.callofcompanions.tooltip.TextStyle;
+import com.pekar.callofcompanions.Config;
 import net.minecraft.ChatFormatting;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
@@ -108,17 +109,22 @@ public class CallCrystal extends ModItem implements ITooltipProvider
         var clickPos = context.getClickedPos();
         if (!AnimalSummonController.isSafeForDestPoint(level, clickPos.above())) return InteractionResult.FAIL;
 
-        if (player.experienceLevel < 1)
+        if (Config.CONSUME_XP_ON_CALL.isTrue())
         {
-            if (player instanceof ServerPlayer serverPlayer)
-                serverPlayer.sendOverlayMessage(Component.translatable("message.callofcompanions.not_enough_xp"));
+            int levelsToConsume = Config.XP_LEVELS_TO_CONSUME.getAsInt();
 
-            return InteractionResult.FAIL;
-        }
+            if (player.experienceLevel < levelsToConsume)
+            {
+                if (player instanceof ServerPlayer serverPlayer)
+                    serverPlayer.sendOverlayMessage(Component.translatable("message.callofcompanions.not_enough_xp"));
 
-        if (player instanceof ServerPlayer serverPlayer && !serverPlayer.isCreative())
-        {
-            serverPlayer.giveExperienceLevels(-1);
+                return InteractionResult.FAIL;
+            }
+
+            if (player instanceof ServerPlayer serverPlayer && !serverPlayer.isCreative())
+            {
+                serverPlayer.giveExperienceLevels(-levelsToConsume);
+            }
         }
 
         player.getCooldowns().addCooldown(stack, crystalCooldown());

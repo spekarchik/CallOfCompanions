@@ -1,5 +1,6 @@
 package com.pekar.callofcompanions.data;
 
+import com.pekar.callofcompanions.Config;
 import net.minecraft.core.UUIDUtil;
 import net.minecraft.core.component.DataComponentType;
 import net.neoforged.neoforge.registries.DeferredHolder;
@@ -10,8 +11,9 @@ import static com.pekar.callofcompanions.Main.DATA_COMPONENTS;
 
 public class DataRegistry
 {
-    public static final short CRYSTAL_DATA_CAPACITY = 4;
-    public static final short DEEP_CRYSTAL_DATA_CAPACITY = 8;
+    // These values are initialized from the runtime configuration in initStatic()
+    public static short CRYSTAL_DATA_CAPACITY = 4;
+    public static short DEEP_CRYSTAL_DATA_CAPACITY = 8;
 
     public static final DeferredHolder<DataComponentType<?>, DataComponentType<CompanionData>> COMPANIONS =
             DATA_COMPONENTS.register("companions", () ->
@@ -29,6 +31,18 @@ public class DataRegistry
 
     public static void initStatic()
     {
-        // just to initialize static members
+        // Initialize capacities from config so they can be changed by server owners
+        try
+        {
+            int c = Config.CRYSTAL_DATA_CAPACITY.getAsInt();
+            int d = Config.DEEP_CRYSTAL_DATA_CAPACITY.getAsInt();
+
+            CRYSTAL_DATA_CAPACITY = (short) c;
+            DEEP_CRYSTAL_DATA_CAPACITY = (short) d;
+        }
+        catch (Throwable t)
+        {
+            // In case config isn't ready yet or an error occurs, keep defaults
+        }
     }
 }
