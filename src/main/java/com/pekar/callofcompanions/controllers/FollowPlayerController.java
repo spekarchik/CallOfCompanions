@@ -39,8 +39,8 @@ class FollowPlayerController extends LoadedAnimalSummonController
                         tryTeleportAnimalTo(level, animal.getUUID(), teleportPos);
                         setGoal(animal, player);
                         playTeleportSound(level, animal);
+                        showAnimalTeleportParticles(level, animal);
                     }
-                    showAnimalTeleportParticles(level, animal);
                     updateCompanionPos(level, companionData, entry);
                 },
                 _ -> {
