@@ -104,23 +104,19 @@ public class PlayerEvents implements IEventHandler
     {
         if (event.getEntity() instanceof ServerPlayer serverPlayer)
         {
+            if (event.getSlot() != EquipmentSlot.MAINHAND) return;
+
             var fromItem = event.getFrom();
+            if (!fromItem.is(ItemRegistry.CALL_CRYSTALS_TAG)) return;
+
             var toItem = event.getTo();
-            if (event.getSlot().getType() == EquipmentSlot.Type.HAND)
-            {
+            var fromUuid = fromItem.get(DataRegistry.CRYSTAL_ID);
+            var toUuid = toItem.get(DataRegistry.CRYSTAL_ID);
 
-                if (!fromItem.is(ItemRegistry.CALL_CRYSTALS_TAG) || !toItem.is(ItemRegistry.CALL_CRYSTALS_TAG)) return;
+            if (fromUuid == null || fromUuid.equals(toUuid)) return;
 
-                var fromUuid = fromItem.get(DataRegistry.CRYSTAL_ID);
-                var toUuid = toItem.get(DataRegistry.CRYSTAL_ID);
-
-                if ((fromUuid == null && toUuid == null) || (fromUuid != null && fromUuid.equals(toUuid))) return;
-
-                LOGGER.debug("Player equipment changed: clear scheduled companion tasks, player={}, fromId={}, toId={}", serverPlayer.getName().getString(), fromUuid, toUuid);
-                CompanionEntryScheduler.DELAY_TASKS.clearFor(serverPlayer);
-                CompanionEntryScheduler.TELEPORT_TASKS.clearFor(serverPlayer);
-                CompanionEntryScheduler.UPDATE_POS_TASKS.clearFor(serverPlayer);
-            }
+            LOGGER.debug("Player equipment changed: clear scheduled companion tasks, player={}, fromId={}, toId={}", serverPlayer.getName().getString(), fromUuid, toUuid);
+            cancelTasksFor(serverPlayer);
         }
     }
 
@@ -129,9 +125,7 @@ public class PlayerEvents implements IEventHandler
     {
         if (event.getEntity() instanceof ServerPlayer serverPlayer)
         {
-            CompanionEntryScheduler.DELAY_TASKS.clearFor(serverPlayer);
-            CompanionEntryScheduler.TELEPORT_TASKS.clearFor(serverPlayer);
-            CompanionEntryScheduler.UPDATE_POS_TASKS.clearFor(serverPlayer);
+            cancelTasksFor(serverPlayer);
         }
     }
 
@@ -140,9 +134,7 @@ public class PlayerEvents implements IEventHandler
     {
         if (event.getEntity() instanceof ServerPlayer serverPlayer)
         {
-            CompanionEntryScheduler.DELAY_TASKS.clearFor(serverPlayer);
-            CompanionEntryScheduler.TELEPORT_TASKS.clearFor(serverPlayer);
-            CompanionEntryScheduler.UPDATE_POS_TASKS.clearFor(serverPlayer);
+            cancelTasksFor(serverPlayer);
         }
     }
 
@@ -151,9 +143,7 @@ public class PlayerEvents implements IEventHandler
     {
         if (event.getEntity() instanceof ServerPlayer serverPlayer)
         {
-            CompanionEntryScheduler.DELAY_TASKS.clearFor(serverPlayer);
-            CompanionEntryScheduler.TELEPORT_TASKS.clearFor(serverPlayer);
-            CompanionEntryScheduler.UPDATE_POS_TASKS.clearFor(serverPlayer);
+            cancelTasksFor(serverPlayer);
         }
     }
 
@@ -162,9 +152,7 @@ public class PlayerEvents implements IEventHandler
     {
         if (event.getEntity() instanceof ServerPlayer serverPlayer)
         {
-            CompanionEntryScheduler.DELAY_TASKS.clearFor(serverPlayer);
-            CompanionEntryScheduler.TELEPORT_TASKS.clearFor(serverPlayer);
-            CompanionEntryScheduler.UPDATE_POS_TASKS.clearFor(serverPlayer);
+            cancelTasksFor(serverPlayer);
         }
     }
 
@@ -173,9 +161,15 @@ public class PlayerEvents implements IEventHandler
     {
         if (event.getEntity() instanceof ServerPlayer serverPlayer)
         {
-            CompanionEntryScheduler.DELAY_TASKS.clearFor(serverPlayer);
-            CompanionEntryScheduler.TELEPORT_TASKS.clearFor(serverPlayer);
-            CompanionEntryScheduler.UPDATE_POS_TASKS.clearFor(serverPlayer);
+            cancelTasksFor(serverPlayer);
         }
+    }
+
+    private static void cancelTasksFor(ServerPlayer player)
+    {
+        CompanionEntryScheduler.DELAY_TASKS.clearFor(player);
+        CompanionEntryScheduler.TELEPORT_TASKS.clearFor(player);
+        CompanionEntryScheduler.UPDATE_POS_TASKS.clearFor(player);
+        player.sendOverlayMessage(Component.translatable("message.callofcompanions.summon_cancelled"));
     }
 }

@@ -24,6 +24,7 @@
   "message.callofcompanions.not_enough_xp": "Недостаточно опыта для призыва.",
   "message.callofcompanions.limit_reached": "Нельзя привязать больше животных к этому кристаллу.",
   "message.callofcompanions.companions_updated": "Связь с животными обновлена.",
+  "message.callofcompanions.summon_cancelled": "Призыв прерван.",
 
   "description.press_shift": "§7Удерживайте §9Shift§7 для подробностей..."
 }
