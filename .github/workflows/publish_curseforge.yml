@@ -1,0 +1,269 @@
+name: Publish to CurseForge
+
+on:
+  workflow_run:
+    workflows: ["Build NeoForge Mod"]
+    types:
+      - completed
+
+jobs:
+  publish:
+    if: |
+      github.event.workflow_run.conclusion == 'success' &&
+      (startsWith(github.event.workflow_run.head_branch, 'Neo/1.21.') ||
+       startsWith(github.event.workflow_run.head_branch, 'Neo/26.'))
+    runs-on: ubuntu-latest
+    env:
+      CURSEFORGE_TOKEN: ${{ secrets.CURSEFORGE_TOKEN }}
+      CF_PROJECT_ID: 1256300
+      COMMON_TAGS: "Server|Client"
+      MOD_LOADER: "NeoForge"
+
+    steps:
+      - name: Detect triggering branch
+        run: |
+          BRANCH="${{ github.event.workflow_run.head_branch }}"
+          echo "TRIGGER_BRANCH=$BRANCH" >> $GITHUB_ENV
+
+          if [[ "$BRANCH" == Neo/1.21.* ]]; then
+            echo "TARGET=1.21" >> $GITHUB_ENV
+          elif [[ "$BRANCH" == Neo/26.* ]]; then
+            echo "TARGET=26" >> $GITHUB_ENV
+          else
+            echo "Unknown branch $BRANCH → skip"
+          fi
+    
+      - name: Checkout CI branch
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.workflow_run.head_branch }}
+
+      - name: Install jq
+        run: |
+          if ! command -v jq >/dev/null; then
+            sudo apt-get update
+            sudo apt-get install -y --no-install-recommends jq
+          fi
+      # Сборка мода прямо в CD
+      - name: Set up Java 21
+        if: env.TARGET == '1.21'
+        uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: 21
+
+      - name: Set up Java 25
+        if: env.TARGET == '26'
+        uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: 25
+
+      - name: Grant execute permission for gradlew
+        run: chmod +x gradlew
+
+      - name: Build mod
+        run: ./gradlew clean build
+          
+      - name: Determine JAR, version and release type
+        run: |
+          JAR_FILE=$(
+            ls ./build/libs/*.jar 2>/dev/null \
+            | grep -Ev '(sources|javadoc)' \
+            | sort -V \
+            | tail -n1
+          )
+          if [ -z "$JAR_FILE" ]; then
+            echo "JAR file not found!"
+            exit 1
+          fi
+          FILENAME=$(basename "$JAR_FILE")
+          echo "FILENAME=$FILENAME" >> "$GITHUB_ENV"
+          GAME_VERSION=$(echo "$FILENAME" | cut -d'-' -f2)
+          VERSION_PART=$(echo "$FILENAME" | sed -E 's/^[^-]*-[^-]*-(.*)\.jar$/\1/')
+          
+          # Определяем JAVA_VERSION
+          if [[ "$TARGET" == 1.21 ]]; then
+            JAVA_VERSION="Java 21"
+          elif [[ "$TARGET" == 26 ]]; then
+            JAVA_VERSION="Java 25"
+          else
+            echo "Unsupported TARGET: $TARGET"
+            exit 1
+          fi
+
+          echo "JAVA_VERSION=$JAVA_VERSION" >> "$GITHUB_ENV"
+          
+          if [[ "$VERSION_PART" =~ ^([0-9]+\.[0-9]+\.[0-9]+)(-(beta|alpha))?$ ]]; then
+            MOD_VERSION="${BASH_REMATCH[1]}"
+            SUFFIX="${BASH_REMATCH[2]:-}"
+            echo "Suffix: $SUFFIX"
+          else
+            echo "Unrecognized version format '$VERSION_PART' → skipping publish"
+            echo "PUBLISH=false" >> $GITHUB_ENV
+            exit 0
+          fi
+          
+          # А дальше case только для известных, остальные → skip
+          case "$SUFFIX" in
+            "")     
+              RELEASE_TYPE="release"
+              SUFFIX_FOR_VERSION=""
+              echo "Recognized as: release"
+              ;;
+            "-beta") 
+              RELEASE_TYPE="beta"
+              SUFFIX_FOR_VERSION="-beta"
+              echo "Recognized as: beta"
+              ;;
+            "-alpha")
+              RELEASE_TYPE="alpha"
+              SUFFIX_FOR_VERSION="-alpha"
+              echo "Recognized as: alpha"
+              ;;
+            *)
+              echo "Unknown version suffix '$SUFFIX' in $FILENAME → skipping publish"
+              echo "PUBLISH=false" >> $GITHUB_ENV
+              exit 0
+              ;;
+          esac
+          
+          echo "GAME_VERSION=$GAME_VERSION" >> $GITHUB_ENV
+          echo "MOD_VERSION=$MOD_VERSION" >> $GITHUB_ENV
+          echo "RELEASE_TYPE=$RELEASE_TYPE" >> $GITHUB_ENV
+          echo "FULL_VERSION=${MOD_VERSION}${SUFFIX_FOR_VERSION}" >> $GITHUB_ENV
+          echo "JAR_FILE=$JAR_FILE" >> $GITHUB_ENV
+          echo "PUBLISH=true" >> $GITHUB_ENV  # по умолчанию true, дальше проверим
+          
+      - name: Get all version IDs
+        if: env.PUBLISH == 'true'
+        run: |
+          # разбиваем env.COMMON_TAGS по |
+          IFS='|' read -r -a TAG_ARRAY <<< "$COMMON_TAGS"
+          
+          # добавляем JAVA_VERSION в массив
+          TAG_ARRAY+=("$JAVA_VERSION")
+
+          echo "All tags to process: ${TAG_ARRAY[@]}"
+
+          # получаем полный список версий из CurseForge API
+          RESPONSE=$(curl -s -X GET https://minecraft.curseforge.com/api/game/versions \
+            -H "Accept: application/json" \
+            -H "X-Api-Token: $CURSEFORGE_TOKEN" \
+            -H "User-Agent: GitHub-Actions"
+          )
+          echo "$RESPONSE" > response.json
+
+          # --- получаем ID для MOD_LOADER отдельно ---
+          MOD_LOADER_ID=$(jq -r --arg t "$MOD_LOADER" '
+            .[] | select(.name == $t or .slug == ($t | gsub("\\.";"-"))) | .id // empty
+          ' response.json | head -n1)
+
+          if [ -z "$MOD_LOADER_ID" ]; then
+            echo "ERROR: MOD_LOADER ID for '$MOD_LOADER' not found!"
+            exit 1
+          else
+            echo "MOD_LOADER_ID=$MOD_LOADER_ID" >> $GITHUB_ENV
+            echo "Found MOD_LOADER_ID: $MOD_LOADER_ID"
+          fi
+
+          # --- создаём массив ID для остальных тегов ---
+          GAME_VERSION_IDS=($MOD_LOADER_ID)
+          # добавляем версию игры в начало массива
+          TAG_ARRAY=("$GAME_VERSION" "${TAG_ARRAY[@]}")
+
+          for TAG in "${TAG_ARRAY[@]}"; do
+            ID=$(jq -r --arg t "$TAG" '
+              .[] | select(.name == $t or .slug == ($t | gsub("\\.";"-"))) | .id // empty
+            ' response.json | head -n1)
+            if [ -z "$ID" ]; then
+              echo "ID for tag '$TAG' not found!"
+            else
+              GAME_VERSION_IDS+=("$ID")
+              echo "Found ID $ID for tag '$TAG'"
+            fi
+          done
+
+          # формируем JSON-массив для metadata
+          GAME_VERSION_IDS_JSON=$(printf '%s\n' "${GAME_VERSION_IDS[@]}" | jq -s -c 'map(tonumber)')
+          echo "GAME_VERSION_IDS_JSON=$GAME_VERSION_IDS_JSON" >> $GITHUB_ENV
+          echo "All version IDs: $GAME_VERSION_IDS_JSON"
+
+      #- name: Check if version already exists on CurseForge
+      #  if: env.PUBLISH == 'true'
+      #  run: |
+          #RESPONSE=$(curl -s \
+          #  -H "X-Api-Key: $CURSEFORGE_TOKEN" \
+          #  -H "Accept: application/json" \
+          #  "https://api.curseforge.com/v1/mods/$CF_PROJECT_ID/files"
+          #)
+
+          # --- выводим в лог ключевые поля всех файлов для дебага ---
+          #echo "=== DEBUG: Files on CurseForge ==="
+          #echo "$RESPONSE" | jq '.data[] | {id, displayName, gameVersions, gameVersionTypeIds}'
+
+          # --- проверяем существование ---
+          #EXISTS=$(echo "$RESPONSE" | jq -r \
+          #  --arg disp "${FULL_VERSION}" \
+          #  --arg loader_id "$MOD_LOADER_ID" '
+          #  .data[]
+          #  | select(.displayName == $disp)
+          #  | select(.gameVersionTypeIds | map(tostring) | index($loader_id))
+          #  | .id // empty
+          #')
+
+          #if [ -n "$EXISTS" ]; then
+          #  echo "Version ${FULL_VERSION} for ${GAME_VERSION} with loader $MOD_LOADER already exists → skipping"
+          #  echo "PUBLISH=false" >> $GITHUB_ENV
+          #else
+          #  echo "Version ${FULL_VERSION} for ${GAME_VERSION} with loader $MOD_LOADER does not exist → publish"
+          #fi
+          
+      - name: Read changelog section
+        if: env.PUBLISH == 'true'
+        run: |
+          if [ -f changelog.md ]; then
+            {
+              echo "CHANGELOG<<EOF"
+              awk '
+                /^## 📦 Version / {
+                  if (!f) { f=1 }
+                  else { exit }
+                }
+                f
+              ' changelog.md
+              echo "EOF"
+            } >> $GITHUB_ENV
+          else
+            echo "CHANGELOG=No changelog provided" >> $GITHUB_ENV
+          fi
+          
+      - name: Publish to CurseForge
+        if: env.PUBLISH == 'true'
+        run: |
+          METADATA=$(jq -nc \
+            --arg changelog "$CHANGELOG" \
+            --arg changelogType "markdown" \
+            --arg displayName "$FILENAME" \
+            --arg releaseType "$RELEASE_TYPE" \
+            --argjson gameVersions "$GAME_VERSION_IDS_JSON" \
+            '{
+              changelog: $changelog,
+              changelogType: $changelogType,
+              displayName: $displayName,
+              releaseType: $releaseType,
+              gameVersions: $gameVersions,
+              isMarkedForManualRelease: false
+            }' | jq -c .) # -c делает JSON в одну строку
+            
+          echo "=== METADATA preview ==="
+          echo "$METADATA"
+          echo "======================="
+          curl -X POST "https://minecraft.curseforge.com/api/projects/$CF_PROJECT_ID/upload-file" \
+            -H "X-Api-Token: $CURSEFORGE_TOKEN" \
+            --form-string "metadata=$METADATA" \
+            -F "file=@$JAR_FILE" \
+            --fail-with-body \
+            --retry 3 \
+            --retry-delay 5 \
+            --retry-all-errors
