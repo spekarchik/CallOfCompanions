@@ -232,7 +232,7 @@ public class CallCrystal extends ModItem implements ITooltipProvider
 
     protected int crystalCooldown()
     {
-        return 600;
+        return Config.CRYSTAL_COOLDOWN.getAsInt();
     }
 
     protected float callDelayFactor()

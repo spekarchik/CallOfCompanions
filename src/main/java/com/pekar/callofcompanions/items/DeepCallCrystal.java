@@ -13,7 +13,7 @@ public class DeepCallCrystal extends CallCrystal implements ITooltipProvider
     @Override
     protected int crystalCooldown()
     {
-        return 400;
+        return Config.DEEP_CRYSTAL_COOLDOWN.getAsInt();
     }
 
     @Override

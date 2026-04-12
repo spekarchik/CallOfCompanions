@@ -38,6 +38,18 @@ public class Config
             .comment("Number of companions a Deep Call Crystal can store.")
             .defineInRange("deep_crystal_data_capacity", 8, 1, 32);
 
+    // Cooldown (in ticks) applied to using a normal Call Crystal.
+    // Default 600 ticks (30 seconds). Range: 0 = no cooldown .. 72000 (1 hour)
+    public static final ModConfigSpec.IntValue CRYSTAL_COOLDOWN = BUILDER
+            .comment("Cooldown in ticks for using a Call Crystal. 20 ticks = 1 second")
+            .defineInRange("crystal_cooldown_ticks", 600, 0, 72000);
+
+    // Cooldown (in ticks) applied to using a Deep Call Crystal.
+    // Default 400 ticks (20 seconds). Range: 0 = no cooldown .. 72000 (1 hour)
+    public static final ModConfigSpec.IntValue DEEP_CRYSTAL_COOLDOWN = BUILDER
+            .comment("Cooldown in ticks for using a Deep Call Crystal. 20 ticks = 1 second")
+            .defineInRange("deep_crystal_cooldown_ticks", 400, 0, 72000);
+
     // When true, Deep Call Crystal will NOT allow adding untamed animals (even if they are named).
     // Default is false to preserve previous behavior. Set to true to restrict Deep Call Crystals to tamed animals only.
     public static final ModConfigSpec.BooleanValue DEEP_CRYSTAL_DISALLOW_UNTAMED = BUILDER
