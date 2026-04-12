@@ -8,10 +8,11 @@ import net.minecraft.core.registries.Registries;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.world.level.Level;
 
-import java.util.UUID;
 import java.util.Objects;
+import java.util.Optional;
+import java.util.UUID;
 
-public record CompanionEntry(UUID uuid, String name, String type, ResourceKey<Level> dimension, BlockPos pos, PositionStatus positionStatus, UUID ownerUuid, String ownerName)
+public record CompanionEntry(UUID uuid, String name, String type, ResourceKey<Level> dimension, BlockPos pos, PositionStatus positionStatus, Optional<UUID> ownerUuid, Optional<String> ownerName)
 {
     public static final Codec<CompanionEntry> ENTRY_CODEC = RecordCodecBuilder.create(instance ->
             instance.group(
@@ -21,8 +22,8 @@ public record CompanionEntry(UUID uuid, String name, String type, ResourceKey<Le
                     ResourceKey.codec(Registries.DIMENSION).fieldOf("dimension").forGetter(CompanionEntry::dimension),
                     BlockPos.CODEC.fieldOf("pos").forGetter(CompanionEntry::pos),
                     Codec.STRING.xmap(PositionStatus::valueOf, PositionStatus::name).fieldOf("positionStatus").forGetter(CompanionEntry::positionStatus),
-                    UUIDUtil.CODEC.fieldOf("ownerUuid").forGetter(CompanionEntry::ownerUuid),
-                    Codec.STRING.fieldOf("ownerName").forGetter(CompanionEntry::ownerName)
+                    UUIDUtil.CODEC.optionalFieldOf("ownerUuid").forGetter(CompanionEntry::ownerUuid),
+                    Codec.STRING.optionalFieldOf("ownerName").forGetter(CompanionEntry::ownerName)
                     ).apply(instance, CompanionEntry::new)
     );
 

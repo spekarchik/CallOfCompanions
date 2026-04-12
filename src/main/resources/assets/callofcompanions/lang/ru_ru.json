@@ -14,6 +14,7 @@
   "item.callofcompanions.call_crystal.desc4": "Привязывает прирученных спутников",
 
   "item.callofcompanions.deep_call_crystal": "Глубинный кристалл зова",
+  "item.callofcompanions.deep_call_crystal.desc0": "нет",
   "item.callofcompanions.deep_call_crystal.desc1": "{} (Хозяин: {}) {}",
   "item.callofcompanions.deep_call_crystal.desc2": "Животные: {}/8",
   "item.callofcompanions.deep_call_crystal.desc3": "Не откликнулись: {}",

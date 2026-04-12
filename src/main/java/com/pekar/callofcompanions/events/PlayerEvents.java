@@ -14,6 +14,7 @@ import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.EquipmentSlot;
+import net.minecraft.world.entity.OwnableEntity;
 import net.minecraft.world.entity.TamableAnimal;
 import net.minecraft.world.entity.animal.Animal;
 import net.minecraft.world.entity.animal.equine.AbstractHorse;
@@ -27,6 +28,7 @@ import net.neoforged.neoforge.event.entity.player.PlayerEvent;
 import net.neoforged.neoforge.event.entity.player.PlayerInteractEvent;
 import org.slf4j.Logger;
 
+import java.util.Optional;
 import java.util.UUID;
 
 public class PlayerEvents implements IEventHandler
@@ -58,6 +60,10 @@ public class PlayerEvents implements IEventHandler
 
                 var name = target.getDisplayName().getString();
                 var companionType = target.getType().getDescription().getString();
+                var owner = target instanceof OwnableEntity ownable ? ownable.getOwner() : null;
+                Optional<UUID> ownerId = owner != null ? Optional.of(owner.getUUID()) : Optional.empty();
+                Optional<String> ownerName = owner != null ? Optional.of(owner.getDisplayName().getString()) : Optional.empty();
+
                 var entry = new CompanionEntry(
                         target.getUUID(),
                         name,
@@ -65,8 +71,8 @@ public class PlayerEvents implements IEventHandler
                         target.level().dimension(),
                         target.blockPosition(),
                         PositionStatus.FRESH,
-                        player.getUUID(),
-                        player.getDisplayName().getString());
+                        ownerId,
+                        ownerName);
 
                 var result = companionData.add(entry);
                 if (result)

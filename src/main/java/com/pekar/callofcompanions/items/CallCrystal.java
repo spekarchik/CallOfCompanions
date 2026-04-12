@@ -252,9 +252,12 @@ public class CallCrystal extends ModItem implements ITooltipProvider
         {
             var name = AnimalSummonController.buildAnimalName(companion.type(), companion.name());
             var status = companion.positionStatus() == PositionStatus.LOST ? "" : "✓";
+            var ownerName = companion.ownerName().isPresent()
+                    ? companion.ownerName().get()
+                    : Component.translatable("item.callofcompanions.deep_call_crystal.desc0").getString();
 
             tooltip.addLine(getDescriptionId(), 1)
-                    .fillWith(name, companion.ownerName(), status)
+                    .fillWith(name, ownerName, status)
                     .styledAs(TextStyle.DarkGray, companion.positionStatus() == PositionStatus.LOST)
                     .apply();
         }
