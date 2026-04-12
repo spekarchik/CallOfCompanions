@@ -109,23 +109,7 @@ public class CallCrystal extends ModItem implements ITooltipProvider
         var clickPos = context.getClickedPos();
         if (!AnimalSummonController.isSafeForDestPoint(level, clickPos.above())) return InteractionResult.FAIL;
 
-        if (Config.CONSUME_XP_ON_CALL.isTrue())
-        {
-            int levelsToConsume = Config.XP_LEVELS_TO_CONSUME.getAsInt();
-
-            if (player.experienceLevel < levelsToConsume)
-            {
-                if (player instanceof ServerPlayer serverPlayer)
-                    serverPlayer.sendOverlayMessage(Component.translatable("message.callofcompanions.not_enough_xp"));
-
-                return InteractionResult.FAIL;
-            }
-
-            if (player instanceof ServerPlayer serverPlayer && !serverPlayer.isCreative())
-            {
-                serverPlayer.giveExperienceLevels(-levelsToConsume);
-            }
-        }
+        if (!consumeXp(player)) return InteractionResult.FAIL;
 
         player.getCooldowns().addCooldown(stack, crystalCooldown());
 
@@ -139,23 +123,7 @@ public class CallCrystal extends ModItem implements ITooltipProvider
             playSummonSound(serverLevel, player.blockPosition());
             showSummonParticles(serverLevel, clickPos);
 
-            var taskEndListener = new TaskEndListener()
-            {
-                @Override
-                public void onAllTasksEnd()
-                {
-                    for (var itemStack : serverPlayer.getInventory().getNonEquipmentItems())
-                    {
-                        if (!CallCrystalHelper.hasSameId(itemStack, crystalId)) continue;
-
-                        itemStack.set(DataComponents.ENCHANTMENT_GLINT_OVERRIDE, false);
-                        saveStackChanges(serverPlayer, itemStack, crystalId, companionData);
-                        break;
-                    }
-                }
-            };
-
-            CompanionEntryScheduler.listen(serverPlayer, taskEndListener);
+            ScheduleSaveDataOnTasksEnd(serverPlayer, crystalId, companionData);
 
             var companionList = companionData.companions();
             var iterator = companionList.iterator();
@@ -189,6 +157,50 @@ public class CallCrystal extends ModItem implements ITooltipProvider
         }
 
         return sidedSuccess(player.level().isClientSide());
+    }
+
+    private static boolean consumeXp(Player player)
+    {
+        if (Config.CONSUME_XP_ON_CALL.isTrue())
+        {
+            int levelsToConsume = Config.XP_LEVELS_TO_CONSUME.getAsInt();
+
+            if (player.experienceLevel < levelsToConsume)
+            {
+                if (player instanceof ServerPlayer serverPlayer)
+                    serverPlayer.sendOverlayMessage(Component.translatable("message.callofcompanions.not_enough_xp"));
+
+                return false;
+            }
+
+            if (player instanceof ServerPlayer serverPlayer && !serverPlayer.isCreative())
+            {
+                serverPlayer.giveExperienceLevels(-levelsToConsume);
+            }
+        }
+
+        return true;
+    }
+
+    private void ScheduleSaveDataOnTasksEnd(ServerPlayer serverPlayer, UUID crystalId, CompanionData companionData)
+    {
+        var taskEndListener = new TaskEndListener()
+        {
+            @Override
+            public void onAllTasksEnd()
+            {
+                for (var itemStack : serverPlayer.getInventory().getNonEquipmentItems())
+                {
+                    if (!CallCrystalHelper.hasSameId(itemStack, crystalId)) continue;
+
+                    itemStack.set(DataComponents.ENCHANTMENT_GLINT_OVERRIDE, false);
+                    saveStackChanges(serverPlayer, itemStack, crystalId, companionData);
+                    break;
+                }
+            }
+        };
+
+        CompanionEntryScheduler.listen(serverPlayer, taskEndListener);
     }
 
     private void saveStackChanges(ServerPlayer serverPlayer, ItemStack stack, UUID crystalId, CompanionData companionData)
