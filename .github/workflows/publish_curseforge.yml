@@ -15,7 +15,7 @@ jobs:
     runs-on: ubuntu-latest
     env:
       CURSEFORGE_TOKEN: ${{ secrets.CURSEFORGE_TOKEN }}
-      CF_PROJECT_ID: 1256300
+      CF_PROJECT_ID: 1512616
       COMMON_TAGS: "Server|Client"
       MOD_LOADER: "NeoForge"
 

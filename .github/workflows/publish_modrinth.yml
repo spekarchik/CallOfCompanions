@@ -15,7 +15,7 @@ jobs:
     runs-on: ubuntu-latest
     env:
       MODRINTH_TOKEN: ${{ secrets.MODRINTH_TOKEN }}
-      MODRINTH_PROJECT_ID: Bdj9JvCV
+      MODRINTH_PROJECT_ID: yI0zavyn
       MOD_LOADER: neoforge
     steps:
       - name: Detect triggering branch
