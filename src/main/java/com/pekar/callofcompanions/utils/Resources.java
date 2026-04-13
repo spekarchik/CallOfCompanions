@@ -1,6 +1,7 @@
 package com.pekar.callofcompanions.utils;
 
-import net.minecraft.resources.Identifier;
+
+import net.minecraft.resources.ResourceLocation;
 
 public class Resources
 {
@@ -9,8 +10,8 @@ public class Resources
 
     }
 
-    public static Identifier createResourceLocation(String namespace, String name)
+    public static ResourceLocation createResourceLocation(String namespace, String name)
     {
-        return Identifier.fromNamespaceAndPath(namespace, name); //was: new ResourceLocation(name),
+        return ResourceLocation.fromNamespaceAndPath(namespace, name); //was: new ResourceLocation(name),
     }
 }
