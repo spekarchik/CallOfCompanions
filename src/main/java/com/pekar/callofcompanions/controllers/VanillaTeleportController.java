@@ -39,7 +39,7 @@ class VanillaTeleportController extends LoadedAnimalSummonController
                     LOGGER.debug("Vanilla teleport completing: companionType={}, companionId={}", entry.type(), entry.uuid());
                     if (animal.distanceToSqr(player) > 12 * 12)
                     {
-                        tryTeleportAnimalTo(level, animal.getUUID(), teleportPos);
+                        tryTeleportAnimalTo(level, animal.getUUID(), teleportPos, true);
                     }
                     setGoal(animal, player);
                     playTeleportSound(level, animal);

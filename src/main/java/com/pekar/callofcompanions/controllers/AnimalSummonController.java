@@ -6,16 +6,17 @@ import com.pekar.callofcompanions.data.CompanionEntry;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.core.particles.SimpleParticleType;
+import net.minecraft.nbt.CompoundTag;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.sounds.SoundEvent;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
+import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.TamableAnimal;
 import net.minecraft.world.entity.animal.Animal;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.level.Level;
 import net.minecraft.world.level.levelgen.Heightmap;
 import org.slf4j.Logger;
 
@@ -83,7 +84,7 @@ public abstract class AnimalSummonController
         );
     }
 
-    protected boolean tryTeleportAnimalTo(ServerLevel level, UUID uuid, BlockPos pos)
+    protected boolean tryTeleportAnimalTo(ServerLevel level, UUID uuid, BlockPos pos, boolean recreate)
     {
         var entity = level.getEntity(uuid);
         LOGGER.debug("Teleport attempt started: entityId={}, loaded={}", uuid, entity != null);
@@ -91,11 +92,34 @@ public abstract class AnimalSummonController
         {
             orderToStand(animal);
             BlockPos randomPos = getRandomPos(pos.above());
-            animal.teleportTo(randomPos.getX() + 0.5, randomPos.getY(), randomPos.getZ() + 0.5);
+            var x = randomPos.getX() + 0.5;
+            var y = randomPos.getY();
+            var z = randomPos.getZ() + 0.5;
+            animal.teleportTo(x, y, z);
+            if (recreate)
+                recreateAnimal(level, animal, x, y, z);
+
             return true;
         }
 
         return false;
+    }
+
+    private void recreateAnimal(ServerLevel level, Animal oldAnimal, double x, double y, double z)
+    {
+        var entityType = oldAnimal.getType();
+        var tag = new CompoundTag();
+        oldAnimal.saveWithoutId(tag);
+        oldAnimal.remove(Entity.RemovalReason.DISCARDED);
+
+        var entity = entityType.create(level);
+        if (entity instanceof Animal newAnimal)
+        {
+            newAnimal.load(tag);
+            newAnimal.moveTo(x, y, z, oldAnimal.getYRot(), oldAnimal.getXRot());
+
+            level.addFreshEntity(newAnimal);
+        }
     }
 
     private BlockPos getRandomPos(BlockPos pos)

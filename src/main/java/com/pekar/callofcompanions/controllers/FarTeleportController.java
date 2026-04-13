@@ -96,7 +96,7 @@ class FarTeleportController extends AnimalSummonController
                         return;
                     }
 
-                    var result = tryTeleportAnimalTo(level, entry.uuid(), teleportPos);
+                    var result = tryTeleportAnimalTo(level, entry.uuid(), teleportPos, true);
                     if (result)
                     {
                         showParticles(level, teleportPos, ParticleTypes.PORTAL);

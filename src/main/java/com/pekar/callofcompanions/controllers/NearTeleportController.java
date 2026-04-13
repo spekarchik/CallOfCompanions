@@ -33,7 +33,7 @@ class NearTeleportController extends LoadedAnimalSummonController
                     return false;
                 },
                 entry -> {
-                    boolean teleported = tryTeleportAnimalTo(level, entry.uuid(), teleportPos);
+                    boolean teleported = tryTeleportAnimalTo(level, entry.uuid(), teleportPos, false);
                     if (teleported)
                     {
                         playTeleportSound(level, animal);
