@@ -72,7 +72,7 @@ public class CallCrystalHelper
         var above = level.getBlockState(pos.above());
         var above2 = level.getBlockState(pos.above(2));
 
-        return below.isSolidRender() &&
+        return below.isSolidRender(level, pos.below()) &&
                 !below.is(BlockTags.FIRE) &&
                 !below.is(Blocks.LAVA) &&
                 at.isAir() &&                    // body
@@ -86,7 +86,7 @@ public class CallCrystalHelper
         var above = level.getBlockState(pos.above());
         var above2 = level.getBlockState(pos.above(2));
 
-        return below.isSolidRender() &&
+        return below.isSolidRender(level, pos.below()) &&
                 !below.is(BlockTags.FIRE) &&
                 !below.is(Blocks.LAVA) &&
                 isAirOrWater(at) &&                    // body

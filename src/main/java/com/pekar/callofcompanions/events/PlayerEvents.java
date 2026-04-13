@@ -90,7 +90,7 @@ public class PlayerEvents implements IEventHandler
                         itemStack.set(DataRegistry.COMPANIONS, companionData.copy());
 
                         event.setCanceled(true);
-                        event.setCancellationResult(event.getSide() == LogicalSide.CLIENT ? InteractionResult.SUCCESS : InteractionResult.SUCCESS_SERVER);
+                        event.setCancellationResult(InteractionResult.sidedSuccess(event.getSide() == LogicalSide.CLIENT));
                         return;
                     }
                     else if (player instanceof ServerPlayer serverPlayer)

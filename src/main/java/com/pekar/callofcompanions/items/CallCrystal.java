@@ -26,6 +26,7 @@ import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
+import net.minecraft.world.InteractionResultHolder;
 import net.minecraft.world.entity.animal.Animal;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
@@ -54,15 +55,15 @@ public class CallCrystal extends ModItem implements ITooltipProvider
     }
 
     @Override
-    public InteractionResult use(Level level, Player player, InteractionHand hand)
+    public InteractionResultHolder<ItemStack> use(Level level, Player player, InteractionHand hand)
     {
-        if (hand != InteractionHand.MAIN_HAND) return InteractionResult.FAIL;
-
         var stack = player.getItemInHand(hand);
+        if (hand != InteractionHand.MAIN_HAND) return InteractionResultHolder.fail(stack);
+
         var companionData = stack.get(DataRegistry.COMPANIONS);
-        if (companionData == null || companionData.companions().isEmpty()) return InteractionResult.FAIL;
+        if (companionData == null || companionData.companions().isEmpty()) return InteractionResultHolder.fail(stack);
         var crystalId = stack.get(DataRegistry.CRYSTAL_ID);
-        if (crystalId == null) return InteractionResult.FAIL;
+        if (crystalId == null) return InteractionResultHolder.fail(stack);
 
         if (level instanceof ServerLevel serverLevel && player instanceof ServerPlayer serverPlayer)
         {
@@ -85,7 +86,7 @@ public class CallCrystal extends ModItem implements ITooltipProvider
             }
         }
 
-        return sidedSuccess(level.isClientSide());
+        return InteractionResultHolder.sidedSuccess(stack, level.isClientSide());
     }
 
     @Override
@@ -100,7 +101,7 @@ public class CallCrystal extends ModItem implements ITooltipProvider
         var crystalId = stack.get(DataRegistry.CRYSTAL_ID);
         if (crystalId == null) return InteractionResult.FAIL;
 
-        if (context.getClickedFace() != Direction.UP || player.getCooldowns().isOnCooldown(stack)) return InteractionResult.FAIL;
+        if (context.getClickedFace() != Direction.UP || player.getCooldowns().isOnCooldown(stack.getItem())) return InteractionResult.FAIL;
 
         var level = context.getLevel();
         var clickPos = context.getClickedPos();
@@ -108,7 +109,7 @@ public class CallCrystal extends ModItem implements ITooltipProvider
 
         if (!consumeXp(player)) return InteractionResult.FAIL;
 
-        player.getCooldowns().addCooldown(stack, crystalCooldown());
+        player.getCooldowns().addCooldown(stack.getItem(), crystalCooldown());
 
         var companionData = savedCompanionData.copy();
 

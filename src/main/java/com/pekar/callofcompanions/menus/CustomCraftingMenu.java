@@ -27,7 +27,8 @@ public class CustomCraftingMenu extends CraftingMenu
     {
         super.slotsChanged(inventory);
 
-        var result = resultSlots.getItem(0);
+        var resultSlot = getSlot(getResultSlotIndex());
+        var result = resultSlot.getItem();
 
         if (!result.isEmpty() && result.is(ItemRegistry.DEEP_CALL_CRYSTAL))
         {
@@ -45,7 +46,7 @@ public class CustomCraftingMenu extends CraftingMenu
                         result.set(DataRegistry.COMPANIONS, companionData.copyWithCapacity((short) Config.DEEP_CRYSTAL_DATA_CAPACITY.getAsInt()));
 
                         // write back the modified result stack
-                        resultSlots.setItem(0, result);
+                        resultSlot.set(result);
                     }
 
                     break;
