@@ -31,7 +31,7 @@ public class SaveCompanionsPacket extends ServerToClientPacket
     public void onReceive(IPayloadContext context)
     {
         var player = context.player();
-        for (var itemStack : player.getInventory().getNonEquipmentItems())
+        for (var itemStack : player.getInventory().items)
         {
             if (!CallCrystalHelper.hasSameId(itemStack, crystalId)) continue;
 

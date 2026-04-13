@@ -83,7 +83,7 @@ public abstract class AnimalSummonController
         );
     }
 
-    protected boolean tryTeleportAnimalTo(Level level, UUID uuid, BlockPos pos)
+    protected boolean tryTeleportAnimalTo(ServerLevel level, UUID uuid, BlockPos pos)
     {
         var entity = level.getEntity(uuid);
         LOGGER.debug("Teleport attempt started: entityId={}, loaded={}", uuid, entity != null);

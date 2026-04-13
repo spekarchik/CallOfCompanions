@@ -30,11 +30,11 @@ import net.minecraft.world.entity.animal.Animal;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.TooltipFlag;
-import net.minecraft.world.item.component.TooltipDisplay;
 import net.minecraft.world.item.context.UseOnContext;
 import net.minecraft.world.level.Level;
 import org.slf4j.Logger;
 
+import java.util.List;
 import java.util.UUID;
 import java.util.function.Consumer;
 
@@ -112,11 +112,10 @@ public class CallCrystal extends ModItem implements ITooltipProvider
 
         var companionData = savedCompanionData.copy();
 
-        if (player instanceof ServerPlayer serverPlayer)
+        if (player instanceof ServerPlayer serverPlayer && level instanceof ServerLevel serverLevel)
         {
             stack.set(DataComponents.ENCHANTMENT_GLINT_OVERRIDE, true);
 
-            var serverLevel = (ServerLevel) serverPlayer.level();
             playSummonSound(serverLevel, player.blockPosition());
             showSummonParticles(serverLevel, clickPos);
 
@@ -128,7 +127,7 @@ public class CallCrystal extends ModItem implements ITooltipProvider
             while (iterator.hasNext())
             {
                 var companionEntry = iterator.next();
-                var entity = level.getEntity(companionEntry.uuid());
+                var entity = serverLevel.getEntity(companionEntry.uuid());
                 Animal animal = entity instanceof Animal a ? a : null;
 
                 if (!CallCrystalHelper.canSummonAnimal(entity, player))
@@ -180,7 +179,7 @@ public class CallCrystal extends ModItem implements ITooltipProvider
             @Override
             public void onAllTasksEnd()
             {
-                for (var itemStack : serverPlayer.getInventory().getNonEquipmentItems())
+                for (var itemStack : serverPlayer.getInventory().items)
                 {
                     if (!CallCrystalHelper.hasSameId(itemStack, crystalId)) continue;
 
@@ -238,9 +237,9 @@ public class CallCrystal extends ModItem implements ITooltipProvider
     }
 
     @Override
-    public void appendHoverText(ItemStack itemStack, TooltipContext context, TooltipDisplay display, Consumer<Component> builder, TooltipFlag tooltipFlag)
+    public void appendHoverText(ItemStack stack, TooltipContext context, List<Component> tooltipComponents, TooltipFlag tooltipFlag)
     {
-        ITooltipProvider.appendHoverText(this, itemStack, context, display, builder, tooltipFlag);
+        ITooltipProvider.appendHoverText(this, stack, context, tooltipComponents, tooltipFlag);
     }
 
     @Override

@@ -9,10 +9,9 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.core.SectionPos;
 import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.network.chat.Component;
-import net.minecraft.server.level.TicketType;
+import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.entity.animal.Animal;
-import net.minecraft.world.level.ChunkPos;
-import net.minecraft.world.level.Level;
+import net.minecraft.world.level.chunk.status.ChunkStatus;
 import org.slf4j.Logger;
 
 import java.util.UUID;
@@ -63,8 +62,7 @@ class FarTeleportController extends AnimalSummonController
             return;
         }
 
-        var chunkPos = new ChunkPos(SectionPos.blockToSectionCoord(companionEntry.pos().getX()), SectionPos.blockToSectionCoord(companionEntry.pos().getZ()));
-        level.getChunkSource().addTicketWithRadius(TicketType.PORTAL, chunkPos, LOAD_CHUNK_RADIUS);
+        var chunk = level.getChunkSource().getChunk(SectionPos.blockToSectionCoord(companionEntry.pos().getX()), SectionPos.blockToSectionCoord(companionEntry.pos().getZ()), ChunkStatus.FULL, true);
 
         var task = new CompanionEntryTask(
                 100,
@@ -104,11 +102,9 @@ class FarTeleportController extends AnimalSummonController
                     }
 
                     CallCrystalHelper.updateCompanionPos(level, companionData, entry);
-                    level.getChunkSource().removeTicketWithRadius(TicketType.PORTAL, chunkPos, LOAD_CHUNK_RADIUS);
                 },
                 entry ->
                 {
-                    level.getChunkSource().removeTicketWithRadius(TicketType.PORTAL, chunkPos, LOAD_CHUNK_RADIUS);
                     playAnimalNotRespondSound(level, teleportPos);
                     showAnimalNotRespondParticles(level, teleportPos);
                     LOGGER.debug("Far teleport cancelled: companionType={}, companionId={}", companionEntry.type(), companionEntry.uuid());
@@ -118,7 +114,7 @@ class FarTeleportController extends AnimalSummonController
         LOGGER.debug("Far teleport task scheduled: companionType={}, companionId={}", companionEntry.type(), companionEntry.uuid());
     }
 
-    private boolean checkEntityLoaded(Level level, UUID uuid)
+    private boolean checkEntityLoaded(ServerLevel level, UUID uuid)
     {
         var entity = level.getEntity(uuid);
         return entity != null;

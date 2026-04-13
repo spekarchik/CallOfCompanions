@@ -48,8 +48,10 @@ public class CustomizationEvents implements IEventHandler
 
         if (result.is(ItemRegistry.DEEP_CALL_CRYSTAL) && result.get(DataRegistry.COMPANIONS) == null)
         {
-            for (var stack : event.getInventory())
+            var inventory = event.getInventory();
+            for (int i = 0; i < inventory.getContainerSize(); i++)
             {
+                var stack = event.getInventory().getItem(i);
                 if (stack.is(ItemRegistry.CALL_CRYSTAL))
                 {
                     var companionData = stack.get(DataRegistry.COMPANIONS);
