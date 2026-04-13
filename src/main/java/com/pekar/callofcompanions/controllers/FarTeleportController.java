@@ -62,7 +62,19 @@ class FarTeleportController extends AnimalSummonController
             return;
         }
 
-        var chunk = level.getChunkSource().getChunk(SectionPos.blockToSectionCoord(companionEntry.pos().getX()), SectionPos.blockToSectionCoord(companionEntry.pos().getZ()), ChunkStatus.FULL, true);
+        // Ensure the companion's chunk and neighbor chunks are loaded within the configured radius
+        int centerSectionX = SectionPos.blockToSectionCoord(companionEntry.pos().getX());
+        int centerSectionZ = SectionPos.blockToSectionCoord(companionEntry.pos().getZ());
+
+        for (int dx = -LOAD_CHUNK_RADIUS; dx <= LOAD_CHUNK_RADIUS; dx++)
+        {
+            for (int dz = -LOAD_CHUNK_RADIUS; dz <= LOAD_CHUNK_RADIUS; dz++)
+            {
+                level.getChunkSource().getChunk(centerSectionX + dx, centerSectionZ + dz, ChunkStatus.FULL, true);
+            }
+        }
+
+        level.getChunkSource().getChunk(centerSectionX, centerSectionZ, ChunkStatus.FULL, true);
 
         var task = new CompanionEntryTask(
                 100,
