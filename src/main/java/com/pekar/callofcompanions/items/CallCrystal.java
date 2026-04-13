@@ -155,7 +155,7 @@ public class CallCrystal extends ModItem implements ITooltipProvider
 
     private static boolean consumeXp(Player player)
     {
-        if (Config.CONSUME_XP_ON_CALL.isTrue())
+        if (Config.CONSUME_XP_ON_CALL.isTrue() && !player.isCreative())
         {
             int levelsToConsume = Config.XP_LEVELS_TO_CONSUME.getAsInt();
 
@@ -167,10 +167,7 @@ public class CallCrystal extends ModItem implements ITooltipProvider
                 return false;
             }
 
-            if (player instanceof ServerPlayer serverPlayer && !serverPlayer.isCreative())
-            {
-                serverPlayer.giveExperienceLevels(-levelsToConsume);
-            }
+            player.giveExperienceLevels(-levelsToConsume);
         }
 
         return true;
