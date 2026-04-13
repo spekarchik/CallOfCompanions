@@ -95,7 +95,7 @@ public class PlayerEvents implements IEventHandler
                     }
                     else if (player instanceof ServerPlayer serverPlayer)
                     {
-                        serverPlayer.sendOverlayMessage(Component.translatable("message.callofcompanions.limit_reached"));
+                        serverPlayer.sendSystemMessage(Component.translatable("message.callofcompanions.limit_reached"), true);
                     }
                 }
             }
@@ -179,7 +179,7 @@ public class PlayerEvents implements IEventHandler
     private static void cancelTasksFor(ServerPlayer player)
     {
         if (CompanionEntryScheduler.hasTasks(player))
-            player.sendOverlayMessage(Component.translatable("message.callofcompanions.summon_cancelled"));
+            player.sendSystemMessage(Component.translatable("message.callofcompanions.summon_cancelled"), true);
 
         CompanionEntryScheduler.DELAY_TASKS.clearFor(player);
         CompanionEntryScheduler.TELEPORT_TASKS.clearFor(player);

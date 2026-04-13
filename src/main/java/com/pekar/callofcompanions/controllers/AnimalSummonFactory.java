@@ -42,7 +42,7 @@ public class AnimalSummonFactory
         if (animal == null) return TeleportType.FAR_TELEPORT;
 
         var distanceSqr = serverPlayer.distanceToSqr(animal);
-        if (animal.is(EntityRegistry.ANIMALS_CAN_TELEPORT_TO_PLAYER) && distanceSqr > MIN_DIST_FOR_VANILLA_TELEPORT_SQR)
+        if (animal.getType().is(EntityRegistry.ANIMALS_CAN_TELEPORT_TO_PLAYER) && distanceSqr > MIN_DIST_FOR_VANILLA_TELEPORT_SQR)
             return TeleportType.VANILLA_TELEPORT;
 
         if (distanceSqr < MAX_DIST_FOR_GOAL_SQR) return TeleportType.FOLLOW_PLAYER;

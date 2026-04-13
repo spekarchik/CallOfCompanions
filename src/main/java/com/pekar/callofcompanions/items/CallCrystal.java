@@ -81,7 +81,7 @@ public class CallCrystal extends ModItem implements ITooltipProvider
             if (companionsUpdated)
             {
                 saveStackChanges(serverPlayer, stack, crystalId, companionData);
-                serverPlayer.sendOverlayMessage(Component.translatable("message.callofcompanions.companions_updated"));
+                serverPlayer.sendSystemMessage(Component.translatable("message.callofcompanions.companions_updated"), true);
             }
         }
 
@@ -162,7 +162,7 @@ public class CallCrystal extends ModItem implements ITooltipProvider
             if (player.experienceLevel < levelsToConsume)
             {
                 if (player instanceof ServerPlayer serverPlayer)
-                    serverPlayer.sendOverlayMessage(Component.translatable("message.callofcompanions.not_enough_xp"));
+                    serverPlayer.sendSystemMessage(Component.translatable("message.callofcompanions.not_enough_xp"), true);
 
                 return false;
             }

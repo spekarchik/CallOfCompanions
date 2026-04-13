@@ -39,7 +39,7 @@ class FarTeleportController extends AnimalSummonController
                     LOGGER.debug("Far teleport delay completed: companionType={}, companionId={}", entry.type(), entry.uuid());
                     createTeleportTask(teleportPos, entry);
                 },
-                _ -> {
+                entry -> {
                     showAnimalNotRespondParticles(level, teleportPos);
                     playAnimalNotRespondSound(level, teleportPos);
                     LOGGER.debug("Far teleport delay cancelled: companionType={}, companionId={}", companionEntry.type(), companionEntry.uuid());
@@ -106,7 +106,7 @@ class FarTeleportController extends AnimalSummonController
                     CallCrystalHelper.updateCompanionPos(level, companionData, entry);
                     level.getChunkSource().removeTicketWithRadius(TicketType.PORTAL, chunkPos, LOAD_CHUNK_RADIUS);
                 },
-                _ ->
+                entry ->
                 {
                     level.getChunkSource().removeTicketWithRadius(TicketType.PORTAL, chunkPos, LOAD_CHUNK_RADIUS);
                     playAnimalNotRespondSound(level, teleportPos);

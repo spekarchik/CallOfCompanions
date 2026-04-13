@@ -48,7 +48,7 @@ class NearTeleportController extends LoadedAnimalSummonController
                         LOGGER.debug("Near teleport failed: companion not found, companionType={}, companionId={}", entry.type(), entry.uuid());
                     }
                 },
-                _ -> {
+                entry -> {
                     LOGGER.debug("Near teleport cancelled: companionType={}, companionId={}", companionEntry.type(), companionEntry.uuid());
                     playAnimalNotRespondSound(level, teleportPos);
                     showAnimalNotRespondParticles(level, teleportPos);

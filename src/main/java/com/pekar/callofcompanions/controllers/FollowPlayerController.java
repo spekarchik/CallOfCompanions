@@ -24,7 +24,7 @@ class FollowPlayerController extends LoadedAnimalSummonController
                 300,
                 companionEntry,
                 player,
-                (ticks, _) -> {
+                (ticks, entry) -> {
                     if (ticks % 20 == 0)
                     {
                         setGoal(animal, player);
@@ -43,7 +43,7 @@ class FollowPlayerController extends LoadedAnimalSummonController
                     }
                     CallCrystalHelper.updateCompanionPos(level, companionData, entry);
                 },
-                _ -> {
+                entry -> {
                     LOGGER.debug("Follow-player task cancelled: companionType={}, companionId={}", companionEntry.type(), companionEntry.uuid());
                 }
         );
