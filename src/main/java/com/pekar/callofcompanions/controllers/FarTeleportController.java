@@ -96,12 +96,15 @@ class FarTeleportController extends AnimalSummonController
                         return;
                     }
 
-                    var result = tryTeleportAnimalTo(level, entry.uuid(), teleportPos, true);
-                    if (result)
+                    var teleported = tryTeleportAnimalTo(level, entry.uuid(), teleportPos, true);
+                    if (teleported)
                     {
                         showParticles(level, teleportPos, ParticleTypes.PORTAL);
                         if (level.getEntity(entry.uuid()) instanceof Animal animal)
+                        {
                             playTeleportSound(level, animal);
+                            setGoal(animal, player);
+                        }
                         LOGGER.debug("Far teleport completed: companionType={}, companionId={}", entry.type(), entry.uuid());
                     }
                     else
