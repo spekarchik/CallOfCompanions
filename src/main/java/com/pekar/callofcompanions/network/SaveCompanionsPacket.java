@@ -16,7 +16,7 @@ public class SaveCompanionsPacket extends ServerToClientPacket
     private final UUID crystalId;
     private final CompanionData companionData;
 
-    public SaveCompanionsPacket()
+    SaveCompanionsPacket()
     {
         this(null, null);
     }

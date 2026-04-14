@@ -26,7 +26,7 @@ class NearTeleportController extends LoadedAnimalSummonController
                 companionEntry,
                 player,
                 (ticks, entry) -> {
-                    if (ticks % 20 == 0)
+                    if (ticks % 10 == 0)
                     {
                         showAnimalTeleportParticles(level, animal);
                     }
@@ -38,6 +38,7 @@ class NearTeleportController extends LoadedAnimalSummonController
                     {
                         playTeleportSound(level, animal);
                         showAnimalTeleportParticles(level, animal);
+                        setGoal(animal, player);
                         CallCrystalHelper.updateCompanionPos(level, companionData, companionEntry);
                         LOGGER.debug("Near teleport completed: companionType={}, companionId={}", entry.type(), entry.uuid());
                     }

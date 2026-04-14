@@ -25,9 +25,10 @@ class FollowPlayerController extends LoadedAnimalSummonController
                 companionEntry,
                 player,
                 (ticks, _) -> {
-                    if (ticks % 20 == 0)
+                    if (ticks % 5 == 0)
                     {
-                        setGoal(animal, player);
+                        if (animal.getNavigation().isDone())
+                            setGoal(animal, player);
                         return animal.distanceToSqr(player) < 9;
                     }
                     return false;
