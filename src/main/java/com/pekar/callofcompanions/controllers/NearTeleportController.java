@@ -47,7 +47,7 @@ class NearTeleportController extends LoadedAnimalSummonController
                         playAnimalNotRespondSound(level, teleportPos);
                         showAnimalNotRespondParticles(level, teleportPos);
                         var name = CallCrystalHelper.buildAnimalName(entry.type(), entry.name());
-                        player.sendSystemMessage(Component.translatable("message.callofcompanions.cant_teleport", name));
+                        player.sendOverlayMessage(Component.translatable("message.callofcompanions.cant_teleport", name));
                         LOGGER.debug("Far teleport failed: companion couldn't find a safe place to teleport, companionType={}, companionId={}", entry.type(), entry.uuid());
                     }
 
