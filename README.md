@@ -103,9 +103,15 @@ Customize the experience:
 - XP cost (or disable it)
 - Summon range behavior
 - Crystal capacity
+- Cooldown
 - Allow/disallow untamed animals in Deep Crystal
 
 Make it lightweight… or powerful.
+
+*The configuration file is generated automatically after launching the game and can be found in the standard mod config directory.*
+
+*By default, it is located at:*
+`config/callofcompanions-common.toml`
 
 ---
 
@@ -138,7 +144,7 @@ They’re just… waiting for your call.
 - Launch the game and enjoy your adventure!
 
 ## Technical Details
-- **Supported Minecraft versions:** 1.21.1, 1.21.4 - 1.21.11, 26.1
+- **Supported Minecraft versions:** 1.21.1, 1.21.4 - 1.21.11, 26.1+
 - **Texture resolution:** 16×16
 - **Supported languages:** English, Belarusian, Russian, Polish
 
