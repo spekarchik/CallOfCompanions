@@ -13,6 +13,7 @@ import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.entity.TamableAnimal;
 import net.minecraft.world.entity.animal.Animal;
+import net.minecraft.world.entity.animal.nautilus.AbstractNautilus;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
@@ -90,7 +91,8 @@ public abstract class AnimalSummonController
         if (entity instanceof Animal animal)
         {
             orderToStand(animal);
-            BlockPos randomPos = getRandomPos(pos.above());
+            var randomPos = getRandomPos(pos.above(), animal);
+            if (randomPos == null) return false;
             animal.teleportTo(randomPos.getX() + 0.5, randomPos.getY(), randomPos.getZ() + 0.5);
             return true;
         }
@@ -98,21 +100,44 @@ public abstract class AnimalSummonController
         return false;
     }
 
-    private BlockPos getRandomPos(BlockPos pos)
+    private BlockPos getRandomPos(BlockPos pos, Animal animal)
     {
+        boolean isWaterAnimal = animal instanceof AbstractNautilus;
+
+        final int delta = 3;
+
+        // First try a number of random samples around the requested position
         for (int i = 0; i < 10; i++)
         {
-            var newPos = randomAroundPos(pos, 3);
+            var newPos = randomAroundPos(pos, delta);
 
-            var ground = level.getHeightmapPos(Heightmap.Types.MOTION_BLOCKING_NO_LEAVES, newPos);
-
-            if (Math.abs(ground.getY() - pos.getY()) <= 3 && CallCrystalHelper.isSafeForTeleleporting(level, ground))
+            if (CallCrystalHelper.isSafeForTeleleporting(level, newPos, isWaterAnimal))
             {
-                return ground;
+                return newPos;
             }
         }
 
-        return pos;
+        // If random sampling failed, iterate all positions in the square radius and return the first safe one
+        for (int dy = isWaterAnimal ? -2 : 0; dy <= 0; dy++)
+        {
+            for (int dx = -delta; dx <= delta; dx++)
+            {
+                for (int dz = -delta; dz <= delta; dz++)
+                {
+                    //if (dx == 0 && dz == 0) continue;
+
+                    var checkPos = pos.offset(dx, dy, dz);
+
+                    if (CallCrystalHelper.isSafeForTeleleporting(level, checkPos, isWaterAnimal))
+                    {
+                        return checkPos;
+                    }
+                }
+            }
+        }
+
+        // No safe position found — return original
+        return null;
     }
 
     private BlockPos randomAroundPos(BlockPos pos, int delta)

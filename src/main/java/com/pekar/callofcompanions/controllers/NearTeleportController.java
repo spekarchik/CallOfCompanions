@@ -4,6 +4,7 @@ import com.mojang.logging.LogUtils;
 import com.pekar.callofcompanions.scheduler.CompanionEntryScheduler;
 import com.pekar.callofcompanions.scheduler.CompanionEntryTask;
 import net.minecraft.core.BlockPos;
+import net.minecraft.network.chat.Component;
 import org.slf4j.Logger;
 
 class NearTeleportController extends LoadedAnimalSummonController
@@ -39,15 +40,18 @@ class NearTeleportController extends LoadedAnimalSummonController
                         playTeleportSound(level, animal);
                         showAnimalTeleportParticles(level, animal);
                         setGoal(animal, player);
-                        CallCrystalHelper.updateCompanionPos(level, companionData, companionEntry);
                         LOGGER.debug("Near teleport completed: companionType={}, companionId={}", entry.type(), entry.uuid());
                     }
                     else
                     {
                         playAnimalNotRespondSound(level, teleportPos);
                         showAnimalNotRespondParticles(level, teleportPos);
-                        LOGGER.debug("Near teleport failed: companion not found, companionType={}, companionId={}", entry.type(), entry.uuid());
+                        var name = CallCrystalHelper.buildAnimalName(entry.type(), entry.name());
+                        player.sendSystemMessage(Component.translatable("message.callofcompanions.cant_teleport", name));
+                        LOGGER.debug("Far teleport failed: companion couldn't find a safe place to teleport, companionType={}, companionId={}", entry.type(), entry.uuid());
                     }
+
+                    CallCrystalHelper.updateCompanionPos(level, companionData, companionEntry);
                 },
                 _ -> {
                     LOGGER.debug("Near teleport cancelled: companionType={}, companionId={}", companionEntry.type(), companionEntry.uuid());
