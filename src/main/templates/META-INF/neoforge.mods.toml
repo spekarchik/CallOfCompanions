@@ -35,12 +35,11 @@ logoFile="logo.png" #optional
 # A text field displayed in the mod UI
 #credits="" #optional
 
-# The authors of the mod, displayed in the mod UI (optional)
-authors="Sergey Pekarchik"
+# A text field displayed in the mod UI
+authors="${mod_authors}" #optional
 
 # The description text for the mod (multi line!) (#mandatory)
-description='''
-'''
+description='''${mod_description}'''
 
 # The [[mixins]] block allows you to declare your mixin config to FML so that it gets loaded.
 #[[mixins]]

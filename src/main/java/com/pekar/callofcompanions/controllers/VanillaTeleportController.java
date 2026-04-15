@@ -4,6 +4,7 @@ import com.mojang.logging.LogUtils;
 import com.pekar.callofcompanions.scheduler.CompanionEntryScheduler;
 import com.pekar.callofcompanions.scheduler.CompanionEntryTask;
 import net.minecraft.core.BlockPos;
+import net.minecraft.network.chat.Component;
 import org.slf4j.Logger;
 
 class VanillaTeleportController extends LoadedAnimalSummonController
@@ -39,11 +40,20 @@ class VanillaTeleportController extends LoadedAnimalSummonController
                     LOGGER.debug("Vanilla teleport completing: companionType={}, companionId={}", entry.type(), entry.uuid());
                     if (animal.distanceToSqr(player) > 12 * 12)
                     {
-                        tryTeleportAnimalTo(level, animal.getUUID(), teleportPos);
+                        var teleported = tryTeleportAnimalTo(level, animal.getUUID(), teleportPos);
+                        if (teleported)
+                        {
+                            playTeleportSound(level, animal);
+                            showAnimalTeleportParticles(level, animal);
+                        }
+                        else
+                        {
+                            var name = CallCrystalHelper.buildAnimalName(entry.type(), entry.name());
+                            player.sendOverlayMessage(Component.translatable("message.callofcompanions.cant_teleport", name));
+                            LOGGER.debug("Far teleport failed: companion couldn't find a safe place to teleport, companionType={}, companionId={}", entry.type(), entry.uuid());
+                        }
                     }
                     setGoal(animal, player);
-                    playTeleportSound(level, animal);
-                    showAnimalTeleportParticles(level, animal);
                     CallCrystalHelper.updateCompanionPos(level, companionData, entry);
                 },
                 entry -> {
