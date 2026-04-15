@@ -21,10 +21,11 @@
   "item.callofcompanions.deep_call_crystal.desc4": "Powiązuje oswojone lub nazwane zwierzęta",
 
   "message.callofcompanions.not_found": "%s nie odpowiedział.",
+  "message.callofcompanions.cant_teleport": "%s nie mógł znaleźć bezpiecznego miejsca, aby do ciebie dotrzeć.",
   "message.callofcompanions.wrong_dimension": "%s jest zbyt daleko, aby odpowiedzieć.",
   "message.callofcompanions.not_enough_xp": "Za mało doświadczenia, aby przywołać zwierzęta.",
   "message.callofcompanions.limit_reached": "Nie można powiązać więcej zwierząt z tym kryształem.",
-  "message.callofcompanions.companions_updated": "Połączenie ze zwierzętami odświeżone.",
+  "message.callofcompanions.companions_updated": "Połączenie ze zwierzętami zostało odświeżone.",
   "message.callofcompanions.summon_cancelled": "Przywołanie przerwane.",
 
   "description.press_shift": "§Przytrzymaj §9Shift§7, aby zobaczyć szczegóły..."

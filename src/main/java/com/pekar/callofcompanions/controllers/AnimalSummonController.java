@@ -1,6 +1,7 @@
 package com.pekar.callofcompanions.controllers;
 
 import com.mojang.logging.LogUtils;
+import com.pekar.callofcompanions.controllers.animal.TeleportSafetyCheckerResolver;
 import com.pekar.callofcompanions.data.CompanionData;
 import com.pekar.callofcompanions.data.CompanionEntry;
 import net.minecraft.core.BlockPos;
@@ -17,7 +18,6 @@ import net.minecraft.world.entity.TamableAnimal;
 import net.minecraft.world.entity.animal.Animal;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.level.levelgen.Heightmap;
 import org.slf4j.Logger;
 
 import java.util.UUID;
@@ -91,7 +91,9 @@ public abstract class AnimalSummonController
         if (entity instanceof Animal animal)
         {
             orderToStand(animal);
-            BlockPos randomPos = getRandomPos(pos.above());
+            BlockPos randomPos = getRandomPos(pos.above(), animal);
+            if (randomPos == null) return false;
+
             var x = randomPos.getX() + 0.5;
             var y = randomPos.getY();
             var z = randomPos.getZ() + 0.5;
@@ -122,21 +124,47 @@ public abstract class AnimalSummonController
         }
     }
 
-    private BlockPos getRandomPos(BlockPos pos)
+    private BlockPos getRandomPos(BlockPos pos, Animal animal)
     {
+        final int delta = 3;
+
+        var safetyChecker = TeleportSafetyCheckerResolver.getChecker(animal);
+
+        // First try a number of random samples around the requested position
         for (int i = 0; i < 10; i++)
         {
-            var newPos = randomAroundPos(pos, 3);
+            var newPos = randomAroundPos(pos, delta);
 
-            var ground = level.getHeightmapPos(Heightmap.Types.MOTION_BLOCKING_NO_LEAVES, newPos);
-
-            if (Math.abs(ground.getY() - pos.getY()) <= 3 && CallCrystalHelper.isSafeForTeleleporting(level, ground))
+            for (int dy = 0; dy >= safetyChecker.getMinTeleportYOffset(); dy--)
             {
-                return ground;
+                if (safetyChecker.canTeleport(level, newPos.offset(0, dy, 0)))
+                {
+                    return newPos;
+                }
             }
         }
 
-        return pos;
+        // If random sampling failed, iterate all positions in the square radius and return the first safe one
+        for (int dy = safetyChecker.getMinTeleportYOffset(); dy <= 0; dy++)
+        {
+            for (int dx = -delta; dx <= delta; dx++)
+            {
+                for (int dz = -delta; dz <= delta; dz++)
+                {
+                    if (dx == 0 && dz == 0 && dy != pos.getY()) continue;
+
+                    var checkPos = pos.offset(dx, dy, dz);
+
+                    if (safetyChecker.canTeleport(level, checkPos))
+                    {
+                        return checkPos;
+                    }
+                }
+            }
+        }
+
+        // No safe position found — return original
+        return null;
     }
 
     private BlockPos randomAroundPos(BlockPos pos, int delta)

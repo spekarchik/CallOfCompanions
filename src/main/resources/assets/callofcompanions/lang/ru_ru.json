@@ -21,6 +21,7 @@
   "item.callofcompanions.deep_call_crystal.desc4": "Привязывает прирученных или именованных животных",
 
   "message.callofcompanions.not_found": "%s не откликнулся.",
+  "message.callofcompanions.cant_teleport": "%s не смог найти безопасное место, чтобы добраться до вас.",
   "message.callofcompanions.wrong_dimension": "%s слишком далеко и не может откликнуться.",
   "message.callofcompanions.not_enough_xp": "Недостаточно опыта для призыва.",
   "message.callofcompanions.limit_reached": "Нельзя привязать больше животных к этому кристаллу.",
