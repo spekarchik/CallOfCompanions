@@ -14,7 +14,7 @@ public class GhastTeleportSafetyChecker extends TeleportSafetyCheckerBase
         var groundState = level.getBlockState(groundPos);
 
         // basic invalid ground checks
-        if (!groundState.isSolidRender() || groundState.is(BlockTags.FIRE) || groundState.is(Blocks.LAVA))
+        if (groundState.is(BlockTags.FIRE) || groundState.is(Blocks.LAVA))
             return false;
 
         // require a 6x6x6 air volume above the target pos
@@ -26,8 +26,7 @@ public class GhastTeleportSafetyChecker extends TeleportSafetyCheckerBase
                 for (int dy = 0; dy <= 5; dy++)
                 {
                     var checkPos = pos.offset(dx, dy, dz);
-                    var state = level.getBlockState(checkPos);
-                    if (!state.isAir()) return false;
+                    if (!hasNoCollisions(level, checkPos)) return false;
                 }
             }
         }
@@ -43,12 +42,11 @@ public class GhastTeleportSafetyChecker extends TeleportSafetyCheckerBase
                 var neighGroundState = level.getBlockState(neighGroundPos);
 
                 // Option 1: neighbor ground is solid (and not fire/lava)
-                boolean opt1 = neighGroundState.isSolidRender() &&
-                        !neighGroundState.is(BlockTags.FIRE) && !neighGroundState.is(Blocks.LAVA);
+                boolean opt1 = !neighGroundState.is(BlockTags.FIRE) && !neighGroundState.is(Blocks.LAVA);
 
                 // Option 2: neighbor ground is air but has a solid block below it (and not fire/lava)
                 var belowNeigh = level.getBlockState(neighGroundPos.below());
-                boolean opt2 = neighGroundState.isAir() && belowNeigh.isSolidRender() &&
+                boolean opt2 = hasNoCollisions(level, neighGroundPos) &&
                         !belowNeigh.is(BlockTags.FIRE) && !belowNeigh.is(Blocks.LAVA);
 
                 if (!(opt1 || opt2)) return false;

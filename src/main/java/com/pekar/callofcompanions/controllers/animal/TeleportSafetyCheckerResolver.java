@@ -12,6 +12,6 @@ public class TeleportSafetyCheckerResolver
         if (animal instanceof AbstractNautilus) return new WaterAnimalTeleportSafetyChecker();
         else if (animal instanceof HappyGhast) return new GhastTeleportSafetyChecker();
         else if (animal instanceof Strider) return new StriderTeleportSafetyChecker();
-        else return new OnGroundAnimalTeleportSafetyChecker();
+        else return new GroundAnimalTeleportSafetyChecker();
     }
 }
