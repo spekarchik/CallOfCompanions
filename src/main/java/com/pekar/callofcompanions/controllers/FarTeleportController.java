@@ -96,12 +96,15 @@ class FarTeleportController extends AnimalSummonController
                         return;
                     }
 
-                    var result = tryTeleportAnimalTo(level, entry.uuid(), teleportPos);
-                    if (result)
+                    var teleported = tryTeleportAnimalTo(level, entry.uuid(), teleportPos);
+                    if (teleported)
                     {
                         showParticles(level, teleportPos, ParticleTypes.PORTAL);
                         if (level.getEntity(entry.uuid()) instanceof Animal animal)
+                        {
                             playTeleportSound(level, animal);
+                            setGoal(animal, player);
+                        }
                         LOGGER.debug("Far teleport completed: companionType={}, companionId={}", entry.type(), entry.uuid());
                     }
                     else
@@ -109,8 +112,16 @@ class FarTeleportController extends AnimalSummonController
                         playAnimalNotRespondSound(level, teleportPos);
                         showAnimalNotRespondParticles(level, teleportPos);
                         var name = CallCrystalHelper.buildAnimalName(entry.type(), entry.name());
-                        player.sendSystemMessage(Component.translatable("message.callofcompanions.not_found", name));
-                        LOGGER.debug("Far teleport failed: companion not found, companionType={}, companionId={}", entry.type(), entry.uuid());
+                        if (level.getEntity(entry.uuid()) == null)
+                        {
+                            player.sendSystemMessage(Component.translatable("message.callofcompanions.not_found", name));
+                            LOGGER.debug("Far teleport failed: companion not found, companionType={}, companionId={}", entry.type(), entry.uuid());
+                        }
+                        else
+                        {
+                            player.sendSystemMessage(Component.translatable("message.callofcompanions.cant_teleport", name), true);
+                            LOGGER.debug("Far teleport failed: companion couldn't find a safe place to teleport, companionType={}, companionId={}", entry.type(), entry.uuid());
+                        }
                     }
 
                     CallCrystalHelper.updateCompanionPos(level, companionData, entry);
