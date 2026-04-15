@@ -3,7 +3,6 @@ package com.pekar.callofcompanions.controllers.animal;
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Blocks;
-import net.minecraft.world.level.block.state.BlockState;
 
 public class WaterAnimalTeleportSafetyChecker extends TeleportSafetyCheckerBase
 {
@@ -13,13 +12,11 @@ public class WaterAnimalTeleportSafetyChecker extends TeleportSafetyCheckerBase
         // water-animals (future use): ground must be solid and above must be water, next two above water or air
         var below = level.getBlockState(pos.below());
         var at = level.getBlockState(pos);
-        var above = level.getBlockState(pos.above());
-        var above2 = level.getBlockState(pos.above(2));
 
         boolean belowWater = below.is(Blocks.WATER);
         boolean atIsOk = at.is(Blocks.WATER) || (at.isAir() && belowWater);
-        boolean aboveOk = isAirOrWater(above);
-        boolean above2Ok = isAirOrWater(above2);
+        boolean aboveOk = isAirOrWater(level, pos.above());
+        boolean above2Ok = isAirOrWater(level, pos.above(2));
 
         if (!(atIsOk && aboveOk && above2Ok)) return false;
 
@@ -30,15 +27,15 @@ public class WaterAnimalTeleportSafetyChecker extends TeleportSafetyCheckerBase
             {
                 if (dx == 0 && dz == 0) continue;
 
-                var neighBelow = level.getBlockState(pos.offset(dx, -1, dz));
-                var neighAt = level.getBlockState(pos.offset(dx, 0, dz));
-                var neighAbove = level.getBlockState(pos.offset(dx, 1, dz));
-                var neighAbove2 = level.getBlockState(pos.offset(dx, 2, dz));
+                var neighBelowPos = pos.offset(dx, -1, dz);
+                var neighAtPos = pos.offset(dx, 0, dz);
+                var neighAbovePos = pos.offset(dx, 1, dz);
+                var neighAbove2Pos = pos.offset(dx, 2, dz);
 
-                boolean neighAtIsOk = neighAt.is(Blocks.WATER) || (neighAt.isAir() && neighBelow.is(Blocks.WATER));
+                boolean neighAtIsOk = level.isWaterAt(neighAtPos) || (hasNoCollisions(level, neighAtPos) && level.isWaterAt(neighBelowPos));
                 if (!neighAtIsOk) return false;
-                if (!isAirOrWater(neighAbove)) return false;
-                if (!isAirOrWater(neighAbove2)) return false;
+                if (!isAirOrWater(level, neighAbovePos)) return false;
+                if (!isAirOrWater(level, neighAbove2Pos)) return false;
             }
         }
 
@@ -51,8 +48,8 @@ public class WaterAnimalTeleportSafetyChecker extends TeleportSafetyCheckerBase
         return -2;
     }
 
-    private static boolean isAirOrWater(BlockState state)
+    private boolean isAirOrWater(Level level, BlockPos pos)
     {
-        return state.isAir() || state.is(Blocks.WATER);
+        return hasNoCollisions(level, pos) || level.isWaterAt(pos);
     }
 }
