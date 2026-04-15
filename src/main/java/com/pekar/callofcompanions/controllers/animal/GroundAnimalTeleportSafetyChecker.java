@@ -5,7 +5,7 @@ import net.minecraft.tags.BlockTags;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Blocks;
 
-public class OnGroundAnimalTeleportSafetyChecker extends TeleportSafetyCheckerBase
+public class GroundAnimalTeleportSafetyChecker extends TeleportSafetyCheckerBase
 {
     @Override
     public boolean canTeleport(Level level, BlockPos pos)
@@ -30,11 +30,11 @@ public class OnGroundAnimalTeleportSafetyChecker extends TeleportSafetyCheckerBa
                 var neighGroundPos = groundPos.offset(dx, 0, dz);
                 var neighGroundState = level.getBlockState(neighGroundPos);
 
-                // Option 1: neighbour ground is solid (and not fire/lava)
+                // Option 1: neighbor ground is solid (and not fire/lava)
                 boolean opt1 = neighGroundState.isSolidRender() &&
                         !neighGroundState.is(BlockTags.FIRE) && !neighGroundState.is(Blocks.LAVA);
 
-                // Option 2: neighbour ground is air but has a solid block below it (and not fire/lava)
+                // Option 2: neighbor ground is air but has a solid block below it (and not fire/lava)
                 var belowNeigh = level.getBlockState(neighGroundPos.below());
                 boolean opt2 = hasNoCollisions(level, neighGroundPos) && belowNeigh.isSolidRender() &&
                         !belowNeigh.is(BlockTags.FIRE) && !belowNeigh.is(Blocks.LAVA);
