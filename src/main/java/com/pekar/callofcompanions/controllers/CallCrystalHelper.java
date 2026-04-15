@@ -65,20 +65,6 @@ public class CallCrystalHelper
         companions.add(newEntry);
     }
 
-    public static boolean isSafeForTeleleporting(Level level, BlockPos pos)
-    {
-        var below = level.getBlockState(pos.below());
-        var at = level.getBlockState(pos);
-        var above = level.getBlockState(pos.above());
-        var above2 = level.getBlockState(pos.above(2));
-
-        return below.isSolidRender() &&
-                !below.is(BlockTags.FIRE) &&
-                !below.is(Blocks.LAVA) &&
-                at.isAir() &&                    // body
-                above.isAir() && above2.isAir(); // head
-    }
-
     public static boolean isSafeForDestPoint(Level level, BlockPos pos)
     {
         var below = level.getBlockState(pos.below());

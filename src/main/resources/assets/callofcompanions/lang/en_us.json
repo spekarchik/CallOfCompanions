@@ -21,6 +21,7 @@
   "item.callofcompanions.deep_call_crystal.desc4": "Binds tamed or named animals",
 
   "message.callofcompanions.not_found": "%s did not respond.",
+  "message.callofcompanions.cant_teleport": "%s couldn't find a safe place to reach you.",
   "message.callofcompanions.wrong_dimension": "%s is too far away to respond.",
   "message.callofcompanions.not_enough_xp": "Not enough experience to call your animals.",
   "message.callofcompanions.limit_reached": "You cannot bind any more animals to this crystal.",
