@@ -4,6 +4,7 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.world.level.Level;
 
 import static com.pekar.callofcompanions.controllers.CallCrystalHelper.hasNoAirCollisions;
+import static com.pekar.callofcompanions.controllers.CallCrystalHelper.isSafeSolidBlock;
 
 public class GroundAnimalTeleportSafetyChecker implements TeleportSafetyChecker
 {
@@ -11,9 +12,7 @@ public class GroundAnimalTeleportSafetyChecker implements TeleportSafetyChecker
     public boolean canTeleport(Level level, BlockPos pos)
     {
         var groundPos = pos.below();
-        var groundState = level.getBlockState(groundPos);
-
-        if (!groundState.isSolidRender(level, groundPos)) return false;
+        if (!isSafeSolidBlock(level, groundPos)) return false;
 
         // non-water animals: require 3 blocks of air above target (pos, pos+1, pos+2)
         if (!(hasNoAirCollisions(level, pos) && hasNoAirCollisions(level, pos.above()) && hasNoAirCollisions(level, pos.above(2)))) return false;
@@ -25,15 +24,12 @@ public class GroundAnimalTeleportSafetyChecker implements TeleportSafetyChecker
             {
                 if (dx == 0 && dz == 0) continue;
 
-                var neighGroundPos = pos.offset(dx, -1, dz);
-                var neighGroundState = level.getBlockState(neighGroundPos);
-
                 // Option 1: neighbor ground is solid (and not fire/lava)
-                boolean opt1 = neighGroundState.isSolidRender(level, neighGroundPos);
+                var neighGroundPos = pos.offset(dx, -1, dz);
+                boolean opt1 = isSafeSolidBlock(level, neighGroundPos);
 
                 // Option 2: neighbor ground is air but has a solid block below it (and not fire/lava)
-                var belowNeigh = level.getBlockState(neighGroundPos.below());
-                boolean opt2 = hasNoAirCollisions(level, neighGroundPos) && belowNeigh.isSolidRender(level, neighGroundPos.below());
+                boolean opt2 = hasNoAirCollisions(level, neighGroundPos) && isSafeSolidBlock(level, neighGroundPos.below());
 
                 if (!(opt1 || opt2)) return false;
 

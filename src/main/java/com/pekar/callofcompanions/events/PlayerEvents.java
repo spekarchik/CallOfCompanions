@@ -49,6 +49,13 @@ public class PlayerEvents implements IEventHandler
         boolean isDeepCallCrystal = itemStack.is(ItemRegistry.DEEP_CALL_CRYSTAL);
         if (isDeepCallCrystal || itemStack.is(ItemRegistry.CALL_CRYSTAL))
         {
+            if (player.getCooldowns().isOnCooldown(itemStack.getItem()))
+            {
+                event.setCanceled(true);
+                event.setCancellationResult(InteractionResult.CONSUME);
+                return;
+            }
+
             boolean isTameAnimal = target instanceof TamableAnimal tamable && tamable.isTame();
             boolean isTamedHorse = target instanceof AbstractHorse horse && horse.isTamed();
 
