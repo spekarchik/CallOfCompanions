@@ -5,6 +5,7 @@ import com.pekar.callofcompanions.data.CompanionEntry;
 import com.pekar.callofcompanions.data.DataRegistry;
 import com.pekar.callofcompanions.items.ItemRegistry;
 import net.minecraft.core.BlockPos;
+import net.minecraft.core.Direction;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.tags.FluidTags;
 import net.minecraft.world.entity.Entity;
@@ -13,6 +14,7 @@ import net.minecraft.world.entity.animal.horse.AbstractHorse;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
+import net.minecraft.world.level.block.Blocks;
 
 import java.util.UUID;
 
@@ -78,7 +80,12 @@ public class CallCrystalHelper
     public static boolean hasNoAirCollisions(Level level, BlockPos pos)
     {
         var state = level.getBlockState(pos);
-        if (state.getFluidState().is(FluidTags.WATER) || state.getFluidState().is(FluidTags.LAVA))
+        if (state.getFluidState().is(FluidTags.WATER)
+                || state.getFluidState().is(FluidTags.LAVA)
+                || state.is(Blocks.FIRE)
+                || state.is(Blocks.SOUL_FIRE)
+                || state.is(Blocks.SWEET_BERRY_BUSH)
+                || state.is(Blocks.POWDER_SNOW))
             return false;
 
         var collisionShape = state.getCollisionShape(level, pos);
@@ -98,5 +105,11 @@ public class CallCrystalHelper
     public static boolean isLavaSource(Level level, BlockPos pos)
     {
         return level.getFluidState(pos).isSourceOfType(LAVA);
+    }
+
+    public static boolean isSafeSolidBlock(Level level, BlockPos pos)
+    {
+        var state = level.getBlockState(pos);
+        return state.isSolidRender() && !state.is(Blocks.MAGMA_BLOCK);
     }
 }
