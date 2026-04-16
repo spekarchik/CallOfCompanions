@@ -1,3 +1,11 @@
+## 📦 Version 1.2.0
+
+### 📝 Improvements
+- Crystals can now be used on blocks without collision (plants, snow) if the block below is solid.
+- Blocks without collision no longer prevent animals from teleporting.
+- Teleport particles now appear around the teleported animal instead of at the crystal’s use location.
+
+
 ## 📦 Version 1.1.0
 
 ### 📝 Improvements

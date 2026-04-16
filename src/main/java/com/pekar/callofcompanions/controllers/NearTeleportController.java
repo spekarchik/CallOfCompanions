@@ -44,8 +44,8 @@ class NearTeleportController extends LoadedAnimalSummonController
                     }
                     else
                     {
-                        playAnimalNotRespondSound(level, teleportPos);
-                        showAnimalNotRespondParticles(level, teleportPos);
+                        playAnimalNotRespondSound(level, teleportPos.below());
+                        showAnimalNotRespondParticles(level, teleportPos.below());
                         var name = CallCrystalHelper.buildAnimalName(entry.type(), entry.name());
                         player.sendSystemMessage(Component.translatable("message.callofcompanions.cant_teleport", name), true);
                         LOGGER.debug("Far teleport failed: companion couldn't find a safe place to teleport, companionType={}, companionId={}", entry.type(), entry.uuid());
@@ -55,8 +55,8 @@ class NearTeleportController extends LoadedAnimalSummonController
                 },
                 entry -> {
                     LOGGER.debug("Near teleport cancelled: companionType={}, companionId={}", companionEntry.type(), companionEntry.uuid());
-                    playAnimalNotRespondSound(level, teleportPos);
-                    showAnimalNotRespondParticles(level, teleportPos);
+                    playAnimalNotRespondSound(level, teleportPos.below());
+                    showAnimalNotRespondParticles(level, teleportPos.below());
                 }
         );
         CompanionEntryScheduler.TELEPORT_TASKS.add(task);

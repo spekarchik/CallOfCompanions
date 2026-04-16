@@ -54,8 +54,8 @@ class FarTeleportController extends AnimalSummonController
 
         if (!level.dimension().equals(companionEntry.dimension()))
         {
-            playAnimalNotRespondSound(level, teleportPos);
-            showAnimalNotRespondParticles(level, teleportPos);
+            playAnimalNotRespondSound(level, teleportPos.below());
+            showAnimalNotRespondParticles(level, teleportPos.below());
             var name = CallCrystalHelper.buildAnimalName(companionEntry.type(), companionEntry.name());
             player.sendSystemMessage(Component.translatable("message.callofcompanions.wrong_dimension", name));
             LOGGER.debug("Far teleport cancelled: wrong dimension, companionType={}, companionId={}, companionDimension={}", companionEntry.type(), companionEntry.uuid(), companionEntry.dimension());
@@ -99,9 +99,9 @@ class FarTeleportController extends AnimalSummonController
                     var teleported = tryTeleportAnimalTo(level, entry.uuid(), teleportPos, true);
                     if (teleported)
                     {
-                        showParticles(level, teleportPos, ParticleTypes.PORTAL);
                         if (level.getEntity(entry.uuid()) instanceof Animal animal)
                         {
+                            showAnimalTeleportParticles(level, animal);
                             playTeleportSound(level, animal);
                             setGoal(animal, player);
                         }
@@ -109,8 +109,8 @@ class FarTeleportController extends AnimalSummonController
                     }
                     else
                     {
-                        playAnimalNotRespondSound(level, teleportPos);
-                        showAnimalNotRespondParticles(level, teleportPos);
+                        playAnimalNotRespondSound(level, teleportPos.below());
+                        showAnimalNotRespondParticles(level, teleportPos.below());
                         var name = CallCrystalHelper.buildAnimalName(entry.type(), entry.name());
                         if (level.getEntity(entry.uuid()) == null)
                         {
@@ -128,8 +128,8 @@ class FarTeleportController extends AnimalSummonController
                 },
                 entry ->
                 {
-                    playAnimalNotRespondSound(level, teleportPos);
-                    showAnimalNotRespondParticles(level, teleportPos);
+                    playAnimalNotRespondSound(level, teleportPos.below());
+                    showAnimalNotRespondParticles(level, teleportPos.below());
                     LOGGER.debug("Far teleport cancelled: companionType={}, companionId={}", companionEntry.type(), companionEntry.uuid());
                 });
 
