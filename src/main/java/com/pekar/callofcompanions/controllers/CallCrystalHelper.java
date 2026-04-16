@@ -6,17 +6,18 @@ import com.pekar.callofcompanions.data.DataRegistry;
 import com.pekar.callofcompanions.items.ItemRegistry;
 import net.minecraft.core.BlockPos;
 import net.minecraft.server.level.ServerLevel;
-import net.minecraft.tags.BlockTags;
+import net.minecraft.tags.FluidTags;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.TamableAnimal;
 import net.minecraft.world.entity.animal.horse.AbstractHorse;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
-import net.minecraft.world.level.block.Blocks;
-import net.minecraft.world.level.block.state.BlockState;
 
 import java.util.UUID;
+
+import static net.minecraft.world.level.material.Fluids.LAVA;
+import static net.minecraft.world.level.material.Fluids.WATER;
 
 public class CallCrystalHelper
 {
@@ -65,22 +66,37 @@ public class CallCrystalHelper
         companions.add(newEntry);
     }
 
-    public static boolean isSafeForDestPoint(Level level, BlockPos pos)
+    public static boolean canApplyCrystalAt(Level level, BlockPos pos)
     {
         var below = level.getBlockState(pos.below());
-        var at = level.getBlockState(pos);
-        var above = level.getBlockState(pos.above());
-        var above2 = level.getBlockState(pos.above(2));
 
         return below.isSolidRender() &&
-                !below.is(BlockTags.FIRE) &&
-                !below.is(Blocks.LAVA) &&
-                isAirOrWater(at) &&                    // body
-                isAirOrWater(above) && isAirOrWater(above2); // head
+                noCollisionOrIsWater(level, pos) &&                    // body
+                noCollisionOrIsWater(level, pos.above()) && noCollisionOrIsWater(level, pos.above(2)); // head
     }
 
-    private static boolean isAirOrWater(BlockState state)
+    public static boolean hasNoAirCollisions(Level level, BlockPos pos)
     {
-        return state.isAir() || state.is(Blocks.WATER);
+        var state = level.getBlockState(pos);
+        if (state.getFluidState().is(FluidTags.WATER) || state.getFluidState().is(FluidTags.LAVA))
+            return false;
+
+        var collisionShape = state.getCollisionShape(level, pos);
+        return collisionShape.isEmpty();
+    }
+
+    public static boolean noCollisionOrIsWater(Level level, BlockPos pos)
+    {
+        return hasNoAirCollisions(level, pos) || isWaterSource(level, pos);
+    }
+
+    public static boolean isWaterSource(Level level, BlockPos pos)
+    {
+        return level.getFluidState(pos).isSourceOfType(WATER);
+    }
+
+    public static boolean isLavaSource(Level level, BlockPos pos)
+    {
+        return level.getFluidState(pos).isSourceOfType(LAVA);
     }
 }

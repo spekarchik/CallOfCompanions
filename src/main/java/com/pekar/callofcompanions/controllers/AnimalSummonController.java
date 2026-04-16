@@ -90,7 +90,7 @@ public abstract class AnimalSummonController
         if (entity instanceof Animal animal)
         {
             orderToStand(animal);
-            var randomPos = getRandomPos(pos.above(), animal);
+            var randomPos = getRandomPos(pos, animal);
             if (randomPos == null) return false;
             animal.teleportTo(randomPos.getX() + 0.5, randomPos.getY(), randomPos.getZ() + 0.5);
             return true;
