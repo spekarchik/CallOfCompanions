@@ -107,7 +107,7 @@ public abstract class AnimalSummonController
         return false;
     }
 
-    private void recreateAnimal(ServerLevel level, Animal oldAnimal, double x, double y, double z)
+    protected void recreateAnimal(ServerLevel level, Animal oldAnimal, double x, double y, double z)
     {
         var entityType = oldAnimal.getType();
         var tag = new CompoundTag();
@@ -122,6 +122,7 @@ public abstract class AnimalSummonController
 
             level.addFreshEntity(newAnimal);
         }
+        LOGGER.debug("Animal recreated: entityId={}, type={}, pos=({}, {}, {})", oldAnimal.getUUID(), entityType.getDescription().getString(), x, y, z);
     }
 
     private BlockPos getRandomPos(BlockPos pos, Animal animal)

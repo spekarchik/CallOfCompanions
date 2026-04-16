@@ -1,6 +1,7 @@
 package com.pekar.callofcompanions.controllers;
 
 import com.mojang.logging.LogUtils;
+import com.pekar.callofcompanions.entity.EntityRegistry;
 import com.pekar.callofcompanions.scheduler.CompanionEntryScheduler;
 import com.pekar.callofcompanions.scheduler.CompanionEntryTask;
 import net.minecraft.core.BlockPos;
@@ -52,9 +53,17 @@ class FollowPlayerController extends LoadedAnimalSummonController
                             LOGGER.debug("Far teleport failed: companion couldn't find a safe place to teleport, companionType={}, companionId={}", entry.type(), entry.uuid());
                         }
                     }
+                    else if (animal.getType().is(EntityRegistry.ANIMALS_CAN_TELEPORT_TO_PLAYER))
+                    {
+                        recreateAnimal(level, animal, animal.getX(), animal.getY(), animal.getZ());
+                    }
                     CallCrystalHelper.updateCompanionPos(level, companionData, entry);
                 },
                 entry -> {
+                    if (animal.getType().is(EntityRegistry.ANIMALS_CAN_TELEPORT_TO_PLAYER) && animal.distanceToSqr(player) < 10 * 10)
+                    {
+                        recreateAnimal(level, animal, animal.getX(), animal.getY(), animal.getZ());
+                    }
                     LOGGER.debug("Follow-player task cancelled: companionType={}, companionId={}", companionEntry.type(), companionEntry.uuid());
                 }
         );

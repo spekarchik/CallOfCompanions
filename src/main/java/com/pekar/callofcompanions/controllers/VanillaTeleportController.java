@@ -1,6 +1,7 @@
 package com.pekar.callofcompanions.controllers;
 
 import com.mojang.logging.LogUtils;
+import com.pekar.callofcompanions.entity.EntityRegistry;
 import com.pekar.callofcompanions.scheduler.CompanionEntryScheduler;
 import com.pekar.callofcompanions.scheduler.CompanionEntryTask;
 import net.minecraft.core.BlockPos;
@@ -40,7 +41,7 @@ class VanillaTeleportController extends LoadedAnimalSummonController
                     LOGGER.debug("Vanilla teleport completing: companionType={}, companionId={}", entry.type(), entry.uuid());
                     if (animal.distanceToSqr(player) > 12 * 12)
                     {
-                        var teleported = tryTeleportAnimalTo(level, animal.getUUID(), teleportPos, true);
+                        var teleported = tryTeleportAnimalTo(level, animal.getUUID(), teleportPos, false);
                         if (teleported)
                         {
                             playTeleportSound(level, animal);
@@ -53,13 +54,18 @@ class VanillaTeleportController extends LoadedAnimalSummonController
                             LOGGER.debug("Far teleport failed: companion couldn't find a safe place to teleport, companionType={}, companionId={}", entry.type(), entry.uuid());
                         }
                     }
+                    recreateAnimal(level, animal, animal.getX(), animal.getY(), animal.getZ());
                     setGoal(animal, player);
                     CallCrystalHelper.updateCompanionPos(level, companionData, entry);
                 },
                 entry -> {
-                    LOGGER.debug("Vanilla teleport cancelled: companionType={}, companionId={}", companionEntry.type(), companionEntry.uuid());
                     playAnimalNotRespondSound(level, teleportPos.below());
                     showAnimalNotRespondParticles(level, teleportPos.below());
+                    if (animal.getType().is(EntityRegistry.ANIMALS_CAN_TELEPORT_TO_PLAYER) && animal.distanceToSqr(player) < 10 * 10)
+                    {
+                        recreateAnimal(level, animal, animal.getX(), animal.getY(), animal.getZ());
+                    }
+                    LOGGER.debug("Vanilla teleport cancelled: companionType={}, companionId={}", companionEntry.type(), companionEntry.uuid());
                 }
         );
         CompanionEntryScheduler.UPDATE_POS_TASKS.add(task);

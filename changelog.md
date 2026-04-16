@@ -6,6 +6,7 @@
 - Teleport particles now appear around the teleported animal instead of at the crystal’s use location.
 - **Crystals** can no longer bind animals while on cooldown.
 - *Fire*, *Powder Snow*, *Magma Blocks*, and *Sweet Berry Bushes* now prevent teleportation (*Striders* can still appear on *Magma Blocks*).
+- Fixed remaining cases where tamed *dogs, cats, and parrots* could appear invisible after teleporting.
 
 
 ## 📦 Version 1.1.0
