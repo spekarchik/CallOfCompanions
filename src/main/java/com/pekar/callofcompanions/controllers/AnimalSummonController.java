@@ -14,7 +14,6 @@ import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.entity.TamableAnimal;
 import net.minecraft.world.entity.animal.Animal;
-import net.minecraft.world.entity.animal.nautilus.AbstractNautilus;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
@@ -91,7 +90,7 @@ public abstract class AnimalSummonController
         if (entity instanceof Animal animal)
         {
             orderToStand(animal);
-            var randomPos = getRandomPos(pos.above(), animal);
+            var randomPos = getRandomPos(pos, animal);
             if (randomPos == null) return false;
             animal.teleportTo(randomPos.getX() + 0.5, randomPos.getY(), randomPos.getZ() + 0.5);
             return true;

@@ -58,8 +58,8 @@ class VanillaTeleportController extends LoadedAnimalSummonController
                 },
                 entry -> {
                     LOGGER.debug("Vanilla teleport cancelled: companionType={}, companionId={}", companionEntry.type(), companionEntry.uuid());
-                    playAnimalNotRespondSound(level, teleportPos);
-                    showAnimalNotRespondParticles(level, teleportPos);
+                    playAnimalNotRespondSound(level, teleportPos.below());
+                    showAnimalNotRespondParticles(level, teleportPos.below());
                 }
         );
         CompanionEntryScheduler.UPDATE_POS_TASKS.add(task);
