@@ -5,7 +5,9 @@ import net.minecraft.tags.BlockTags;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Blocks;
 
-public class GhastTeleportSafetyChecker extends TeleportSafetyCheckerBase
+import static com.pekar.callofcompanions.controllers.CallCrystalHelper.hasNoAirCollisions;
+
+public class GhastTeleportSafetyChecker implements TeleportSafetyChecker
 {
     @Override
     public boolean canTeleport(Level level, BlockPos pos)
@@ -26,7 +28,7 @@ public class GhastTeleportSafetyChecker extends TeleportSafetyCheckerBase
                 for (int dy = 0; dy <= 5; dy++)
                 {
                     var checkPos = pos.offset(dx, dy, dz);
-                    if (!hasNoCollisions(level, checkPos)) return false;
+                    if (!hasNoAirCollisions(level, checkPos)) return false;
                 }
             }
         }
@@ -41,12 +43,12 @@ public class GhastTeleportSafetyChecker extends TeleportSafetyCheckerBase
                 var neighGroundPos = groundPos.offset(dx, 0, dz);
                 var neighGroundState = level.getBlockState(neighGroundPos);
 
-                // Option 1: neighbor ground is solid (and not fire/lava)
+                // Option 1: neighbor ground is not fire/lava
                 boolean opt1 = !neighGroundState.is(BlockTags.FIRE) && !neighGroundState.is(Blocks.LAVA);
 
                 // Option 2: neighbor ground is air but has a solid block below it (and not fire/lava)
                 var belowNeigh = level.getBlockState(neighGroundPos.below());
-                boolean opt2 = hasNoCollisions(level, neighGroundPos) &&
+                boolean opt2 = hasNoAirCollisions(level, neighGroundPos) &&
                         !belowNeigh.is(BlockTags.FIRE) && !belowNeigh.is(Blocks.LAVA);
 
                 if (!(opt1 || opt2)) return false;

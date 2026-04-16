@@ -100,11 +100,17 @@ public class CallCrystal extends ModItem implements ITooltipProvider
         var crystalId = stack.get(DataRegistry.CRYSTAL_ID);
         if (crystalId == null) return InteractionResult.FAIL;
 
-        if (context.getClickedFace() != Direction.UP || player.getCooldowns().isOnCooldown(stack)) return InteractionResult.FAIL;
+        if (player.getCooldowns().isOnCooldown(stack)) return InteractionResult.FAIL;
 
         var level = context.getLevel();
         var clickPos = context.getClickedPos();
-        if (!CallCrystalHelper.isSafeForDestPoint(level, clickPos.above())) return InteractionResult.FAIL;
+        var clickedTopFace = context.getClickedFace() == Direction.UP;
+        var hasNoCollisions = CallCrystalHelper.noCollisionOrIsWater(level, clickPos);
+
+        if (!clickedTopFace && !hasNoCollisions) return InteractionResult.FAIL;
+
+        var useOnPos = hasNoCollisions ? clickPos.below() : clickPos;
+        if (!CallCrystalHelper.canApplyCrystalAt(level, useOnPos.above())) return InteractionResult.FAIL;
 
         if (!consumeXp(player)) return InteractionResult.FAIL;
 
@@ -118,7 +124,7 @@ public class CallCrystal extends ModItem implements ITooltipProvider
 
             var serverLevel = (ServerLevel) serverPlayer.level();
             playSummonSound(serverLevel, player.blockPosition());
-            showSummonParticles(serverLevel, clickPos);
+            showSummonParticles(serverLevel, useOnPos);
 
             ScheduleSaveDataOnTasksEnd(serverPlayer, crystalId, companionData);
 
@@ -146,7 +152,7 @@ public class CallCrystal extends ModItem implements ITooltipProvider
                         callDelayFactor()
                 );
 
-                AnimalSummonFactory.get(summonContext).run(clickPos);
+                AnimalSummonFactory.get(summonContext).run(useOnPos.above());
             }
         }
 
