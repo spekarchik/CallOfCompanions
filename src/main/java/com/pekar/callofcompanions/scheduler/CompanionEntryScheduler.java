@@ -29,8 +29,8 @@ public class CompanionEntryScheduler
 
     public void add(CompanionEntryTask task)
     {
-        tasks.add(task);
-        incrementTaskCount(task.initiator().getUUID());
+        if (tasks.add(task))
+            incrementTaskCount(task.initiator().getUUID());
     }
 
     public void clear()
