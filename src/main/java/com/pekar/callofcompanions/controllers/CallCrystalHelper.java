@@ -64,7 +64,7 @@ public class CallCrystalHelper
             return;
         }
 
-        var newEntry = companion.getWith(entity.blockPosition(), getAnimalType(entity));
+        var newEntry = companion.getWith(entity.level().dimension(), entity.blockPosition(), getAnimalType(entity));
         companions.add(newEntry);
     }
 
