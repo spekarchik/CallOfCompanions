@@ -1,3 +1,9 @@
+## 📦 Version 1.2.1
+
+### 🐞 Fixed
+- Fixed an issue where the crystal's glint would sometimes not be removed after multiple uses.
+
+
 ## 📦 Version 1.2.0
 
 ### 📝 Improvements
