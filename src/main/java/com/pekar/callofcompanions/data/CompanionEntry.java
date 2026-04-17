@@ -28,14 +28,9 @@ public record CompanionEntry(UUID uuid, String name, String type, ResourceKey<Le
     );
 
     // need to also update animal type because text localization may be changed
-    public CompanionEntry getWith(BlockPos newPos, String animalType)
+    public CompanionEntry getWith(ResourceKey<Level> dimension, BlockPos newPos, String animalType)
     {
-        return new CompanionEntry(this.uuid, this.name, animalType, this.dimension, newPos, PositionStatus.FRESH, this.ownerUuid, this.ownerName);
-    }
-
-    public CompanionEntry getWith(ResourceKey<Level> dimension, BlockPos newPos)
-    {
-        return new CompanionEntry(this.uuid, this.name, this.type, dimension, newPos, PositionStatus.FRESH, this.ownerUuid, this.ownerName);
+        return new CompanionEntry(this.uuid, this.name, animalType, dimension, newPos, PositionStatus.FRESH, this.ownerUuid, this.ownerName);
     }
 
     public CompanionEntry getAsLost()
