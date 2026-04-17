@@ -1,3 +1,10 @@
+## 📦 Version 1.2.2
+
+### 🐞 Fixed
+- Fixed an issue where using a crystal did not update the animal's dimension.
+  This could cause animals to be teleported to an incorrect dimension based on the last stored value.
+
+
 ## 📦 Version 1.2.1
 
 ### 🐞 Fixed
