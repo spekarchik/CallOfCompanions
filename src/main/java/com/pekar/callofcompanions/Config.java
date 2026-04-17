@@ -56,5 +56,14 @@ public class Config
             .comment("If true, Deep Call Crystals cannot add untamed animals (even if named).")
             .define("deep_crystal_disallow_untamed", false);
 
+    // Workaround for a Minecraft 1.21.1 bug where dogs, cats or parrots sometimes appear invisible after teleporting.
+    // When true, the mod will recreate the animal after calling to prevent invisibility. This prevents the
+    // invisibility but causes a noticeable single position shift/jump when calling the same type of animal
+    // and the animal is nearby (the animal comes to the player and is recreated to avoid the invisibility).
+    // Default: false. Specific to Minecraft 1.21.1; enable only if players observe the invisible-animal issue.
+    public static final ModConfigSpec.BooleanValue PREVENT_PETS_INVISIBILITY_WORKAROUND_1_21_1 = BUILDER
+            .comment("Workaround for MC 1.21.1: recreate dogs/cats/parrots on call to avoid invisibility; causes a single position jump.")
+            .define("prevent_pets_invisibility_workaround_1_21_1", false);
+
     static final ModConfigSpec SPEC = BUILDER.build();
 }

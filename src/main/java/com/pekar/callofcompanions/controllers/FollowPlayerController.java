@@ -8,6 +8,8 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.network.chat.Component;
 import org.slf4j.Logger;
 
+import static com.pekar.callofcompanions.Config.PREVENT_PETS_INVISIBILITY_WORKAROUND_1_21_1;
+
 class FollowPlayerController extends LoadedAnimalSummonController
 {
     private static final Logger LOGGER = LogUtils.getLogger();
@@ -53,14 +55,16 @@ class FollowPlayerController extends LoadedAnimalSummonController
                             LOGGER.debug("Far teleport failed: companion couldn't find a safe place to teleport, companionType={}, companionId={}", entry.type(), entry.uuid());
                         }
                     }
-                    else if (animal.getType().is(EntityRegistry.ANIMALS_CAN_TELEPORT_TO_PLAYER))
+                    else if (PREVENT_PETS_INVISIBILITY_WORKAROUND_1_21_1.isTrue() && animal.getType().is(EntityRegistry.ANIMALS_CAN_TELEPORT_TO_PLAYER))
                     {
                         recreateAnimal(level, animal, animal.getX(), animal.getY(), animal.getZ());
                     }
                     CallCrystalHelper.updateCompanionPos(level, companionData, entry);
                 },
                 entry -> {
-                    if (animal.getType().is(EntityRegistry.ANIMALS_CAN_TELEPORT_TO_PLAYER) && animal.distanceToSqr(player) < 10 * 10)
+                    if (PREVENT_PETS_INVISIBILITY_WORKAROUND_1_21_1.isTrue()
+                            && animal.getType().is(EntityRegistry.ANIMALS_CAN_TELEPORT_TO_PLAYER)
+                            && animal.distanceToSqr(player) < 10 * 10)
                     {
                         recreateAnimal(level, animal, animal.getX(), animal.getY(), animal.getZ());
                     }
