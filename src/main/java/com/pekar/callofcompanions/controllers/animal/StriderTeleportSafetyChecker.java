@@ -2,22 +2,21 @@ package com.pekar.callofcompanions.controllers.animal;
 
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.level.Level;
-import net.minecraft.world.level.block.Blocks;
 
-public class StriderTeleportSafetyChecker extends TeleportSafetyCheckerBase
+import static com.pekar.callofcompanions.controllers.CallCrystalHelper.hasNoAirCollisions;
+import static com.pekar.callofcompanions.controllers.CallCrystalHelper.isLavaSource;
+
+public class StriderTeleportSafetyChecker implements TeleportSafetyChecker
 {
     @Override
     public boolean canTeleport(Level level, BlockPos pos)
     {
         var below = level.getBlockState(pos.below());
-        var at = level.getBlockState(pos);
-        var above2 = level.getBlockState(pos.above(2));
-        var above3 = level.getBlockState(pos.above(3));
 
-        boolean atIsOk = at.is(Blocks.LAVA) || (hasNoCollisions(level, pos) && below.isSolidRender());
-        boolean aboveOk = hasNoCollisions(level, pos.above());
-        boolean above2Ok = above2.isAir();
-        boolean above3Ok = above3.isAir();
+        boolean atIsOk = isLavaSource(level, pos) || (hasNoAirCollisions(level, pos) && below.isSolidRender());
+        boolean aboveOk = hasNoAirCollisions(level, pos.above());
+        boolean above2Ok = hasNoAirCollisions(level, pos.above(2));
+        boolean above3Ok = hasNoAirCollisions(level, pos.above(3));
 
         if (!(atIsOk && aboveOk && above2Ok && above3Ok)) return false;
 
@@ -29,17 +28,16 @@ public class StriderTeleportSafetyChecker extends TeleportSafetyCheckerBase
 
                 var neightAtPos = pos.offset(dx, 0, dz);
                 var neighAbovePos = pos.offset(dx, 1, dz);
+                var neighAbove2Pos = pos.offset(dx, 2, dz);
+                var neighAbove3Pos = pos.offset(dx, 3, dz);
 
                 var neighBelow = level.getBlockState(pos.offset(dx, -1, dz));
-                var neighAt = level.getBlockState(neightAtPos);
-                var neighAbove2 = level.getBlockState(pos.offset(dx, 2, dz));
-                var neighAbove3 = level.getBlockState(pos.offset(dx, 3, dz));
 
-                boolean neighAtIsOk = neighAt.is(Blocks.LAVA) || (hasNoCollisions(level, neightAtPos) && neighBelow.isSolidRender());
+                boolean neighAtIsOk = isLavaSource(level, neightAtPos) || (hasNoAirCollisions(level, neightAtPos) && neighBelow.isSolidRender());
                 if (!neighAtIsOk) return false;
-                if (!hasNoCollisions(level, neighAbovePos)) return false;
-                if (!neighAbove2.isAir()) return false;
-                if (!neighAbove3.isAir()) return false;
+                if (!hasNoAirCollisions(level, neighAbovePos)) return false;
+                if (!hasNoAirCollisions(level, neighAbove2Pos)) return false;
+                if (!hasNoAirCollisions(level, neighAbove3Pos)) return false;
             }
         }
 
