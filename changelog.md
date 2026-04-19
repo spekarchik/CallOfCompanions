@@ -1,3 +1,9 @@
+## 📦 Version 1.2.3
+
+### 🐞 Fixed
+- Crystal glint is now removed when the player takes the item into their hand (prevents glint from staying if the item was quickly moved away during summoning).
+
+
 ## 📦 Version 1.2.2
 
 ### 🐞 Fixed
