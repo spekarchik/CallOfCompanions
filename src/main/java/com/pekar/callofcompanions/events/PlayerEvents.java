@@ -9,6 +9,7 @@ import com.pekar.callofcompanions.data.DataRegistry;
 import com.pekar.callofcompanions.data.PositionStatus;
 import com.pekar.callofcompanions.items.ItemRegistry;
 import com.pekar.callofcompanions.scheduler.CompanionEntryScheduler;
+import net.minecraft.core.component.DataComponents;
 import net.minecraft.network.chat.Component;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
@@ -122,12 +123,28 @@ public class PlayerEvents implements IEventHandler
     {
         if (event.getEntity() instanceof ServerPlayer serverPlayer)
         {
+            var fromItem = event.getFrom();
+            var toItem = event.getTo();
+
+            if (event.getSlot().getType() == EquipmentSlot.Type.HAND)
+            {
+                if (toItem.is(ItemRegistry.CALL_CRYSTALS_TAG) && toItem.getOrDefault(DataComponents.ENCHANTMENT_GLINT_OVERRIDE, false))
+                {
+                    var fromUuid = fromItem.get(DataRegistry.CRYSTAL_ID);
+                    var toUuid = toItem.get(DataRegistry.CRYSTAL_ID);
+
+                    if (!fromItem.is(ItemRegistry.CALL_CRYSTALS_TAG) || fromUuid == null || !fromUuid.equals(toUuid))
+                    {
+                        toItem.set(DataComponents.ENCHANTMENT_GLINT_OVERRIDE, false);
+                        return;
+                    }
+                }
+            }
+
             if (event.getSlot() != EquipmentSlot.MAINHAND) return;
 
-            var fromItem = event.getFrom();
             if (!fromItem.is(ItemRegistry.CALL_CRYSTALS_TAG)) return;
 
-            var toItem = event.getTo();
             var fromUuid = fromItem.get(DataRegistry.CRYSTAL_ID);
             var toUuid = toItem.get(DataRegistry.CRYSTAL_ID);
 
