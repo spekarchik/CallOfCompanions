@@ -128,10 +128,16 @@ public class PlayerEvents implements IEventHandler
 
             if (event.getSlot().getType() == EquipmentSlot.Type.HAND)
             {
-                if (fromItem.isEmpty() && toItem.is(ItemRegistry.CALL_CRYSTALS_TAG) && toItem.getOrDefault(DataComponents.ENCHANTMENT_GLINT_OVERRIDE, false))
+                if (toItem.is(ItemRegistry.CALL_CRYSTALS_TAG) && toItem.getOrDefault(DataComponents.ENCHANTMENT_GLINT_OVERRIDE, false))
                 {
-                    toItem.set(DataComponents.ENCHANTMENT_GLINT_OVERRIDE, false);
-                    return;
+                    var fromUuid = fromItem.get(DataRegistry.CRYSTAL_ID);
+                    var toUuid = toItem.get(DataRegistry.CRYSTAL_ID);
+
+                    if (!fromItem.is(ItemRegistry.CALL_CRYSTALS_TAG) || fromUuid == null || !fromUuid.equals(toUuid))
+                    {
+                        toItem.set(DataComponents.ENCHANTMENT_GLINT_OVERRIDE, false);
+                        return;
+                    }
                 }
             }
 
