@@ -1,3 +1,9 @@
+## 📦 Version 1.3.0
+
+### ✨ New
+- Added a crafting recipe: **Deep Call Crystal** can now be unbound using **Flint**, removing all bound animals.
+
+
 ## 📦 Version 1.2.3
 
 ### 🐞 Fixed
