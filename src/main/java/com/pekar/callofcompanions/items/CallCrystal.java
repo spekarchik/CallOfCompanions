@@ -130,6 +130,7 @@ public class CallCrystal extends ModItem implements ITooltipProvider
 
             var companionList = companionData.companions();
             var iterator = companionList.iterator();
+            boolean anySummoned = false;
 
             while (iterator.hasNext())
             {
@@ -143,6 +144,8 @@ public class CallCrystal extends ModItem implements ITooltipProvider
                     continue;
                 }
 
+                anySummoned = true;
+
                 var summonContext = new SummonAnimalContext(
                         serverPlayer,
                         animal,
@@ -153,6 +156,12 @@ public class CallCrystal extends ModItem implements ITooltipProvider
                 );
 
                 AnimalSummonFactory.get(summonContext).run(useOnPos.above());
+            }
+
+            if (!anySummoned)
+            {
+                stack.set(DataComponents.ENCHANTMENT_GLINT_OVERRIDE, false);
+                serverPlayer.sendSystemMessage(Component.translatable("message.callofcompanions.no_summonable_companions"), true);
             }
         }
 

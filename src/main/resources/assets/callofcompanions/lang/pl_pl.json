@@ -27,6 +27,7 @@
   "message.callofcompanions.limit_reached": "Nie można powiązać więcej zwierząt z tym kryształem.",
   "message.callofcompanions.companions_updated": "Połączenie ze zwierzętami zostało odświeżone.",
   "message.callofcompanions.summon_cancelled": "Przywołanie przerwane.",
+  "message.callofcompanions.no_summonable_companions": "Kryształ nie jest powiązany z twoimi zwierzętami.",
 
   "description.press_shift": "§Przytrzymaj §9Shift§7, aby zobaczyć szczegóły..."
 }
