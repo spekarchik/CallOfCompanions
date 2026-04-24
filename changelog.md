@@ -3,6 +3,9 @@
 ### ✨ New
 - Added a crafting recipe: **Deep Call Crystal** can now be unbound using **Flint**, removing all bound animals.
 
+### 📝 Improvements
+- Added an overlay message when a crystal has no bound animals to summon.
+
 
 ## 📦 Version 1.2.3
 

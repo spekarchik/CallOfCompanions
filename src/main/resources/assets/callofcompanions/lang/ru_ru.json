@@ -27,6 +27,7 @@
   "message.callofcompanions.limit_reached": "Нельзя привязать больше животных к этому кристаллу.",
   "message.callofcompanions.companions_updated": "Связь с животными обновлена.",
   "message.callofcompanions.summon_cancelled": "Призыв прерван.",
+  "message.callofcompanions.no_summonable_companions": "Кристалл не привязан к вашим животным.",
 
   "description.press_shift": "§7Удерживайте §9Shift§7 для подробностей..."
 }
