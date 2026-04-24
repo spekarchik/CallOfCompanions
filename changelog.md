@@ -1,3 +1,9 @@
+## 📦 Version 1.3.1
+
+### 📝 Improvements
+- **Axolotls** can now only teleport into water.
+
+
 ## 📦 Version 1.3.0
 
 ### ✨ New
