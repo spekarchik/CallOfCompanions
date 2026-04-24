@@ -27,6 +27,7 @@
   "message.callofcompanions.limit_reached": "Нельга прывязаць больш жывёл да гэтага крышталя.",
   "message.callofcompanions.companions_updated": "Сувязь з жывёламі абноўлена.",
   "message.callofcompanions.summon_cancelled": "Заклік перарваны.",
+  "message.callofcompanions.no_summonable_companions": "Крышталь не прывязаны да вашых жывёл.",
 
   "description.press_shift": "§7Утрымлівайце §9Shift§7 для падрабязнасцей..."
 }
