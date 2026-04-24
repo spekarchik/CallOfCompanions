@@ -1,16 +1,18 @@
 {
   "type": "minecraft:crafting_shaped",
   "group": "deep_call_crystal",
+  "category": "misc",
   "pattern": [
-    "*",
-    "="
+    "AAA",
+    "A*A",
+    "AAA"
   ],
   "key": {
-    "=": {
-        "item": "minecraft:sculk_shrieker"
+    "A": {
+      "item": "minecraft:flint"
     },
     "*": {
-        "item": "callofcompanions:call_crystal"
+         "item": "callofcompanions:deep_call_crystal"
     }
   },
   "result": {
