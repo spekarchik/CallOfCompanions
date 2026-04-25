@@ -96,6 +96,19 @@ Deep Call Crystal exception:
 
 ---
 
+## 🔄 Resetting a Crystal
+
+Sometimes… bonds need to be rewritten.
+
+- **Call Crystal** can be replaced easily — just craft a new one  
+- **Deep Call Crystal** can be *cleansed* and reused  
+
+Surround a Deep Call Crystal with **Flint** to wipe all stored companions.
+
+A fresh start — without losing the crystal itself.
+
+---
+
 ## ⚙️ Configurable
 
 Customize the experience:
