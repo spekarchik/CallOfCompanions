@@ -1,11 +1,22 @@
 ## 🌌 Call of Companions
 
-Ever lost your beloved companion somewhere in the vast world?  
-Left your horse behind? Your wolf wandered off? Your parrot vanished into unloaded chunks?
+Travel freely. Switch companions instantly.
 
-**Not anymore.**
+Ride your horse across the plains…  
+Call your Nautilus to cross the ocean…  
+Summon wolves before a fight…  
+Bring a Strider when facing lava.
 
-**Call of Companions** gives you the power to *call them back* — from anywhere.
+Adapt instantly — without ever going back.
+
+No backtracking. No compromises. No awkward workarounds.
+
+And if your companions ever get left behind…  
+lost to distance, terrain, or unloaded chunks —
+
+they’re never truly gone.
+
+**Call of Companions** lets you bring them back to you — from anywhere.
 
 ---
 
