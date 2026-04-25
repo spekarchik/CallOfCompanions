@@ -1,3 +1,24 @@
+## 📦 Version 1.3.1
+
+### 📝 Improvements
+- **Axolotls** can now only teleport into water.
+
+
+## 📦 Version 1.3.0
+
+### ✨ New
+- Added a crafting recipe: **Deep Call Crystal** can now be unbound using **Flint**, removing all bound animals.
+
+### 📝 Improvements
+- Added an overlay message when a crystal has no bound animals to summon.
+
+
+## 📦 Version 1.2.3
+
+### 🐞 Fixed
+- Crystal glint is now removed when the player takes the item into their hand (prevents glint from staying if the item was quickly moved away during summoning).
+
+
 ## 📦 Version 1.2.2
 
 ### 🐞 Fixed
