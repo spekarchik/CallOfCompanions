@@ -20,7 +20,7 @@ jobs:
     steps:
       - name: Publish gate
         run: |
-          if [ "${{ secrets.DISALLOW_PUBLISH }}" = "true" ]; then
+          if [ "${{ secrets.DISALLOW_MODRINTH }}" = "true" ]; then
             echo "PUBLISH=false" >> $GITHUB_ENV
           else
             echo "PUBLISH=true" >> $GITHUB_ENV
