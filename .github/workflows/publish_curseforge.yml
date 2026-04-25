@@ -11,7 +11,8 @@ jobs:
     if: |
       github.event.workflow_run.conclusion == 'success' &&
       (startsWith(github.event.workflow_run.head_branch, 'Neo/1.21.') ||
-       startsWith(github.event.workflow_run.head_branch, 'Neo/26.'))
+       startsWith(github.event.workflow_run.head_branch, 'Neo/26.')) &&
+      (secrets.DISALLOW_PUBLISH != 'true')
     runs-on: ubuntu-latest
     env:
       CURSEFORGE_TOKEN: ${{ secrets.CURSEFORGE_TOKEN }}
