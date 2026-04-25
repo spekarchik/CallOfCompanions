@@ -20,7 +20,15 @@ jobs:
       MOD_LOADER: "NeoForge"
 
     steps:
+      - name: Publish gate
+        run: |
+          if [ "${{ secrets.DISALLOW_PUBLISH }}" = "true" ]; then
+            echo "PUBLISH=false" >> $GITHUB_ENV
+          else
+            echo "PUBLISH=true" >> $GITHUB_ENV
+          fi
       - name: Detect triggering branch
+        if: env.PUBLISH == 'true'
         run: |
           BRANCH="${{ github.event.workflow_run.head_branch }}"
           echo "TRIGGER_BRANCH=$BRANCH" >> $GITHUB_ENV
@@ -34,11 +42,13 @@ jobs:
           fi
     
       - name: Checkout CI branch
+        if: env.PUBLISH == 'true'
         uses: actions/checkout@v4
         with:
           ref: ${{ github.event.workflow_run.head_branch }}
 
       - name: Install jq
+        if: env.PUBLISH == 'true'
         run: |
           if ! command -v jq >/dev/null; then
             sudo apt-get update
@@ -46,26 +56,29 @@ jobs:
           fi
       # Сборка мода прямо в CD
       - name: Set up Java 21
-        if: env.TARGET == '1.21'
+        if: env.PUBLISH == 'true' && env.TARGET == '1.21'
         uses: actions/setup-java@v4
         with:
           distribution: temurin
           java-version: 21
 
       - name: Set up Java 25
-        if: env.TARGET == '26'
+        if: env.PUBLISH == 'true' && env.TARGET == '26'
         uses: actions/setup-java@v4
         with:
           distribution: temurin
           java-version: 25
 
       - name: Grant execute permission for gradlew
+        if: env.PUBLISH == 'true'
         run: chmod +x gradlew
 
       - name: Build mod
+        if: env.PUBLISH == 'true'
         run: ./gradlew clean build
           
       - name: Determine JAR, version and release type
+        if: env.PUBLISH == 'true'
         run: |
           JAR_FILE=$(
             ls ./build/libs/*.jar 2>/dev/null \
