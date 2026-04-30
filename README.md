@@ -75,6 +75,21 @@ Your world feels… connected.
 
 ---
 
+## 🚚 Advanced Use: Transport
+
+Sometimes… your companions carry more than just your trust.
+
+- Llamas with chests can store items for you  
+- Summon them anytime to access your storage  
+- Create your own **mobile supply caravan**
+
+No more relying only on Ender Chests.  
+No more running out of space mid-journey.
+
+Your companions can carry the world with you.
+
+---
+
 ## 🧠 Smart Summoning
 
 The system adapts automatically:
