@@ -31,6 +31,7 @@ public abstract class AnimalSummonController
     protected final CompanionEntry companionEntry;
     protected final ItemStack callCrystalStack;
     protected final float callDelayFactor;
+    protected final TeleportListener teleportListener;
 
     protected AnimalSummonController(SummonAnimalContext context)
     {
@@ -40,6 +41,7 @@ public abstract class AnimalSummonController
         this.companionEntry = context.companionEntry();
         this.callCrystalStack = context.callCrystalStack();
         this.callDelayFactor = context.callDelayFactor();
+        this.teleportListener = context.teleportListener();
     }
 
     protected void setGoal(Animal animal, Player player)

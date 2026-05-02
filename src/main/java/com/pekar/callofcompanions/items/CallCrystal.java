@@ -2,9 +2,7 @@ package com.pekar.callofcompanions.items;
 
 import com.mojang.logging.LogUtils;
 import com.pekar.callofcompanions.Config;
-import com.pekar.callofcompanions.controllers.AnimalSummonFactory;
-import com.pekar.callofcompanions.controllers.CallCrystalHelper;
-import com.pekar.callofcompanions.controllers.SummonAnimalContext;
+import com.pekar.callofcompanions.controllers.*;
 import com.pekar.callofcompanions.data.CompanionData;
 import com.pekar.callofcompanions.data.DataRegistry;
 import com.pekar.callofcompanions.data.PositionStatus;
@@ -112,7 +110,13 @@ public class CallCrystal extends ModItem implements ITooltipProvider
         var useOnPos = hasNoCollisions ? clickPos.below() : clickPos;
         if (!CallCrystalHelper.canApplyCrystalAt(level, useOnPos.above())) return InteractionResult.FAIL;
 
-        if (!consumeXp(player)) return InteractionResult.FAIL;
+        if (!hasEnoughXp(player))
+        {
+            if (player instanceof ServerPlayer serverPlayer)
+                serverPlayer.sendSystemMessage(Component.translatable("message.callofcompanions.not_enough_xp"), true);
+
+            return InteractionResult.FAIL;
+        }
 
         player.getCooldowns().addCooldown(stack, crystalCooldown());
 
@@ -125,7 +129,25 @@ public class CallCrystal extends ModItem implements ITooltipProvider
             playSummonSound(serverLevel, player.blockPosition());
             showSummonParticles(serverLevel, useOnPos);
 
-            ScheduleSaveDataOnTasksEnd(serverPlayer, crystalId, companionData);
+            var farTeleportListener = new TeleportListener()
+            {
+                private boolean farTeleportUsed = false;
+
+                @Override
+                public void onTeleport(TeleportType teleportType)
+                {
+                    if (teleportType == TeleportType.FAR_TELEPORT)
+                        farTeleportUsed = true;
+                }
+
+                @Override
+                public boolean teleported()
+                {
+                    return farTeleportUsed;
+                }
+            };
+
+            scheduleSaveDataOnTasksEnd(serverPlayer, crystalId, companionData, farTeleportListener);
 
             var companionList = companionData.companions();
             var iterator = companionList.iterator();
@@ -151,7 +173,8 @@ public class CallCrystal extends ModItem implements ITooltipProvider
                         companionData,
                         companionEntry,
                         stack,
-                        callDelayFactor()
+                        callDelayFactor(),
+                        farTeleportListener
                 );
 
                 AnimalSummonFactory.get(summonContext).run(useOnPos.above());
@@ -167,27 +190,21 @@ public class CallCrystal extends ModItem implements ITooltipProvider
         return sidedSuccess(player.level().isClientSide());
     }
 
-    private static boolean consumeXp(Player player)
+    private boolean hasEnoughXp(Player player)
     {
-        if (Config.CONSUME_XP_ON_CALL.isTrue() && !player.isCreative())
-        {
-            int levelsToConsume = Config.XP_LEVELS_TO_CONSUME.getAsInt();
-
-            if (player.experienceLevel < levelsToConsume)
-            {
-                if (player instanceof ServerPlayer serverPlayer)
-                    serverPlayer.sendSystemMessage(Component.translatable("message.callofcompanions.not_enough_xp"), true);
-
-                return false;
-            }
-
-            player.giveExperienceLevels(-levelsToConsume);
-        }
-
-        return true;
+        if (Config.CONSUME_XP_ON_CALL.isFalse() || player.isCreative()) return true;
+        return player.experienceLevel >= Config.XP_LEVELS_TO_CONSUME.getAsInt();
     }
 
-    private void ScheduleSaveDataOnTasksEnd(ServerPlayer serverPlayer, UUID crystalId, CompanionData companionData)
+    private void consumeXp(Player player)
+    {
+        if (Config.CONSUME_XP_ON_CALL.isFalse() || player.isCreative()) return;
+
+        int levelsToConsume = Config.XP_LEVELS_TO_CONSUME.getAsInt();
+        player.giveExperienceLevels(-Math.min(levelsToConsume, player.experienceLevel));
+    }
+
+    private void scheduleSaveDataOnTasksEnd(ServerPlayer serverPlayer, UUID crystalId, CompanionData companionData, TeleportListener teleportListener)
     {
         var taskEndListener = new TaskEndListener()
         {
@@ -200,6 +217,11 @@ public class CallCrystal extends ModItem implements ITooltipProvider
 
                     itemStack.set(DataComponents.ENCHANTMENT_GLINT_OVERRIDE, false);
                     saveStackChanges(serverPlayer, itemStack, crystalId, companionData);
+
+                    if (teleportListener.teleported())
+                    {
+                        consumeXp(serverPlayer);
+                    }
                     break;
                 }
             }

@@ -1,3 +1,9 @@
+## 📦 Version 1.4.0
+
+### 📝 Improvements
+- XP is now only consumed if at least one animal actually gets teleported from an unloaded chunk.
+
+
 ## 📦 Version 1.3.1
 
 ### 📝 Improvements
