@@ -45,6 +45,9 @@ class VanillaTeleportController extends LoadedAnimalSummonController
                         {
                             playTeleportSound(level, animal);
                             showAnimalTeleportParticles(level, animal);
+
+                            if (teleportListener != null)
+                                teleportListener.onTeleport(TeleportType.VANILLA_TELEPORT);
                         }
                         else
                         {

@@ -40,6 +40,10 @@ class NearTeleportController extends LoadedAnimalSummonController
                         playTeleportSound(level, animal);
                         showAnimalTeleportParticles(level, animal);
                         setGoal(animal, player);
+
+                        if (teleportListener != null)
+                            teleportListener.onTeleport(TeleportType.NEAR_TELEPORT);
+
                         LOGGER.debug("Near teleport completed: companionType={}, companionId={}", entry.type(), entry.uuid());
                     }
                     else

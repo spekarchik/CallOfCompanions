@@ -6,14 +6,6 @@ import net.minecraft.world.entity.animal.Animal;
 
 public class AnimalSummonFactory
 {
-    private enum TeleportType
-    {
-        VANILLA_TELEPORT,
-        FOLLOW_PLAYER,
-        NEAR_TELEPORT,
-        FAR_TELEPORT
-    }
-
     public static AnimalSummonController get(SummonAnimalContext context)
     {
         switch (resolveTeleportType(context.player(), context.animal()))

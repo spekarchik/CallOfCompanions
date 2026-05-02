@@ -12,7 +12,8 @@ public record SummonAnimalContext(ServerPlayer player,
                                   CompanionData companionData,
                                   CompanionEntry companionEntry,
                                   ItemStack callCrystalStack,
-                                  float callDelayFactor
+                                  float callDelayFactor,
+                                  TeleportListener teleportListener
                                   )
 {
     public ServerLevel level()

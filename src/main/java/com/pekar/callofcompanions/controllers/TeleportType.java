@@ -1,9 +1,9 @@
 package com.pekar.callofcompanions.controllers;
 
-public enum TaskType
+public enum TeleportType
 {
-    IGNORE,
-    GOAL,
+    VANILLA_TELEPORT,
+    FOLLOW_PLAYER,
     NEAR_TELEPORT,
     FAR_TELEPORT
 }
