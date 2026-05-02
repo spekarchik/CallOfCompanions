@@ -95,6 +95,10 @@ class FarTeleportController extends AnimalSummonController
                             playTeleportSound(level, animal);
                             setGoal(animal, player);
                         }
+
+                        if (teleportListener != null)
+                            teleportListener.onTeleport(TeleportType.FAR_TELEPORT);
+
                         LOGGER.debug("Far teleport completed: companionType={}, companionId={}", entry.type(), entry.uuid());
                     }
                     else
