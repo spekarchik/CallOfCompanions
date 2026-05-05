@@ -33,6 +33,10 @@ import net.minecraft.world.item.context.UseOnContext;
 import net.minecraft.world.level.Level;
 import org.slf4j.Logger;
 
+import java.time.Instant;
+import java.time.ZoneId;
+import java.time.format.DateTimeFormatter;
+import java.time.format.DateTimeParseException;
 import java.util.UUID;
 import java.util.function.Consumer;
 
@@ -289,17 +293,20 @@ public class CallCrystal extends ModItem implements ITooltipProvider
 
         if (companionData != null)
         {
-            for (var companion : companionData.companions())
+            for (var companionEntry : companionData.companions())
             {
-                var name = CallCrystalHelper.buildAnimalName(companion.type(), companion.name());
-                var status = companion.positionStatus() == PositionStatus.LOST ? "" : "✓";
-                var ownerName = companion.ownerName().isPresent()
-                        ? companion.ownerName().get()
+                var name = CallCrystalHelper.buildAnimalName(companionEntry.type(), companionEntry.name());
+                var status = companionEntry.positionStatus() == PositionStatus.LOST ? "" : "✓";
+                if (flag.hasShiftDown())
+                    status += getTimeString(companionEntry.timestamp());
+
+                var ownerName = companionEntry.ownerName().isPresent()
+                        ? companionEntry.ownerName().get()
                         : Component.translatable("item.callofcompanions.deep_call_crystal.desc0").getString();
 
                 tooltip.addLine(getDescriptionId(), 1)
                         .fillWith(name, ownerName, status)
-                        .styledAs(TextStyle.DarkGray, companion.positionStatus() == PositionStatus.LOST)
+                        .styledAs(TextStyle.DarkGray, companionEntry.positionStatus() == PositionStatus.LOST)
                         .apply();
             }
         }
@@ -330,6 +337,51 @@ public class CallCrystal extends ModItem implements ITooltipProvider
         {
             tooltip.addLineById("description.press_shift").apply();
         }
+    }
+
+    private String getTimeString(long timestamp)
+    {
+        if (timestamp == 0L) return "";
+        long now = System.currentTimeMillis();
+        long secondsAgo = (now - timestamp) / 1000;
+
+        String relative;
+        if (secondsAgo < 60)
+            relative = secondsAgo + Component.translatable("text.callofcompanions.seconds_ago").getString();
+        else
+        {
+            long minutesAgo = secondsAgo / 60;
+            if (minutesAgo < 60)
+                relative = minutesAgo + Component.translatable("text.callofcompanions.minutes_ago").getString();
+            else
+            {
+                long hoursAgo = minutesAgo / 60;
+                if (hoursAgo < 24)
+                    relative = hoursAgo + Component.translatable("text.callofcompanions.hours_ago").getString();
+                else
+                {
+                    long daysAgo = hoursAgo / 24;
+                    relative = daysAgo + Component.translatable("text.callofcompanions.days_ago").getString();
+                }
+            }
+        }
+
+        // Format the absolute timestamp using configured pattern, fallback to default if invalid
+        String pattern = Config.DATETIME_FORMAT.get();
+        DateTimeFormatter formatter;
+        try
+        {
+            formatter = DateTimeFormatter.ofPattern(pattern).withZone(ZoneId.systemDefault());
+        }
+        catch (IllegalArgumentException | DateTimeParseException ex)
+        {
+            // fallback to default en-US pattern
+            formatter = DateTimeFormatter.ofPattern("MM/dd/yyyy HH:mm").withZone(ZoneId.systemDefault());
+        }
+
+        String formatted = formatter.format(Instant.ofEpochMilli(timestamp));
+
+        return "  " + relative + " (" + formatted + ")";
     }
 
     protected String getSummonableAnimalsDescriptionId()
