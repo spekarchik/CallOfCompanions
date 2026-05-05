@@ -29,5 +29,10 @@
   "message.callofcompanions.summon_cancelled": "Заклік перарваны.",
   "message.callofcompanions.no_summonable_companions": "Крышталь не прывязаны да вашых жывёл.",
 
+  "text.callofcompanions.seconds_ago": " сек. таму",
+  "text.callofcompanions.minutes_ago": " хв. таму",
+  "text.callofcompanions.hours_ago": " гад. таму",
+  "text.callofcompanions.days_ago": " дн. таму",
+
   "description.press_shift": "§7Утрымлівайце §9Shift§7 для падрабязнасцей..."
 }
