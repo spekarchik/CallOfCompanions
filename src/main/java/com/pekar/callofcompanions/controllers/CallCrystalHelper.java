@@ -72,7 +72,7 @@ public class CallCrystalHelper
     {
         var below = level.getBlockState(pos.below());
 
-        return below.isCollisionShapeFullBlock(level, pos) &&
+        return below.isCollisionShapeFullBlock(level, pos.below()) &&
                 noCollisionOrIsWater(level, pos) &&                    // body
                 noCollisionOrIsWater(level, pos.above()) && noCollisionOrIsWater(level, pos.above(2)); // head
     }
