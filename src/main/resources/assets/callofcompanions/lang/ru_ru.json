@@ -29,5 +29,10 @@
   "message.callofcompanions.summon_cancelled": "Призыв прерван.",
   "message.callofcompanions.no_summonable_companions": "Кристалл не привязан к вашим животным.",
 
+  "text.callofcompanions.seconds_ago": " сек. назад",
+  "text.callofcompanions.minutes_ago": " мин. назад",
+  "text.callofcompanions.hours_ago": " ч назад",
+  "text.callofcompanions.days_ago": " дн. назад",
+
   "description.press_shift": "§7Удерживайте §9Shift§7 для подробностей..."
 }

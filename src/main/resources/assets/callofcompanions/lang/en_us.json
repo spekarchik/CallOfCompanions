@@ -29,5 +29,10 @@
   "message.callofcompanions.summon_cancelled": "The call was interrupted.",
   "message.callofcompanions.no_summonable_companions": "The crystal has no bound animals for you.",
 
+  "text.callofcompanions.seconds_ago": " s ago",
+  "text.callofcompanions.minutes_ago": " m ago",
+  "text.callofcompanions.hours_ago": " h ago",
+  "text.callofcompanions.days_ago": " days ago",
+
   "description.press_shift": "§7Hold §9Shift§7 for details..."
 }
