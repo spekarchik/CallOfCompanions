@@ -110,6 +110,6 @@ public class CallCrystalHelper
     public static boolean isSafeSolidBlock(Level level, BlockPos pos)
     {
         var state = level.getBlockState(pos);
-        return state.isSolidRender() && !state.is(Blocks.MAGMA_BLOCK);
+        return state.isCollisionShapeFullBlock(level, pos) && !state.is(Blocks.MAGMA_BLOCK);
     }
 }
