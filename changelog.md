@@ -1,3 +1,9 @@
+## 📦 Version 1.5.0
+
+### 📝 Improvements
+- Crystals can now be used on **Ice**, **Glass**, and other transparent blocks.
+
+
 ## 📦 Version 1.4.0
 
 ### 📝 Improvements

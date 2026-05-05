@@ -71,7 +71,7 @@ public class CallCrystalHelper
     {
         var below = level.getBlockState(pos.below());
 
-        return below.isSolidRender(level, pos.below()) &&
+        return below.isCollisionShapeFullBlock(level, pos.below()) &&
                 noCollisionOrIsWater(level, pos) &&                    // body
                 noCollisionOrIsWater(level, pos.above()) && noCollisionOrIsWater(level, pos.above(2)); // head
     }
@@ -109,6 +109,6 @@ public class CallCrystalHelper
     public static boolean isSafeSolidBlock(Level level, BlockPos pos)
     {
         var state = level.getBlockState(pos);
-        return state.isSolidRender(level, pos) && !state.is(Blocks.MAGMA_BLOCK);
+        return state.isCollisionShapeFullBlock(level, pos) && !state.is(Blocks.MAGMA_BLOCK);
     }
 }
