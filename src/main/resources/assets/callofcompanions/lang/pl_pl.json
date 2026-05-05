@@ -29,5 +29,10 @@
   "message.callofcompanions.summon_cancelled": "Przywołanie przerwane.",
   "message.callofcompanions.no_summonable_companions": "Kryształ nie jest powiązany z twoimi zwierzętami.",
 
-  "description.press_shift": "§Przytrzymaj §9Shift§7, aby zobaczyć szczegóły..."
+  "text.callofcompanions.seconds_ago": " s temu",
+  "text.callofcompanions.minutes_ago": " min temu",
+  "text.callofcompanions.hours_ago": " godz. temu",
+  "text.callofcompanions.days_ago": " dni temu",
+
+  "description.press_shift": "§7Przytrzymaj §9Shift§7, aby zobaczyć szczegóły..."
 }
