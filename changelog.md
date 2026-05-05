@@ -2,6 +2,7 @@
 
 ### 📝 Improvements
 - Crystals can now be used on **Ice**, **Glass**, and other transparent blocks.
+- Crystals now store when animal coordinates were last updated. Hold *Shift* to view.
 
 
 ## 📦 Version 1.4.0

@@ -84,7 +84,8 @@ public class PlayerEvents implements IEventHandler
                             target.blockPosition(),
                             PositionStatus.FRESH,
                             ownerId,
-                            ownerName);
+                            ownerName,
+                            System.currentTimeMillis());
 
                     var result = companionData.add(entry);
                     if (result)

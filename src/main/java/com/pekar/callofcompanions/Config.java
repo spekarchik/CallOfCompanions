@@ -65,5 +65,11 @@ public class Config
             .comment("Workaround for MC 1.21.1: recreate dogs/cats/parrots on call to avoid invisibility; causes a single position jump.")
             .define("prevent_pets_invisibility_workaround_1_21_1", false);
 
+    // Date/time format used in tooltips and displays.
+    // Uses java.time.format.DateTimeFormatter patterns. Default is en-US style: MM/dd/yyyy HH:mm
+    public static final ModConfigSpec.ConfigValue<String> DATETIME_FORMAT = BUILDER
+            .comment("Date/time format used in tooltips. Uses java.time.format.DateTimeFormatter patterns. Default: MM/dd/yyyy HH:mm")
+            .define("datetime_format", "MM/dd/yyyy HH:mm");
+
     static final ModConfigSpec SPEC = BUILDER.build();
 }
