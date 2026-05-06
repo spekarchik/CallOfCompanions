@@ -302,8 +302,18 @@ public class CallCrystal extends ModItem implements ITooltipProvider
                         ? companionEntry.ownerName().get()
                         : Component.translatable("item.callofcompanions.deep_call_crystal.desc0").getString();
 
+                // Color the line based on timestamp:
+                // - green if not older than 2 minutes
+                // - white if older than 2 minutes but not older than 20 minutes
+                long timestamp = companionEntry.timestamp();
+                long age = timestamp == 0L ? Long.MAX_VALUE : (System.currentTimeMillis() - timestamp);
+                boolean recent = timestamp != 0L && age <= 120_000L; // <= 2 minutes
+                boolean mediumAge = timestamp != 0L && age > 120_000L && age <= 1_200_000L; // >2 and <=20 minutes
+
                 tooltip.addLine(getDescriptionId(), 1)
                         .fillWith(name, ownerName, status)
+                        .withFormatting(ChatFormatting.GREEN, Config.TOOLTIP_AGE_COLORING.isTrue() && recent)
+                        .withFormatting(ChatFormatting.WHITE, Config.TOOLTIP_AGE_COLORING.isTrue() && mediumAge)
                         .styledAs(TextStyle.DarkGray, companionEntry.positionStatus() == PositionStatus.LOST)
                         .apply();
             }
