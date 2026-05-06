@@ -62,5 +62,16 @@ public class Config
             .comment("Date/time format used in tooltips. Uses java.time.format.DateTimeFormatter patterns. Default: MM/dd/yyyy HH:mm")
             .define("datetime_format", "MM/dd/yyyy HH:mm");
 
+    // When true, tooltips will color companion lines depending on the stored companion data age.
+    // The in-code age thresholds are:
+    //  - GREEN:  age <= 2 minutes  (<= 120_000 ms)
+    //  - WHITE:  2 minutes < age <= 20 minutes (<= 1_200_000 ms)
+    // For older data the tooltip falls back to the default styling (or other styles like dark gray for LOST entries).
+    // If false, age-based coloring will be disabled and the tooltip lines will use default styling.
+    public static final ModConfigSpec.BooleanValue TOOLTIP_AGE_COLORING = BUILDER
+            .comment("Enable/disable coloring tooltip lines depending on stored companion data age.")
+            .comment("Green when age <= 2 minutes; white when >2 and <=20 minutes.")
+            .define("tooltip_age_coloring", true);
+
     static final ModConfigSpec SPEC = BUILDER.build();
 }
