@@ -3,6 +3,12 @@
 ### 📝 Improvements
 - Crystals can now be used on **Ice**, **Glass**, and other transparent blocks.
 - Crystals now store when animal coordinates were last updated. Hold *Shift* to view.
+- Animals in the tooltip are now color-coded based on coordinate status:
+  - 🟢 Green — updated within the last 2 minutes
+  - ⚪ White — updated within the last 20 minutes
+  - ⚙ Gray — coordinates were updated earlier
+  - ⚫ Dark gray — animal not found at last known position
+  - Green/white highlighting can be disabled in the config
 
 
 ## 📦 Version 1.4.0
