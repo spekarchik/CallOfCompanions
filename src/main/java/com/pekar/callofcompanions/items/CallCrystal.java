@@ -287,6 +287,9 @@ public class CallCrystal extends ModItem implements ITooltipProvider
     @Override
     public void addTooltip(ItemStack stack, TooltipContext context, ITooltip tooltip, TooltipFlag flag)
     {
+        var level = context.level();
+        if (level == null) return;
+
         var companionData = stack.get(DataRegistry.COMPANIONS);
 
         tooltip.ignoreEmptyLines();
@@ -298,24 +301,19 @@ public class CallCrystal extends ModItem implements ITooltipProvider
                 var name = CallCrystalHelper.buildAnimalName(companionEntry.type(), companionEntry.name());
                 var status = companionEntry.positionStatus() == PositionStatus.LOST ? "" : "✓";
                 if (flag.hasShiftDown())
-                    status += getTimeString(companionEntry.timestamp());
+                    status += getTimeString(level, companionEntry.timestamp(), companionEntry.gameTimestamp());
 
                 var ownerName = companionEntry.ownerName().isPresent()
                         ? companionEntry.ownerName().get()
                         : Component.translatable("item.callofcompanions.deep_call_crystal.desc0").getString();
 
-                // Color the line based on timestamp:
-                // - green if not older than 2 minutes
-                // - white if older than 2 minutes but not older than 20 minutes
-                long timestamp = companionEntry.timestamp();
-                long age = timestamp == 0L ? Long.MAX_VALUE : (System.currentTimeMillis() - timestamp);
-                boolean recent = timestamp != 0L && age <= 120_000L; // <= 2 minutes
-                boolean mediumAge = timestamp != 0L && age > 120_000L && age <= 1_200_000L; // >2 and <=20 minutes
+                // Determine coloring (recent / medium age) from configured time source
+                AgeCategory ageCategory = computeAgeCategory(companionEntry.timestamp(), companionEntry.gameTimestamp(), level);
 
                 tooltip.addLine(getDescriptionId(), 1)
                         .fillWith(name, ownerName, status)
-                        .withFormatting(ChatFormatting.GREEN, Config.TOOLTIP_AGE_COLORING.isTrue() && recent)
-                        .withFormatting(ChatFormatting.WHITE, Config.TOOLTIP_AGE_COLORING.isTrue() && mediumAge)
+                        .withFormatting(ChatFormatting.GREEN, Config.TOOLTIP_AGE_COLORING.isTrue() && ageCategory == AgeCategory.RECENT)
+                        .withFormatting(ChatFormatting.WHITE, Config.TOOLTIP_AGE_COLORING.isTrue() && ageCategory == AgeCategory.MEDIUM)
                         .styledAs(TextStyle.DarkGray, companionEntry.positionStatus() == PositionStatus.LOST)
                         .apply();
             }
@@ -349,34 +347,70 @@ public class CallCrystal extends ModItem implements ITooltipProvider
         }
     }
 
-    private String getTimeString(long timestamp)
+    private String getTimeString(Level level, long timestamp, long gameTimestamp)
     {
+        // If there is no real timestamp, we cannot produce meaningful output (gameTimestamp-only case is invalid here)
         if (timestamp == 0L) return "";
-        long now = System.currentTimeMillis();
-        long secondsAgo = (now - timestamp) / 1000;
+
+        boolean useReal = Config.TOOLTIP_USE_REALTIME.isTrue();
 
         String relative;
-        if (secondsAgo < 60)
-            relative = secondsAgo + Component.translatable("text.callofcompanions.seconds_ago").getString();
+        String absolute = formatAbsolute(timestamp);
+
+        if (useReal)
+        {
+            long secondsAgo = Math.max(0L, (System.currentTimeMillis() - timestamp) / 1000);
+            relative = formatRelativeReal(secondsAgo);
+        }
         else
         {
-            long minutesAgo = secondsAgo / 60;
-            if (minutesAgo < 60)
-                relative = minutesAgo + Component.translatable("text.callofcompanions.minutes_ago").getString();
+            if (gameTimestamp != 0L)
+            {
+                long secondsAgo = Math.max(0L, (level.getGameTime() - gameTimestamp) / 20);
+                relative = formatRelativeInGame(secondsAgo);
+            }
             else
             {
-                long hoursAgo = minutesAgo / 60;
-                if (hoursAgo < 24)
-                    relative = hoursAgo + Component.translatable("text.callofcompanions.hours_ago").getString();
-                else
-                {
-                    long daysAgo = hoursAgo / 24;
-                    relative = daysAgo + Component.translatable("text.callofcompanions.days_ago").getString();
-                }
+                // configured source missing -> hide relative and show only absolute
+                relative = "";
             }
         }
 
-        // Format the absolute timestamp using configured pattern, fallback to default if invalid
+        return "  " + (relative.isEmpty() ? absolute : relative + " (" + absolute + ")");
+    }
+
+    private String formatRelativeReal(long secondsAgo)
+    {
+        if (secondsAgo < 60)
+            return secondsAgo + Component.translatable("text.callofcompanions.seconds_ago").getString();
+
+        long minutes = secondsAgo / 60;
+        if (minutes < 60)
+            return minutes + Component.translatable("text.callofcompanions.minutes_ago").getString();
+
+        long hours = minutes / 60;
+        if (hours < 24)
+            return hours + Component.translatable("text.callofcompanions.hours_ago").getString();
+
+        long days = hours / 24;
+        return days + Component.translatable("text.callofcompanions.days_ago").getString();
+    }
+
+    private String formatRelativeInGame(long secondsAgo)
+    {
+        if (secondsAgo < 60)
+            return secondsAgo + Component.translatable("text.callofcompanions.seconds_ago").getString();
+
+        long minutes = secondsAgo / 60;
+        if (minutes < 20) // 20 minutes == 1 in-game day
+            return minutes + Component.translatable("text.callofcompanions.minutes_ago").getString();
+
+        long days = minutes / 20;
+        return days + Component.translatable("text.callofcompanions.days_ago").getString();
+    }
+
+    private String formatAbsolute(long timestamp)
+    {
         String pattern = Config.DATETIME_FORMAT.get();
         DateTimeFormatter formatter;
         try
@@ -385,13 +419,11 @@ public class CallCrystal extends ModItem implements ITooltipProvider
         }
         catch (IllegalArgumentException | DateTimeParseException ex)
         {
-            // fallback to default en-US pattern
             formatter = DateTimeFormatter.ofPattern("MM/dd/yyyy HH:mm").withZone(ZoneId.systemDefault());
         }
 
-        String formatted = formatter.format(Instant.ofEpochMilli(timestamp));
-
-        return "  " + relative + " (" + formatted + ")";
+        Instant instantToFormat = Instant.ofEpochMilli(timestamp);
+        return formatter.format(instantToFormat);
     }
 
     protected String getSummonableAnimalsDescriptionId()
@@ -402,5 +434,27 @@ public class CallCrystal extends ModItem implements ITooltipProvider
     protected int crystalDataCapacity()
     {
         return Config.CRYSTAL_DATA_CAPACITY.getAsInt();
+    }
+
+    private enum AgeCategory { NONE, RECENT, MEDIUM }
+
+    private AgeCategory computeAgeCategory(long realTimestamp, long gameTimestamp, Level level)
+    {
+        boolean useReal = Config.TOOLTIP_USE_REALTIME.isTrue();
+
+        if (useReal)
+        {
+            if (realTimestamp == 0L) return AgeCategory.NONE;
+            long seconds = Math.max(0L, (System.currentTimeMillis() - realTimestamp) / 1000);
+            if (seconds <= 120) return AgeCategory.RECENT; // <= 2 minutes
+            if (seconds <= 1200) return AgeCategory.MEDIUM; // >2 and <=20 minutes
+            return AgeCategory.NONE;
+        }
+
+        if (gameTimestamp == 0L) return AgeCategory.NONE;
+        long age = level.getGameTime() - gameTimestamp; // ticks
+        if (age <= 2400L) return AgeCategory.RECENT; // <= 2 minutes (in ticks)
+        if (age <= 24_000L) return AgeCategory.MEDIUM; // >2 and <=20 minutes
+        return AgeCategory.NONE;
     }
 }
