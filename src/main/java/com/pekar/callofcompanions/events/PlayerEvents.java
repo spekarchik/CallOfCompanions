@@ -75,6 +75,7 @@ public class PlayerEvents implements IEventHandler
                     var owner = target instanceof OwnableEntity ownable ? ownable.getOwner() : null;
                     Optional<UUID> ownerId = owner != null ? Optional.of(owner.getUUID()) : Optional.empty();
                     Optional<String> ownerName = owner != null ? Optional.of(owner.getDisplayName().getString()) : Optional.empty();
+                    var level = event.getLevel();
 
                     var entry = new CompanionEntry(
                             target.getUUID(),
@@ -85,12 +86,13 @@ public class PlayerEvents implements IEventHandler
                             PositionStatus.FRESH,
                             ownerId,
                             ownerName,
-                            System.currentTimeMillis());
+                            System.currentTimeMillis(),
+                            level.getGameTime());
 
                     var result = companionData.add(entry);
                     if (result)
                     {
-                        if (event.getLevel() instanceof ServerLevel serverLevel)
+                        if (level instanceof ServerLevel serverLevel)
                         {
                             playAddAnimalSound(serverLevel, animal);
                         }
