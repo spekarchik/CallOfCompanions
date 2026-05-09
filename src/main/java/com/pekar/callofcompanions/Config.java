@@ -71,6 +71,12 @@ public class Config
             .comment("Date/time format used in tooltips. Uses java.time.format.DateTimeFormatter patterns. Default: MM/dd/yyyy HH:mm")
             .define("datetime_format", "MM/dd/yyyy HH:mm");
 
+    // When true, tooltip relative time uses real-world time (System.currentTimeMillis()) instead of in-game time (game ticks).
+    // When false (default), relative times are calculated using in-game time (level game ticks). This is the recommended default.
+    public static final ModConfigSpec.BooleanValue TOOLTIP_USE_REALTIME = BUILDER
+            .comment("If true, tooltip relative time is calculated using real (system) time. If false, in-game time (game ticks) is used.")
+            .define("tooltip_use_realtime", false);
+
     // When true, tooltips will color companion lines depending on the stored companion data age.
     // The in-code age thresholds are:
     //  - GREEN:  age <= 2 minutes  (<= 120_000 ms)
