@@ -1,7 +1,10 @@
-## 📦 Version 1.5.1
+## 📦 Version 1.6.0
 
 ### 📝 Improvements
-- Companion location timestamps in Crystal tooltips now use in-game playtime for freshness indicators and relative time display.
+- Companion location timestamps in Crystal tooltips now support both real-time and in-game time modes.
+- Added a config option to control how relative time and freshness indicators are calculated.
+- In-game time is now used by default for coordinate freshness display.
+- Older Crystal data created before this update may temporarily show only absolute timestamps until coordinates are refreshed.
 
 
 ## 📦 Version 1.5.0
