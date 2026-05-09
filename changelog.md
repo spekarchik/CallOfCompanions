@@ -1,4 +1,4 @@
-## 📦 Version 1.6.0
+## 📦 Version 1.5.1
 
 ### 📝 Improvements
 - Companion location timestamps in Crystal tooltips now use in-game playtime for freshness indicators and relative time display.
