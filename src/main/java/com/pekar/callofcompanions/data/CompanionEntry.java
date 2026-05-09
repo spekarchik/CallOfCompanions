@@ -13,7 +13,7 @@ import java.util.Optional;
 import java.util.UUID;
 
 public record CompanionEntry(UUID uuid, String name, String type, ResourceKey<Level> dimension, BlockPos pos, PositionStatus positionStatus,
-                             Optional<UUID> ownerUuid, Optional<String> ownerName, long timestamp)
+                             Optional<UUID> ownerUuid, Optional<String> ownerName, long timestamp, long gameTimestamp)
 {
     public static final Codec<CompanionEntry> ENTRY_CODEC = RecordCodecBuilder.create(instance ->
             instance.group(
@@ -25,21 +25,22 @@ public record CompanionEntry(UUID uuid, String name, String type, ResourceKey<Le
                     Codec.STRING.xmap(PositionStatus::valueOf, PositionStatus::name).fieldOf("positionStatus").forGetter(CompanionEntry::positionStatus),
                     UUIDUtil.CODEC.optionalFieldOf("ownerUuid").forGetter(CompanionEntry::ownerUuid),
                     Codec.STRING.optionalFieldOf("ownerName").forGetter(CompanionEntry::ownerName),
-                    Codec.LONG.optionalFieldOf("timestamp").forGetter(ce -> Optional.of(ce.timestamp()))
-                    ).apply(instance, (uuid, name, type, dimension, pos, positionStatus, ownerUuid, ownerName, timestampOpt) ->
-                            new CompanionEntry(uuid, name, type, dimension, pos, positionStatus, ownerUuid, ownerName, timestampOpt.orElse(0L)))
+                    Codec.LONG.optionalFieldOf("timestamp").forGetter(ce -> Optional.of(ce.timestamp())),
+                    Codec.LONG.optionalFieldOf("gameTimestamp").forGetter(ce -> Optional.of(ce.gameTimestamp()))
+                    ).apply(instance, (uuid, name, type, dimension, pos, positionStatus, ownerUuid, ownerName, timestampOpt, gameTimestampOpt) ->
+                            new CompanionEntry(uuid, name, type, dimension, pos, positionStatus, ownerUuid, ownerName, timestampOpt.orElse(0L), gameTimestampOpt.orElse(0L)))
     );
 
     // need to also update animal type because text localization may be changed
-    public CompanionEntry getWith(ResourceKey<Level> dimension, BlockPos newPos, String animalType)
+    public CompanionEntry getWith(ResourceKey<Level> dimension, BlockPos newPos, String animalType, Level level)
     {
-        return new CompanionEntry(this.uuid, this.name, animalType, dimension, newPos, PositionStatus.FRESH, this.ownerUuid, this.ownerName, System.currentTimeMillis());
+        return new CompanionEntry(this.uuid, this.name, animalType, dimension, newPos, PositionStatus.FRESH, this.ownerUuid, this.ownerName, System.currentTimeMillis(), level.getGameTime());
     }
 
     public CompanionEntry getAsLost()
     {
         if (positionStatus == PositionStatus.LOST) return this;
-        return new CompanionEntry(this.uuid, this.name, this.type, this.dimension, this.pos, PositionStatus.LOST, this.ownerUuid, this.ownerName, this.timestamp);
+        return new CompanionEntry(this.uuid, this.name, this.type, this.dimension, this.pos, PositionStatus.LOST, this.ownerUuid, this.ownerName, this.timestamp, this.gameTimestamp);
     }
 
     @Override
