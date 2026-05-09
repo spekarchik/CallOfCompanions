@@ -287,6 +287,9 @@ public class CallCrystal extends ModItem implements ITooltipProvider
     @Override
     public void addTooltip(ItemStack stack, TooltipContext context, ITooltip tooltip, TooltipFlag flag)
     {
+        var level = context.level();
+        if (level == null) return;
+
         var companionData = stack.get(DataRegistry.COMPANIONS);
 
         tooltip.ignoreEmptyLines();
@@ -298,7 +301,7 @@ public class CallCrystal extends ModItem implements ITooltipProvider
                 var name = CallCrystalHelper.buildAnimalName(companionEntry.type(), companionEntry.name());
                 var status = companionEntry.positionStatus() == PositionStatus.LOST ? "" : "✓";
                 if (flag.hasShiftDown())
-                    status += getTimeString(companionEntry.timestamp());
+                    status += getTimeString(level, companionEntry.timestamp(), companionEntry.gameTimestamp());
 
                 var ownerName = companionEntry.ownerName().isPresent()
                         ? companionEntry.ownerName().get()
@@ -307,10 +310,10 @@ public class CallCrystal extends ModItem implements ITooltipProvider
                 // Color the line based on timestamp:
                 // - green if not older than 2 minutes
                 // - white if older than 2 minutes but not older than 20 minutes
-                long timestamp = companionEntry.timestamp();
-                long age = timestamp == 0L ? Long.MAX_VALUE : (System.currentTimeMillis() - timestamp);
-                boolean recent = timestamp != 0L && age <= 120_000L; // <= 2 minutes
-                boolean mediumAge = timestamp != 0L && age > 120_000L && age <= 1_200_000L; // >2 and <=20 minutes
+                long timestamp = companionEntry.gameTimestamp();
+                long age = timestamp == 0L ? Long.MAX_VALUE : (level.getGameTime() - timestamp);
+                boolean recent = timestamp != 0L && age <= 2400L; // <= 2 minutes
+                boolean mediumAge = timestamp != 0L && age > 2400L && age <= 24_000L; // >2 and <=20 minutes
 
                 tooltip.addLine(getDescriptionId(), 1)
                         .fillWith(name, ownerName, status)
@@ -349,11 +352,14 @@ public class CallCrystal extends ModItem implements ITooltipProvider
         }
     }
 
-    private String getTimeString(long timestamp)
+    private String getTimeString(Level level, long timestamp, long gameTimestamp)
     {
         if (timestamp == 0L) return "";
-        long now = System.currentTimeMillis();
-        long secondsAgo = (now - timestamp) / 1000;
+
+        long now = level.getGameTime();
+        long secondsAgo = gameTimestamp != 0L
+                ? (now - gameTimestamp) / 20
+                : (System.currentTimeMillis() - timestamp) / 1000;
 
         String relative;
         if (secondsAgo < 60)
