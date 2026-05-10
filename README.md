@@ -139,6 +139,17 @@ Make it lightweight… or powerful.
 
 ---
 
+## 🔗 Mod Compatibility
+
+The mod is compatible with many modded animals and companions.
+
+Successfully tested with:
+- Animal Garden
+
+Compatibility works automatically for most entities using standard taming mechanics and ownership systems.
+
+---
+
 ## 🧩 Design Philosophy
 
 No menus.  
@@ -171,40 +182,6 @@ They’re just… waiting for your call.
 - **Supported Minecraft versions:** 1.21.1, 1.21.4 - 1.21.11, 26.1+
 - **Texture resolution:** 16×16
 - **Supported languages:** English, Belarusian, Russian, Polish
-
----
-
-## 🧩 Related Mods
-
-The Block of Angel mod is fully compatible with my following mods:
-
-- **[🌟 The Block of Angel](https://modrinth.com/mod/angel-block-mod)**
-  An exploration-focused mod that rewards curiosity and reduces repetitive grind — while keeping the core survival balance intact. Perfect for players who want each discovery to matter.
-  Start with almost nothing — earn every shortcut.  
-  This mod transforms Minecraft into a world of meaningful adventure and artifact-driven progression. No grind, no farms — just clever tools, dangerous dungeons, and rewards you must conquer.
-
-  • Progression-focused gameplay: leather armor, stone weapons, and real survival.  
-  • Unique tools: magnetic rods, precision builders, instant crop planters.  
-  • Legendary gear: 6 armor sets, powerful weapons, and upgrade paths.  
-  • Angel Block & Rod: sacred artifacts that protect and purify your world.  
-  • No custom UIs — pure, immersive gameplay.
-
-  Ideal for adventurers who want to *explore*, *survive*, and *earn* their power — not dig tunnels forever.
-
-- **[🌟 Pouch & Paper](https://modrinth.com/mod/pouch-and-paper)** — introduces compact forms of tradeable resources for easier storage and trading:  
-  • paper (stackable and block form),  
-  • ink and glow ink (bottled),  
-  • leather (bundled),  
-  • seeds (in pouches),  
-  • feathers (as compact packs).  
-  Includes the *Burnt Paper Block* — crafted by setting a Paper Block on fire. It attracts creepers and repels bees, perfect for traps and moody builds.
-
-- **[🔧 EnchantOnce](https://modrinth.com/mod/enchantonce)** — a minimalistic but powerful rework of enchanting and repairing.  
-  Fixed XP costs, enchanted book duplication, material-based repairs, and perfect gear cloning — all with vanilla-style mechanics.  
-  Fully supports custom gear and enchantments from The Block of Angel.
-
-- **[🧭 Compass Cleaner](https://modrinth.com/mod/compass-cleaner)** — adds a minimalist recipe to reset a _Lodestone Compass_ to a regular _Compass_.  
-    Ideal for tidying up obsolete compasses after you lose or remove their lodestone targets.
 
 ---
 
