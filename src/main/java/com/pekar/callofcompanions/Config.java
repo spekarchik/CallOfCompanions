@@ -21,10 +21,10 @@ public class Config
     // Radius in chunks to load around a companion when performing a far teleport.
     // WARNING: Increasing this value will make the server load more chunks (costly in memory and CPU).
     // Lower values may cause animals to not be found in remote chunks. Change at your own risk.
-    // Valid range: 1..12 (1 = minimal, 12 = large area).
+    // Valid range: 1..32 (1 = minimal, 12 = large area).
     public static final ModConfigSpec.IntValue FAR_TELEPORT_CHUNK_RADIUS = BUILDER
             .comment("Radius in chunks to load around a companion when doing a far teleport. Change at your own risk; higher values increase server memory/CPU usage.")
-            .defineInRange("far_teleport_chunk_radius", 6, 1, 12);
+            .defineInRange("far_teleport_chunk_radius", 6, 1, 32);
 
     // How many companions a normal Call Crystal can store.
     // Increase at your own risk: higher values may increase memory usage.
