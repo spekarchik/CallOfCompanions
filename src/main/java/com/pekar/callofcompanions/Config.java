@@ -71,10 +71,16 @@ public class Config
             .comment("Date/time format used in tooltips. Uses java.time.format.DateTimeFormatter patterns. Default: MM/dd/yyyy HH:mm")
             .define("datetime_format", "MM/dd/yyyy HH:mm");
 
-    // When true, tooltip relative time uses real-world time (System.currentTimeMillis()) instead of in-game time (game ticks).
-    // When false (default), relative times are calculated using in-game time (level game ticks). This is the recommended default.
+    // Controls how relative time is displayed in Crystal tooltips.
+    // false = Minecraft in-game time (20 real minutes = 1 in-game day)
+    // true = real-world elapsed time
     public static final ModConfigSpec.BooleanValue TOOLTIP_USE_REALTIME = BUILDER
-            .comment("If true, tooltip relative time is calculated using real (system) time. If false, in-game time (game ticks) is used.")
+            .comment(
+                    "Controls how relative time is displayed in Crystal tooltips.",
+                    "false = Minecraft in-game time (20 real minutes = 1 in-game day)",
+                    "        Time does not progress while the world/server is offline.",
+                    "true = real-world elapsed time"
+            )
             .define("tooltip_use_realtime", false);
 
     // When true, tooltips will color companion lines depending on the stored companion data age.
