@@ -1,3 +1,9 @@
+## 📦 Version 1.6.1
+
+### 📝 Improvements
+- **Soul Sand** and **Dirt Path** are now valid blocks for crystal use and animal teleportation.
+
+
 ## 📦 Version 1.6.0
 
 ### 📝 Improvements
