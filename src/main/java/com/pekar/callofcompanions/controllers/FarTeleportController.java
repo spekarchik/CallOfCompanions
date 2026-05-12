@@ -76,7 +76,7 @@ class FarTeleportController extends AnimalSummonController
             showAnimalNotRespondParticles(playerLevel, teleportPos.below());
             var name = CallCrystalHelper.buildAnimalName(companionEntry.type(), companionEntry.name());
             player.sendSystemMessage(Component.translatable("message.callofcompanions.wrong_dimension", name));
-            LOGGER.debug("Far teleport cancelled: wrong dimension, companionType={}, companionId={}, companionDimension={}", companionEntry.type(), companionEntry.uuid(), companionEntry.dimension());
+            LOGGER.debug("Far teleport cancelled: wrong dimension, companionType={}, companionId={}, companionPos={}, companionDimension={}", companionEntry.type(), companionEntry.uuid(), companionEntry.pos(), companionEntry.dimension());
             return;
         }
 
@@ -123,7 +123,7 @@ class FarTeleportController extends AnimalSummonController
         var entity = playerLevel.getEntity(entry.uuid());
         if (!CallCrystalHelper.canSummonAnimal(entity, player))
         {
-            LOGGER.debug("Far teleport skipped: companion can't be summoned by player, companionType={}, companionId={}, player={}", entry.type(), entry.uuid(), player.getDisplayName());
+            LOGGER.debug("Far teleport skipped: companion can't be summoned by player, companionType={}, companionId={}, companionPos={}, companionDimension={}, player={}", entry.type(), entry.uuid(), entry.pos(), entry.dimension(), player.getDisplayName());
             return;
         }
 
@@ -140,7 +140,7 @@ class FarTeleportController extends AnimalSummonController
             if (teleportListener != null)
                 teleportListener.onTeleport(isCrossDimensionalTeleport ? TeleportType.CROSS_DIMENSION_TELEPORT : TeleportType.FAR_TELEPORT);
 
-            LOGGER.debug("Far teleport completed: companionType={}, companionId={}", entry.type(), entry.uuid());
+            LOGGER.debug("Far teleport completed: companionType={}, companionId={}, companionPos={}, companionDimension={}", entry.type(), entry.uuid(), entry.pos(), entry.dimension());
         }
         else
         {
@@ -150,12 +150,12 @@ class FarTeleportController extends AnimalSummonController
             if (playerLevel.getEntity(entry.uuid()) == null)
             {
                 player.sendSystemMessage(Component.translatable("message.callofcompanions.not_found", name));
-                LOGGER.debug("Far teleport failed: companion not found, companionType={}, companionId={}", entry.type(), entry.uuid());
+                LOGGER.debug("Far teleport failed: companion not found, companionType={}, companionId={}, companionPos={}, companionDimension={}", entry.type(), entry.uuid(), entry.pos(), entry.dimension());
             }
             else
             {
                 player.sendOverlayMessage(Component.translatable("message.callofcompanions.cant_teleport", name));
-                LOGGER.debug("Far teleport failed: companion couldn't find a safe place to teleport, companionType={}, companionId={}", entry.type(), entry.uuid());
+                LOGGER.debug("Far teleport failed: companion couldn't find a safe place to teleport, companionType={}, companionId={}, companionPos={}, companionDimension={}", entry.type(), entry.uuid(), entry.pos(), entry.dimension());
             }
         }
 
