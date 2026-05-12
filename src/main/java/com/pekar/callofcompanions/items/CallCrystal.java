@@ -137,18 +137,27 @@ public class CallCrystal extends ModItem implements ITooltipProvider
             var farTeleportListener = new TeleportListener()
             {
                 private boolean farTeleportUsed = false;
+                private boolean crossDimTeleportUsed = false;
 
                 @Override
                 public void onTeleport(TeleportType teleportType)
                 {
                     if (teleportType == TeleportType.FAR_TELEPORT)
                         farTeleportUsed = true;
+                    else if (teleportType == TeleportType.CROSS_DIMENSION_TELEPORT)
+                        crossDimTeleportUsed = true;
                 }
 
                 @Override
                 public boolean teleported()
                 {
-                    return farTeleportUsed;
+                    return farTeleportUsed || crossDimTeleportUsed;
+                }
+
+                @Override
+                public boolean isCrossDimensional()
+                {
+                    return crossDimTeleportUsed;
                 }
             };
 
@@ -179,7 +188,8 @@ public class CallCrystal extends ModItem implements ITooltipProvider
                         companionEntry,
                         stack,
                         callDelayFactor(),
-                        farTeleportListener
+                        farTeleportListener,
+                        allowInterDimensionalTeleports()
                 );
 
                 AnimalSummonFactory.get(summonContext).run(useOnPos.above());
@@ -197,15 +207,18 @@ public class CallCrystal extends ModItem implements ITooltipProvider
 
     private boolean hasEnoughXp(Player player)
     {
-        if (Config.CONSUME_XP_ON_CALL.isFalse() || player.isCreative()) return true;
-        return player.experienceLevel >= Config.XP_LEVELS_TO_CONSUME.getAsInt();
+        if (player.isCreative()) return true;
+        return player.experienceLevel >= requiredXpAmountToCall();
     }
 
-    private void consumeXp(Player player)
+    private void consumeXp(Player player, boolean isInterDimensionalCall)
     {
-        if (Config.CONSUME_XP_ON_CALL.isFalse() || player.isCreative()) return;
+        if (player.isCreative()) return;
 
-        int levelsToConsume = Config.XP_LEVELS_TO_CONSUME.getAsInt();
+        int levelsToConsume = isInterDimensionalCall
+                ? Math.min(requiredXpAmountToCall(), Config.XP_LEVELS_TO_CONSUME_CROSS_DIMENSION.getAsInt())
+                : Math.min(requiredXpAmountToCall(), Config.XP_LEVELS_TO_CONSUME.getAsInt());
+
         player.giveExperienceLevels(-Math.min(levelsToConsume, player.experienceLevel));
     }
 
@@ -225,7 +238,7 @@ public class CallCrystal extends ModItem implements ITooltipProvider
 
                     if (teleportListener.teleported())
                     {
-                        consumeXp(serverPlayer);
+                        consumeXp(serverPlayer, teleportListener.isCrossDimensional());
                     }
                     break;
                 }
@@ -305,7 +318,7 @@ public class CallCrystal extends ModItem implements ITooltipProvider
 
                 var ownerName = companionEntry.ownerName().isPresent()
                         ? companionEntry.ownerName().get()
-                        : Component.translatable("item.callofcompanions.deep_call_crystal.desc0").getString();
+                        : Component.translatable("text.callofcompanions.none").getString();
 
                 // Determine coloring (recent / medium age) from configured time source
                 AgeCategory ageCategory = computeAgeCategory(companionEntry.timestamp(), companionEntry.gameTimestamp(), level);
@@ -337,9 +350,21 @@ public class CallCrystal extends ModItem implements ITooltipProvider
                     .fillWith(lostCampanions)
                     .withFormatting(ChatFormatting.DARK_AQUA, true)
                     .apply();
-            tooltip.addLine(getSummonableAnimalsDescriptionId(), 4)
-                    .withFormatting(ChatFormatting.DARK_AQUA, true)
+            tooltip.addLine(getSummonableAnimalsInfoDescriptionId(), 4)
+                    .withFormatting(ChatFormatting.DARK_GREEN, true)
                     .apply();
+            tooltip.addLine(getCrossDimensionCallsInfoDescriptionId(), 5)
+                    .withFormatting(ChatFormatting.DARK_GREEN, true)
+                    .apply();
+
+            var player = context.player();
+            if (Config.CONSUME_XP_ON_CALL.isTrue() && player != null && !player.isCreative())
+            {
+                tooltip.addLine(getDescriptionId(), 6)
+                        .fillWith(requiredXpAmountToCall())
+                        .withFormatting(ChatFormatting.DARK_GREEN, true)
+                        .apply();
+            }
         }
         else
         {
@@ -426,7 +451,12 @@ public class CallCrystal extends ModItem implements ITooltipProvider
         return formatter.format(instantToFormat);
     }
 
-    protected String getSummonableAnimalsDescriptionId()
+    protected String getSummonableAnimalsInfoDescriptionId()
+    {
+        return getDescriptionId();
+    }
+
+    protected String getCrossDimensionCallsInfoDescriptionId()
     {
         return getDescriptionId();
     }
@@ -434,6 +464,16 @@ public class CallCrystal extends ModItem implements ITooltipProvider
     protected int crystalDataCapacity()
     {
         return Config.CRYSTAL_DATA_CAPACITY.getAsInt();
+    }
+
+    protected boolean allowInterDimensionalTeleports()
+    {
+        return false;
+    }
+
+    protected int requiredXpAmountToCall()
+    {
+        return Config.CONSUME_XP_ON_CALL.isTrue() ? Config.XP_LEVELS_TO_CONSUME.getAsInt() : 0;
     }
 
     private enum AgeCategory { NONE, RECENT, MEDIUM }

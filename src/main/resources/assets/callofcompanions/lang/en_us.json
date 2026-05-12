@@ -12,13 +12,16 @@
   "item.callofcompanions.call_crystal.desc2": "Animals: {}/{}",
   "item.callofcompanions.call_crystal.desc3": "Missing: {}",
   "item.callofcompanions.call_crystal.desc4": "Binds tamed animals",
+  "item.callofcompanions.call_crystal.desc5": "Calls animals within the current dimension",
+  "item.callofcompanions.call_crystal.desc6": "Requires at least {} XP levels to use",
 
   "item.callofcompanions.deep_call_crystal": "Deep Call Crystal",
-  "item.callofcompanions.deep_call_crystal.desc0": "None",
   "item.callofcompanions.deep_call_crystal.desc1": "{} (Owner: {}) {}",
   "item.callofcompanions.deep_call_crystal.desc2": "Animals: {}/{}",
   "item.callofcompanions.deep_call_crystal.desc3": "Missing: {}",
   "item.callofcompanions.deep_call_crystal.desc4": "Binds tamed or named animals",
+  "item.callofcompanions.deep_call_crystal.desc5": "Calls animals across dimensions",
+  "item.callofcompanions.deep_call_crystal.desc6": "Requires at least {} XP levels to use",
 
   "message.callofcompanions.not_found": "%s did not respond.",
   "message.callofcompanions.cant_teleport": "%s couldn't find a safe place to reach you.",
@@ -29,6 +32,7 @@
   "message.callofcompanions.summon_cancelled": "The call was interrupted.",
   "message.callofcompanions.no_summonable_companions": "The crystal has no bound animals for you.",
 
+  "text.callofcompanions.none": "None",
   "text.callofcompanions.seconds_ago": " s ago",
   "text.callofcompanions.minutes_ago": " m ago",
   "text.callofcompanions.hours_ago": " h ago",
