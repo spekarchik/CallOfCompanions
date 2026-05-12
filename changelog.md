@@ -1,7 +1,12 @@
-## 📦 Version 1.6.1
+## 📦 Version 1.7.0
 
 ### 📝 Improvements
 - **Soul Sand** and **Dirt Path** are now valid blocks for crystal use and animal teleportation.
+
+### 🛠️ Changes
+- Reworked config structure.
+  - ⚠ Existing config settings will be reset to default values after updating.
+  - You may need to reconfigure the mod settings.
 
 
 ## 📦 Version 1.6.0
