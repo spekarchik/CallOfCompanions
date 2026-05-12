@@ -12,13 +12,16 @@
   "item.callofcompanions.call_crystal.desc2": "Животные: {}/{}",
   "item.callofcompanions.call_crystal.desc3": "Не откликнулись: {}",
   "item.callofcompanions.call_crystal.desc4": "Привязывает прирученных животных",
+  "item.callofcompanions.call_crystal.desc5": "Призывает животных только в пределах измерения",
+  "item.callofcompanions.call_crystal.desc6": "Требуется минимум {} уровней XP",
 
   "item.callofcompanions.deep_call_crystal": "Глубинный кристалл зова",
-  "item.callofcompanions.deep_call_crystal.desc0": "нет",
   "item.callofcompanions.deep_call_crystal.desc1": "{} (Хозяин: {}) {}",
   "item.callofcompanions.deep_call_crystal.desc2": "Животные: {}/{}",
   "item.callofcompanions.deep_call_crystal.desc3": "Не откликнулись: {}",
   "item.callofcompanions.deep_call_crystal.desc4": "Привязывает прирученных или именованных животных",
+  "item.callofcompanions.deep_call_crystal.desc5": "Призывает животных между измерениями",
+  "item.callofcompanions.deep_call_crystal.desc6": "Требуется минимум {} уровней XP",
 
   "message.callofcompanions.not_found": "%s не откликнулся.",
   "message.callofcompanions.cant_teleport": "%s не смог найти безопасное место, чтобы добраться до вас.",
@@ -29,6 +32,7 @@
   "message.callofcompanions.summon_cancelled": "Призыв прерван.",
   "message.callofcompanions.no_summonable_companions": "Кристалл не привязан к вашим животным.",
 
+  "text.callofcompanions.none": "нет",
   "text.callofcompanions.seconds_ago": " сек. назад",
   "text.callofcompanions.minutes_ago": " мин. назад",
   "text.callofcompanions.hours_ago": " ч назад",
