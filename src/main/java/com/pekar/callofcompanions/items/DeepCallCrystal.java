@@ -23,9 +23,17 @@ public class DeepCallCrystal extends CallCrystal implements ITooltipProvider
     }
 
     @Override
-    protected String getSummonableAnimalsDescriptionId()
+    protected String getSummonableAnimalsInfoDescriptionId()
     {
         return Config.DEEP_CRYSTAL_DISALLOW_UNTAMED.isTrue()
+                ? "item.callofcompanions.call_crystal"
+                : getDescriptionId();
+    }
+
+    @Override
+    protected String getCrossDimensionCallsInfoDescriptionId()
+    {
+        return Config.DEEP_CRYSTAL_ALLOW_INTERDIMENSIONAL.isFalse()
                 ? "item.callofcompanions.call_crystal"
                 : getDescriptionId();
     }
@@ -34,5 +42,21 @@ public class DeepCallCrystal extends CallCrystal implements ITooltipProvider
     protected int crystalDataCapacity()
     {
         return Config.DEEP_CRYSTAL_DATA_CAPACITY.getAsInt();
+    }
+
+    @Override
+    protected boolean allowInterDimensionalTeleports()
+    {
+        return Config.DEEP_CRYSTAL_ALLOW_INTERDIMENSIONAL.isTrue();
+    }
+
+    @Override
+    protected int requiredXpAmountToCall()
+    {
+        if (Config.CONSUME_XP_ON_CALL.isFalse()) return 0;
+
+        return Config.DEEP_CRYSTAL_ALLOW_INTERDIMENSIONAL.isTrue()
+                ? Config.XP_LEVELS_TO_CONSUME_CROSS_DIMENSION.getAsInt()
+                : Config.XP_LEVELS_TO_CONSUME.getAsInt();
     }
 }
