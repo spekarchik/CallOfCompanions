@@ -12,13 +12,16 @@
   "item.callofcompanions.call_crystal.desc2": "Жывёлы: {}/{}",
   "item.callofcompanions.call_crystal.desc3": "Не адгукнуліся: {}",
   "item.callofcompanions.call_crystal.desc4": "Прывязвае прыручаных жывёл",
+  "item.callofcompanions.call_crystal.desc5": "Кліча жывёл толькі ў межах вымярэння",
+  "item.callofcompanions.call_crystal.desc6": "Патрабуецца мінімум {} узроўняў XP",
 
   "item.callofcompanions.deep_call_crystal": "Глыбінны крышталь клічу",
-  "item.callofcompanions.deep_call_crystal.desc0": "няма",
   "item.callofcompanions.deep_call_crystal.desc1": "{} (Гаспадар: {}) {}",
   "item.callofcompanions.deep_call_crystal.desc2": "Жывёлы: {}/{}",
   "item.callofcompanions.deep_call_crystal.desc3": "Не адгукнуліся: {}",
   "item.callofcompanions.deep_call_crystal.desc4": "Прывязвае прыручаных ці названых жывёл",
+  "item.callofcompanions.deep_call_crystal.desc5": "Кліча жывёл паміж вымярэннямі",
+  "item.callofcompanions.deep_call_crystal.desc6": "Патрабуецца мінімум {} узроўняў XP",
 
   "message.callofcompanions.not_found": "%s не адгукнуўся.",
   "message.callofcompanions.cant_teleport": "%s не змог знайсці бяспечнае месца, каб дабрацца да вас.",
@@ -29,6 +32,7 @@
   "message.callofcompanions.summon_cancelled": "Заклік перарваны.",
   "message.callofcompanions.no_summonable_companions": "Крышталь не прывязаны да вашых жывёл.",
 
+  "text.callofcompanions.none": "няма",
   "text.callofcompanions.seconds_ago": " сек. таму",
   "text.callofcompanions.minutes_ago": " хв. таму",
   "text.callofcompanions.hours_ago": " гад. таму",
