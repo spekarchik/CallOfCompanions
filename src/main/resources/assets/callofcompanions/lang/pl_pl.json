@@ -31,6 +31,7 @@
   "message.callofcompanions.limit_reached": "Nie można powiązać więcej zwierząt z tym kryształem.",
   "message.callofcompanions.cant_bind_tame_only": "Zwierzę musi być oswojone, aby powiązać je z kryształem.",
   "message.callofcompanions.cant_bind_tame_or_named": "Zwierzę musi być oswojone lub nazwane, aby powiązać je z kryształem.",
+  "message.callofcompanions.cant_bind_entity_type": "Stworzenie '%s' nie może być przywiązane do kryształu.",
   "message.callofcompanions.companions_updated": "Połączenie ze zwierzętami zostało odświeżone.",
   "message.callofcompanions.summon_cancelled": "Przywołanie przerwane.",
   "message.callofcompanions.no_summonable_companions": "Kryształ nie jest powiązany z twoimi zwierzętami.",

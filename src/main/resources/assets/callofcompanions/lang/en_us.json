@@ -31,6 +31,7 @@
   "message.callofcompanions.limit_reached": "You cannot bind any more animals to this crystal.",
   "message.callofcompanions.cant_bind_tame_only": "The animal must be tamed to bind it to the crystal.",
   "message.callofcompanions.cant_bind_tame_or_named": "The animal must be tamed or named to bind it to the crystal.",
+  "message.callofcompanions.cant_bind_entity_type": "%s cannot be bound to the crystal.",
   "message.callofcompanions.companions_updated": "Link to animals refreshed.",
   "message.callofcompanions.summon_cancelled": "The call was interrupted.",
   "message.callofcompanions.no_summonable_companions": "The crystal has no bound animals for you.",
