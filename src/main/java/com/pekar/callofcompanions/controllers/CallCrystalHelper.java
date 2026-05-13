@@ -41,8 +41,12 @@ public class CallCrystalHelper
         if (entity == null && entityOwnerId != null && !entityOwnerId.equals(player.getUUID()))
             return false;
 
-        if (entity instanceof TamableAnimal tamable && (!tamable.isTame() || !tamable.isOwnedBy(player)))
-            return false;
+        if (entity instanceof TamableAnimal tamable)
+        {
+            if (!tamable.isTame() && !tamable.hasCustomName()) return false;
+            var ownerRef = tamable.getOwnerReference();
+            if (ownerRef != null && !ownerRef.matches(player)) return false; // don't rely on `tamable.isOwnedBy(player)`!
+        }
 
         if (entity instanceof AbstractHorse horse)
         {
