@@ -322,9 +322,13 @@ public class CallCrystal extends ModItem implements ITooltipProvider
                 if (flag.hasShiftDown())
                     status += getTimeString(level, companionEntry.timestamp(), companionEntry.gameTimestamp());
 
-                var ownerName = companionEntry.ownerName().isPresent()
-                        ? companionEntry.ownerName().get()
-                        : Component.translatable("text.callofcompanions.none").getString();
+                String ownerName;
+                if (companionEntry.ownerName().isPresent())
+                    ownerName = companionEntry.ownerName().get();
+                 else if (companionEntry.ownerUuid().isEmpty())
+                     ownerName = Component.translatable("text.callofcompanions.none").getString();
+                 else
+                     ownerName = "?";
 
                 // Determine coloring (recent / medium age) from configured time source
                 AgeCategory ageCategory = computeAgeCategory(companionEntry.timestamp(), companionEntry.gameTimestamp(), level);
