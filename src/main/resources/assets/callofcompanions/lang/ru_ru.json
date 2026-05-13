@@ -24,6 +24,7 @@
   "item.callofcompanions.deep_call_crystal.desc6": "Требуется минимум {} уровней XP",
 
   "message.callofcompanions.not_found": "%s не откликнулся.",
+  "message.callofcompanions.not_owner": "%s не принадлежит вам.",
   "message.callofcompanions.cant_teleport": "%s не смог найти безопасное место, чтобы добраться до вас.",
   "message.callofcompanions.wrong_dimension": "%s слишком далеко и не может откликнуться.",
   "message.callofcompanions.not_enough_xp": "Недостаточно опыта для призыва.",
