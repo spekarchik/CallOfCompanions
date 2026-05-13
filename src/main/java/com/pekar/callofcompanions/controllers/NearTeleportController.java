@@ -1,6 +1,7 @@
 package com.pekar.callofcompanions.controllers;
 
 import com.mojang.logging.LogUtils;
+import com.pekar.callofcompanions.data.CompanionEntry;
 import com.pekar.callofcompanions.scheduler.CompanionEntryScheduler;
 import com.pekar.callofcompanions.scheduler.CompanionEntryTask;
 import net.minecraft.core.BlockPos;
@@ -20,8 +21,8 @@ class NearTeleportController extends LoadedAnimalSummonController
     public void run(BlockPos teleportPos)
     {
         orderToStand(animal);
-        showAnimalTeleportParticles(level, animal);
-        int delay = level.getRandom().nextIntBetweenInclusive(applyDelayFactor(10), applyDelayFactor(100));
+        showAnimalTeleportParticles(playerLevel, animal);
+        int delay = playerLevel.getRandom().nextIntBetweenInclusive(applyDelayFactor(10), applyDelayFactor(100));
         var task = new CompanionEntryTask(
                 delay,
                 companionEntry,
@@ -29,41 +30,46 @@ class NearTeleportController extends LoadedAnimalSummonController
                 (ticks, entry) -> {
                     if (ticks % 10 == 0)
                     {
-                        showAnimalTeleportParticles(level, animal);
+                        showAnimalTeleportParticles(playerLevel, animal);
                     }
                     return false;
                 },
                 entry -> {
-                    boolean teleported = tryTeleportAnimalTo(level, entry.uuid(), teleportPos, true);
-                    if (teleported)
-                    {
-                        playTeleportSound(level, animal);
-                        showAnimalTeleportParticles(level, animal);
-                        setGoal(animal, player);
-
-                        if (teleportListener != null)
-                            teleportListener.onTeleport(TeleportType.NEAR_TELEPORT);
-
-                        LOGGER.debug("Near teleport completed: companionType={}, companionId={}", entry.type(), entry.uuid());
-                    }
-                    else
-                    {
-                        playAnimalNotRespondSound(level, teleportPos.below());
-                        showAnimalNotRespondParticles(level, teleportPos.below());
-                        var name = CallCrystalHelper.buildAnimalName(entry.type(), entry.name());
-                        player.sendSystemMessage(Component.translatable("message.callofcompanions.cant_teleport", name), true);
-                        LOGGER.debug("Far teleport failed: companion couldn't find a safe place to teleport, companionType={}, companionId={}", entry.type(), entry.uuid());
-                    }
-
-                    CallCrystalHelper.updateCompanionPos(level, companionData, companionEntry);
+                    moveAnimalTo(teleportPos, entry);
                 },
                 entry -> {
                     LOGGER.debug("Near teleport cancelled: companionType={}, companionId={}", companionEntry.type(), companionEntry.uuid());
-                    playAnimalNotRespondSound(level, teleportPos.below());
-                    showAnimalNotRespondParticles(level, teleportPos.below());
+                    playAnimalNotRespondSound(playerLevel, teleportPos.below());
+                    showAnimalNotRespondParticles(playerLevel, teleportPos.below());
                 }
         );
         CompanionEntryScheduler.TELEPORT_TASKS.add(task);
         LOGGER.debug("Near teleport scheduled: companionType={}, companionId={}, delayTicks={}", companionEntry.type(), companionEntry.uuid(), delay);
+    }
+
+    private void moveAnimalTo(BlockPos teleportPos, CompanionEntry entry)
+    {
+        boolean teleported = tryTeleportAnimalTo(playerLevel, entry.uuid(), teleportPos, entry.dimension(), true);
+        if (teleported)
+        {
+            playTeleportSound(playerLevel, animal);
+            showAnimalTeleportParticles(playerLevel, animal);
+            setGoal(animal, player);
+
+            if (teleportListener != null)
+                teleportListener.onTeleport(TeleportType.NEAR_TELEPORT);
+
+            LOGGER.debug("Near teleport completed: companionType={}, companionId={}", entry.type(), entry.uuid());
+        }
+        else
+        {
+            playAnimalNotRespondSound(playerLevel, teleportPos.below());
+            showAnimalNotRespondParticles(playerLevel, teleportPos.below());
+            var name = CallCrystalHelper.buildAnimalName(entry.type(), entry.name());
+            player.sendSystemMessage(Component.translatable("message.callofcompanions.cant_teleport", name), true);
+            LOGGER.debug("Near teleport failed: companion couldn't find a safe place to teleport, companionType={}, companionId={}", entry.type(), entry.uuid());
+        }
+
+        CallCrystalHelper.updateCompanionPos(playerLevel, companionData, companionEntry);
     }
 }

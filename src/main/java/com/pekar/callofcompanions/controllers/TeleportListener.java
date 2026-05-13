@@ -4,4 +4,5 @@ public interface TeleportListener
 {
     void onTeleport(TeleportType teleportType);
     boolean teleported();
+    boolean isCrossDimensional();
 }

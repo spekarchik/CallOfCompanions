@@ -13,10 +13,11 @@ public record SummonAnimalContext(ServerPlayer player,
                                   CompanionEntry companionEntry,
                                   ItemStack callCrystalStack,
                                   float callDelayFactor,
-                                  TeleportListener teleportListener
+                                  TeleportListener teleportListener,
+                                  boolean allowCrossDimensionalTeleports
                                   )
 {
-    public ServerLevel level()
+    public ServerLevel playerLevel()
     {
         return (ServerLevel) player.level();
     }

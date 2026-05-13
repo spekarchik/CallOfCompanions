@@ -1,10 +1,20 @@
 ## 📦 Version 1.7.0
 
+### ✨ New
+- **Deep Call Crystal** behavior updated:
+  - can now teleport animals across dimensions.
+  - now requires the player to have at least 4 XP levels to call animals, regardless of distance or dimension.
+  - consumes 4 XP levels if at least one animal was teleported from another dimension, otherwise only 1 XP level.
+  - no XP is consumed if no animals were teleported from unloaded chunks or other dimensions (existing behavior).
+  - cross-dimensional calls now last 4× longer by default.
+  - added new config options to customize this behavior.
+
 ### 📝 Improvements
 - **Soul Sand** and **Dirt Path** are now valid blocks for crystal use and animal teleportation.
 
 ### 🛠️ Changes
 - Reworked config structure.
+  - **The new config structure is incompatible** with the older versions.
   - ⚠ Existing config settings will be reset to default values after updating.
   - You may need to reconfigure the mod settings.
 

@@ -8,18 +8,25 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.core.particles.SimpleParticleType;
 import net.minecraft.nbt.CompoundTag;
+import net.minecraft.resources.ResourceKey;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.sounds.SoundEvent;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.RelativeMovement;
 import net.minecraft.world.entity.TamableAnimal;
 import net.minecraft.world.entity.animal.Animal;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.level.Level;
+import net.minecraft.world.level.portal.DimensionTransition;
+import net.minecraft.world.phys.Vec3;
 import org.slf4j.Logger;
 
+import java.util.EnumSet;
+import java.util.Set;
 import java.util.UUID;
 
 public abstract class AnimalSummonController
@@ -27,22 +34,24 @@ public abstract class AnimalSummonController
     private static final Logger LOGGER = LogUtils.getLogger();
 
     protected final ServerPlayer player;
-    protected final ServerLevel level;
+    protected final ServerLevel playerLevel;
     protected final CompanionData companionData;
     protected final CompanionEntry companionEntry;
     protected final ItemStack callCrystalStack;
     protected final float callDelayFactor;
     protected final TeleportListener teleportListener;
+    protected final boolean allowCrossDimensionalTeleports;
 
     protected AnimalSummonController(SummonAnimalContext context)
     {
         this.player = context.player();
-        this.level = context.level();
+        this.playerLevel = context.playerLevel();
         this.companionData = context.companionData();
         this.companionEntry = context.companionEntry();
         this.callCrystalStack = context.callCrystalStack();
         this.callDelayFactor = context.callDelayFactor();
         this.teleportListener = context.teleportListener();
+        this.allowCrossDimensionalTeleports = context.allowCrossDimensionalTeleports();
     }
 
     protected void setGoal(Animal animal, Player player)
@@ -86,9 +95,13 @@ public abstract class AnimalSummonController
         );
     }
 
-    protected boolean tryTeleportAnimalTo(ServerLevel level, UUID uuid, BlockPos pos, boolean recreate)
+    protected boolean tryTeleportAnimalTo(ServerLevel level, UUID uuid, BlockPos pos, ResourceKey<Level> fromDimension, boolean recreate)
     {
-        var entity = level.getEntity(uuid);
+        var server = level.getServer();
+        var fromLevel = server.getLevel(fromDimension);
+        if (fromLevel == null) return false;
+
+        var entity = fromLevel.getEntity(uuid);
         LOGGER.debug("Teleport attempt started: entityId={}, loaded={}", uuid, entity != null);
         if (entity instanceof Animal animal)
         {
@@ -99,7 +112,25 @@ public abstract class AnimalSummonController
             var x = randomPos.getX() + 0.5;
             var y = randomPos.getY();
             var z = randomPos.getZ() + 0.5;
-            animal.teleportTo(x, y, z);
+
+            if (level.dimension().equals(fromDimension))
+            {
+                LOGGER.debug("Teleporting to the same dimension: entityId={}, dimension={}", uuid, fromDimension);
+                animal.teleportTo(x, y, z);
+            }
+            else
+            {
+                if (!animal.canChangeDimensions(fromLevel, level)) return false;
+
+                LOGGER.debug("Teleporting across dimensions: entityId={}, fromDimension={}, toDimension={}", uuid, level.dimension(), fromDimension);
+
+                animal.teleportTo(
+                        level,
+                        x, y, z,
+                        EnumSet.noneOf(RelativeMovement.class),
+                        animal.getYRot(), animal.getXRot()
+                );
+            }
             if (recreate)
                 recreateAnimal(level, animal, x, y, z);
 
@@ -140,7 +171,7 @@ public abstract class AnimalSummonController
 
             for (int dy = 0; dy >= safetyChecker.getMinTeleportYOffset(); dy--)
             {
-                if (safetyChecker.canTeleport(level, newPos.offset(0, dy, 0)))
+                if (safetyChecker.canTeleport(playerLevel, newPos.offset(0, dy, 0)))
                 {
                     return newPos;
                 }
@@ -158,7 +189,7 @@ public abstract class AnimalSummonController
 
                     var checkPos = pos.offset(dx, dy, dz);
 
-                    if (safetyChecker.canTeleport(level, checkPos))
+                    if (safetyChecker.canTeleport(playerLevel, checkPos))
                     {
                         return checkPos;
                     }
