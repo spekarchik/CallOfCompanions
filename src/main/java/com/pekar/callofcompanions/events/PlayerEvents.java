@@ -73,7 +73,8 @@ public class PlayerEvents implements IEventHandler
                     var name = target.getDisplayName().getString();
                     var companionType = CallCrystalHelper.getAnimalType(animal);
                     var owner = target instanceof OwnableEntity ownable ? ownable.getOwner() : null;
-                    Optional<UUID> ownerId = owner != null ? Optional.of(owner.getUUID()) : Optional.empty();
+                    var ownerId = target instanceof OwnableEntity ownable && ownable.getOwnerReference() != null ? ownable.getOwnerReference().getUUID() : null;
+                    Optional<UUID> ownerIdOpt = ownerId != null ? Optional.of(ownerId) : Optional.empty();
                     Optional<String> ownerName = owner != null ? Optional.of(owner.getDisplayName().getString()) : Optional.empty();
                     var level = event.getLevel();
 
@@ -84,7 +85,7 @@ public class PlayerEvents implements IEventHandler
                             target.level().dimension(),
                             target.blockPosition(),
                             PositionStatus.FRESH,
-                            ownerId,
+                            ownerIdOpt,
                             ownerName,
                             System.currentTimeMillis(),
                             level.getGameTime());
