@@ -1,6 +1,7 @@
 package com.pekar.callofcompanions.controllers;
 
 import com.mojang.logging.LogUtils;
+import com.pekar.callofcompanions.controllers.animal.TeleportSafetyChecker;
 import com.pekar.callofcompanions.controllers.animal.TeleportSafetyCheckerResolver;
 import com.pekar.callofcompanions.data.CompanionData;
 import com.pekar.callofcompanions.data.CompanionEntry;
@@ -167,20 +168,41 @@ public abstract class AnimalSummonController
         var safetyChecker = TeleportSafetyCheckerResolver.getChecker(animal);
 
         // First try a number of random samples around the requested position
-        for (int i = 0; i < 10; i++)
+        BlockPos newPos = chooseRandomPos(pos, delta, safetyChecker);
+        if (newPos != null)
         {
-            var newPos = randomAroundPos(pos, delta);
-
-            for (int dy = 0; dy >= safetyChecker.getMinTeleportYOffset(); dy--)
-            {
-                if (safetyChecker.canTeleport(playerLevel, newPos.offset(0, dy, 0)))
-                {
-                    return newPos;
-                }
-            }
+            return newPos;
         }
 
         // If random sampling failed, iterate all positions in the square radius and return the first safe one
+        BlockPos checkPos = findPos(pos, safetyChecker, delta);
+        if (checkPos != null)
+        {
+            return checkPos;
+        }
+
+        safetyChecker = TeleportSafetyCheckerResolver.getAlternativeChecker(animal);
+        if (safetyChecker != null)
+        {
+            BlockPos newPos1 = chooseRandomPos(pos, delta, safetyChecker);
+            if (newPos1 != null)
+            {
+                return newPos1;
+            }
+
+            BlockPos checkPos1 = findPos(pos, safetyChecker, delta);
+            if (checkPos1 != null)
+            {
+                return checkPos1;
+            }
+        }
+
+        // No safe position found — return original
+        return null;
+    }
+
+    private BlockPos findPos(BlockPos pos, TeleportSafetyChecker safetyChecker, int delta)
+    {
         for (int dy = safetyChecker.getMinTeleportYOffset(); dy <= 0; dy++)
         {
             for (int dx = -delta; dx <= delta; dx++)
@@ -198,8 +220,23 @@ public abstract class AnimalSummonController
                 }
             }
         }
+        return null;
+    }
 
-        // No safe position found — return original
+    private BlockPos chooseRandomPos(BlockPos pos, int delta, TeleportSafetyChecker safetyChecker)
+    {
+        for (int i = 0; i < 10; i++)
+        {
+            var newPos = randomAroundPos(pos, delta);
+
+            for (int dy = 0; dy >= safetyChecker.getMinTeleportYOffset(); dy--)
+            {
+                if (safetyChecker.canTeleport(playerLevel, newPos.offset(0, dy, 0)))
+                {
+                    return newPos;
+                }
+            }
+        }
         return null;
     }
 
