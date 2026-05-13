@@ -21,11 +21,28 @@ public class TeleportSafetyCheckerResolver
 
         else if (animal instanceof HappyGhast)
             return new GhastTeleportSafetyChecker();
+
         else if (animal instanceof Strider
                 || (animal.getPathfindingMalus(PathType.LAVA) == 0f && animal.getPathfindingMalus(PathType.WALKABLE) != 0f)
         )
-            return new StriderTeleportSafetyChecker();
+            return new LavaAnimalTeleportSafetyChecker();
+
         else
             return new GroundAnimalTeleportSafetyChecker();
+    }
+
+    public static TeleportSafetyChecker getAlternativeChecker(Animal animal)
+    {
+        var primaryChecker = getChecker(animal);
+        if (primaryChecker instanceof WaterAnimalTeleportSafetyChecker) return null;
+
+        if (!(primaryChecker instanceof GroundAnimalTeleportSafetyChecker) && animal.getPathfindingMalus(PathType.WALKABLE) == 0f)
+            return new GroundAnimalTeleportSafetyChecker();
+        if (!(primaryChecker instanceof WaterAnimalTeleportSafetyChecker) && animal.getPathfindingMalus(PathType.WATER) == 0f)
+            return new WaterAnimalTeleportSafetyChecker();
+        if (!(primaryChecker instanceof LavaAnimalTeleportSafetyChecker) && animal.getPathfindingMalus(PathType.LAVA) == 0f)
+            return new LavaAnimalTeleportSafetyChecker();
+
+        return null;
     }
 }
