@@ -29,6 +29,8 @@
   "message.callofcompanions.wrong_dimension": "%s jest zbyt daleko, aby odpowiedzieć.",
   "message.callofcompanions.not_enough_xp": "Za mało doświadczenia, aby przywołać zwierzęta.",
   "message.callofcompanions.limit_reached": "Nie można powiązać więcej zwierząt z tym kryształem.",
+  "message.callofcompanions.cant_bind_tame_only": "Zwierzę musi być oswojone, aby powiązać je z kryształem.",
+  "message.callofcompanions.cant_bind_tame_or_named": "Zwierzę musi być oswojone lub nazwane, aby powiązać je z kryształem.",
   "message.callofcompanions.companions_updated": "Połączenie ze zwierzętami zostało odświeżone.",
   "message.callofcompanions.summon_cancelled": "Przywołanie przerwane.",
   "message.callofcompanions.no_summonable_companions": "Kryształ nie jest powiązany z twoimi zwierzętami.",
