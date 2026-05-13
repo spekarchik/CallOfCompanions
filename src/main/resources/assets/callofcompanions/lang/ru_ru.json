@@ -29,6 +29,8 @@
   "message.callofcompanions.wrong_dimension": "%s слишком далеко и не может откликнуться.",
   "message.callofcompanions.not_enough_xp": "Недостаточно опыта для призыва.",
   "message.callofcompanions.limit_reached": "Нельзя привязать больше животных к этому кристаллу.",
+  "message.callofcompanions.cant_bind_tame_only": "Животное должно быть приручено, чтобы привязать его к кристаллу.",
+  "message.callofcompanions.cant_bind_tame_or_named": "Животное должно быть приручено или иметь имя, чтобы привязать его к кристаллу.",
   "message.callofcompanions.companions_updated": "Связь с животными обновлена.",
   "message.callofcompanions.summon_cancelled": "Призыв прерван.",
   "message.callofcompanions.no_summonable_companions": "Кристалл не привязан к вашим животным.",
