@@ -11,6 +11,8 @@
 
 ### 📝 Improvements
 - **Soul Sand** and **Dirt Path** are now valid blocks for crystal use and animal teleportation.
+- Added an overlay message when the player attempts to bind an animal that cannot be bound.
+- **Striders** now always teleport into *Lava* if possible.
 
 ### 🛠️ Changes
 - Reworked config structure.
