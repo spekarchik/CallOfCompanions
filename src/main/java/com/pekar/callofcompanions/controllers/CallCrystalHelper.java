@@ -6,7 +6,6 @@ import com.pekar.callofcompanions.data.CompanionEntry;
 import com.pekar.callofcompanions.data.DataRegistry;
 import com.pekar.callofcompanions.items.ItemRegistry;
 import net.minecraft.core.BlockPos;
-import net.minecraft.core.Direction;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.tags.FluidTags;
 import net.minecraft.world.entity.Entity;
@@ -37,14 +36,17 @@ public class CallCrystalHelper
         return entity.getType().getDescription().getString();
     }
 
-    public static boolean canSummonAnimal(Entity entity, Player player)
+    public static boolean canSummonAnimal(Entity entity, UUID entityOwnerId, Player player)
     {
+        if (entity == null && entityOwnerId != null && !entityOwnerId.equals(player.getUUID()))
+            return false;
+
         if (entity instanceof TamableAnimal tamable && (!tamable.isTame() || !tamable.isOwnedBy(player)))
             return false;
 
         if (entity instanceof AbstractHorse horse)
         {
-            if (horse.isTamed() && horse.getOwner() != null && horse.getOwner() != player) return false;
+            if (horse.isTamed() && horse.getOwnerReference() != null && !horse.getOwnerReference().matches(player)) return false;
             return horse.isTamed() || horse.hasCustomName();
         }
 
