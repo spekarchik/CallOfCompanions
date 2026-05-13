@@ -79,13 +79,6 @@ class FarTeleportController extends AnimalSummonController
             return;
         }
 
-        var animalLevel = playerLevel.getServer().getLevel(animalDimension);
-        if (animalLevel == null)
-        {
-            handleIllegalState(companionEntry);
-            return;
-        }
-
         // Ensure the companion's chunk and neighbor chunks are loaded within the configured radius
         int centerSectionX = SectionPos.blockToSectionCoord(companionEntry.pos().getX());
         int centerSectionZ = SectionPos.blockToSectionCoord(companionEntry.pos().getZ());
@@ -107,7 +100,7 @@ class FarTeleportController extends AnimalSummonController
                     {
                         showParticles(playerLevel, teleportPos, ParticleTypes.PORTAL);
                     }
-                    return checkEntityLoaded(playerLevel, entry.uuid());
+                    return checkEntityLoaded(animalLevel, entry.uuid());
                 },
                 entry ->
                 {
@@ -126,10 +119,13 @@ class FarTeleportController extends AnimalSummonController
 
     private void teleportAnimalTo(BlockPos teleportPos, CompanionEntry entry, boolean isCrossDimensionalTeleport)
     {
-        var entity = playerLevel.getEntity(entry.uuid());
-        if (!CallCrystalHelper.canSummonAnimal(entity, player))
+        var entity = animalLevel.getEntity(entry.uuid());
+        if (!CallCrystalHelper.canSummonAnimal(entity, entry.ownerUuid().orElse(null), player))
         {
             LOGGER.debug("Far teleport skipped: companion can't be summoned by player, companionType={}, companionId={}, companionPos={}, companionDimension={}, player={}", entry.type(), entry.uuid(), entry.pos(), entry.dimension(), player.getDisplayName());
+
+            var animalDisplayName = CallCrystalHelper.buildAnimalName(entry.type(), entry.name());
+            player.sendSystemMessage(Component.translatable("message.callofcompanions.not_owner", animalDisplayName));
             return;
         }
 
@@ -153,7 +149,7 @@ class FarTeleportController extends AnimalSummonController
             playAnimalNotRespondSound(playerLevel, teleportPos.below());
             showAnimalNotRespondParticles(playerLevel, teleportPos.below());
             var name = CallCrystalHelper.buildAnimalName(entry.type(), entry.name());
-            if (playerLevel.getEntity(entry.uuid()) == null)
+            if (animalLevel.getEntity(entry.uuid()) == null)
             {
                 player.sendSystemMessage(Component.translatable("message.callofcompanions.not_found", name));
                 LOGGER.debug("Far teleport failed: companion not found, companionType={}, companionId={}, companionPos={}, companionDimension={}", entry.type(), entry.uuid(), entry.pos(), entry.dimension());
@@ -172,15 +168,5 @@ class FarTeleportController extends AnimalSummonController
     {
         var entity = level.getEntity(uuid);
         return entity != null;
-    }
-
-    private static void handleIllegalState(CompanionEntry companionEntry)
-    {
-        var msg = String.format("Could not get server level for animal dimension %s (companionType=%s, companionId=%s)",
-                companionEntry.dimension(), companionEntry.type(), companionEntry.uuid());
-        LOGGER.error(msg);
-        // This is an unexpected state: the server doesn't expose a level for the companion's dimension.
-        // Throw an unchecked exception so the caller can notice and the situation can be diagnosed by crash reports/logs.
-        throw new IllegalStateException(msg);
     }
 }

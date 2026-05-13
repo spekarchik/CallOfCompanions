@@ -35,6 +35,7 @@ public abstract class AnimalSummonController
 
     protected final ServerPlayer player;
     protected final ServerLevel playerLevel;
+    protected final ServerLevel animalLevel;
     protected final CompanionData companionData;
     protected final CompanionEntry companionEntry;
     protected final ItemStack callCrystalStack;
@@ -48,6 +49,7 @@ public abstract class AnimalSummonController
         this.playerLevel = context.playerLevel();
         this.companionData = context.companionData();
         this.companionEntry = context.companionEntry();
+        this.animalLevel = playerLevel.getServer().getLevel(companionEntry.dimension());
         this.callCrystalStack = context.callCrystalStack();
         this.callDelayFactor = context.callDelayFactor();
         this.teleportListener = context.teleportListener();
