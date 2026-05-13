@@ -6,14 +6,12 @@ import net.minecraft.world.level.Level;
 import static com.pekar.callofcompanions.controllers.CallCrystalHelper.hasNoAirCollisions;
 import static com.pekar.callofcompanions.controllers.CallCrystalHelper.isLavaSource;
 
-public class StriderTeleportSafetyChecker implements TeleportSafetyChecker
+public class LavaAnimalTeleportSafetyChecker implements TeleportSafetyChecker
 {
     @Override
     public boolean canTeleport(Level level, BlockPos pos)
     {
-        var below = level.getBlockState(pos.below());
-
-        boolean atIsOk = isLavaSource(level, pos) || (hasNoAirCollisions(level, pos) && below.isSolidRender(level, pos.below()));
+        boolean atIsOk = isLavaSource(level, pos);
         boolean aboveOk = hasNoAirCollisions(level, pos.above());
         boolean above2Ok = hasNoAirCollisions(level, pos.above(2));
         boolean above3Ok = hasNoAirCollisions(level, pos.above(3));
@@ -31,10 +29,7 @@ public class StriderTeleportSafetyChecker implements TeleportSafetyChecker
                 var neighAbove2Pos = pos.offset(dx, 2, dz);
                 var neighAbove3Pos = pos.offset(dx, 3, dz);
 
-                var neighBelowPos = pos.offset(dx, -1, dz);
-                var neighBelow = level.getBlockState(neighBelowPos);
-
-                boolean neighAtIsOk = isLavaSource(level, neightAtPos) || (hasNoAirCollisions(level, neightAtPos) && neighBelow.isSolidRender(level, neighBelowPos));
+                boolean neighAtIsOk = isLavaSource(level, neightAtPos);
                 if (!neighAtIsOk) return false;
                 if (!hasNoAirCollisions(level, neighAbovePos)) return false;
                 if (!hasNoAirCollisions(level, neighAbove2Pos)) return false;
