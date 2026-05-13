@@ -168,12 +168,19 @@ public class CallCrystal extends ModItem implements ITooltipProvider
             while (iterator.hasNext())
             {
                 var companionEntry = iterator.next();
-                var entity = serverLevel.getEntity(companionEntry.uuid());
+                var animalLevel = serverLevel.getServer().getLevel(companionEntry.dimension());
+                if (animalLevel == null) continue;
+
+                var entity = animalLevel.getEntity(companionEntry.uuid());
                 Animal animal = entity instanceof Animal a ? a : null;
 
-                if (!CallCrystalHelper.canSummonAnimal(entity, player))
+                if (!CallCrystalHelper.canSummonAnimal(entity, companionEntry.ownerUuid().orElse(null), player))
                 {
                     LOGGER.debug("Skipped: companion can't be summoned by player, companionType={}, companionId={}, player={}", companionEntry.type(), companionEntry.uuid(), player.getDisplayName());
+
+                    var animalDisplayName = CallCrystalHelper.buildAnimalName(companionEntry.type(), companionEntry.name());
+                    serverPlayer.sendSystemMessage(Component.translatable("message.callofcompanions.not_owner", animalDisplayName));
+
                     continue;
                 }
 
