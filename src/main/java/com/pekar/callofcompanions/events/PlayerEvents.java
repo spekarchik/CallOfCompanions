@@ -110,6 +110,21 @@ public class PlayerEvents implements IEventHandler
                         serverPlayer.sendSystemMessage(Component.translatable("message.callofcompanions.limit_reached"), true);
                     }
                 }
+                else
+                {
+                    if (player instanceof ServerPlayer serverPlayer)
+                    {
+                        // For deep crystals we may allow binding named animals depending on config
+                        if (isDeepCallCrystal && Config.DEEP_CRYSTAL_DISALLOW_UNTAMED.isFalse())
+                        {
+                            serverPlayer.sendOverlayMessage(Component.translatable("message.callofcompanions.cant_bind_tame_or_named"));
+                        }
+                        else
+                        {
+                            serverPlayer.sendOverlayMessage(Component.translatable("message.callofcompanions.cant_bind_tame_only"));
+                        }
+                    }
+                }
             }
 
             event.setCanceled(true);
