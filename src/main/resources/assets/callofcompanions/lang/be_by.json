@@ -31,7 +31,7 @@
   "message.callofcompanions.limit_reached": "Нельга прывязаць больш жывёл да гэтага крышталя.",
   "message.callofcompanions.cant_bind_tame_only": "Жывёла павінна быць прыручаная, каб прывязаць яе да крышталя.",
   "message.callofcompanions.cant_bind_tame_or_named": "Жывёла павінна быць прыручаная або мець імя, каб прывязаць яе да крышталя.",
-  "message.callofcompanions.cant_bind_entity_type": "%s не можа быць прывязана да крышталя.",
+  "message.callofcompanions.cant_bind_entity_type": "Істота '%s' не можа быць прывязана да крышталя.",
   "message.callofcompanions.companions_updated": "Сувязь з жывёламі абноўлена.",
   "message.callofcompanions.summon_cancelled": "Заклік перарваны.",
   "message.callofcompanions.no_summonable_companions": "Крышталь не прывязаны да вашых жывёл.",
