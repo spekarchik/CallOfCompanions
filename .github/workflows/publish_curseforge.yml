@@ -239,7 +239,6 @@ jobs:
           # добавляем версию игры в начало массива
           mapfile -t MC_VERSIONS < <(echo "$GAME_VERSIONS_JSON" | jq -r '.[]')
           TAG_ARRAY=("${MC_VERSIONS[@]}" "${TAG_ARRAY[@]}")
-          #TAG_ARRAY=("$GAME_VERSION" "${TAG_ARRAY[@]}")
 
           for TAG in "${TAG_ARRAY[@]}"; do
             ID=$(jq -r --arg t "$TAG" '
@@ -322,7 +321,7 @@ jobs:
               displayName: $displayName,
               releaseType: $releaseType,
               gameVersions: $gameVersions,
-              isMarkedForManualRelease: true
+              isMarkedForManualRelease: false
             }' | jq -c .) # -c делает JSON в одну строку
             
           echo "=== METADATA preview ==="
