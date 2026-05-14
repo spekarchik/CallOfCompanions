@@ -38,6 +38,60 @@ jobs:
           else
             echo "Unknown branch $BRANCH → skip"
           fi
+
+      - name: Parse Minecraft versions from branch
+        if: env.PUBLISH == 'true'
+        run: |
+          BRANCH="${TRIGGER_BRANCH#Neo/}"
+
+          echo "Branch payload: $BRANCH"
+
+          expand_patch_range() {
+            local start="$1"
+            local end="$2"
+
+            IFS='.' read -ra S <<< "$start"
+            IFS='.' read -ra E <<< "$end"
+
+            # major.minor должны совпадать
+            if [[ "${S[0]}.${S[1]}" != "${E[0]}.${E[1]}" ]]; then
+              echo "Range crosses major/minor boundary: $start -> $end"
+              exit 1
+            fi
+
+            local prefix="${S[0]}.${S[1]}"
+            local start_patch="${S[2]:-0}"
+            local end_patch="${E[2]:-0}"
+
+            local versions=()
+
+            for ((i=start_patch; i<=end_patch; i++)); do
+              if [[ "$i" == "0" && "${#S[@]}" -lt 3 ]]; then
+                versions+=("$prefix")
+              else
+                versions+=("$prefix.$i")
+              fi
+            done
+
+            printf '%s\n' "${versions[@]}"
+          }
+
+          if [[ "$BRANCH" =~ ^([0-9]+\.[0-9]+(\.[0-9]+)?)-([0-9]+\.[0-9]+(\.[0-9]+)?)$ ]]; then
+            START="${BASH_REMATCH[1]}"
+            END="${BASH_REMATCH[3]}"
+
+            mapfile -t GAME_VERSIONS < <(expand_patch_range "$START" "$END")
+
+          else
+            GAME_VERSIONS=("$BRANCH")
+          fi
+
+          printf 'Detected versions:\n'
+          printf ' - %s\n' "${GAME_VERSIONS[@]}"
+
+          GAME_VERSIONS_JSON=$(printf '%s\n' "${GAME_VERSIONS[@]}" | jq -R . | jq -s -c .)
+
+          echo "GAME_VERSIONS_JSON=$GAME_VERSIONS_JSON" >> $GITHUB_ENV
     
       - name: Checkout CI branch
         if: env.PUBLISH == 'true'
@@ -235,16 +289,16 @@ jobs:
             --arg project_id "$MODRINTH_PROJECT_ID" \
             --arg version_number "$FULL_VERSION" \
             --arg version_type "$RELEASE_TYPE" \
-            --arg game_version "$GAME_VERSION" \
             --arg changelog "$CHANGELOG" \
             --arg modloader "$MOD_LOADER" \
             --arg name "$MOD_NAME $FULL_VERSION" \
+            --argjson game_versions "$GAME_VERSIONS_JSON" \
             '{
               name: $name,
               project_id: $project_id,
               version_number: $version_number,
               version_type: $version_type,
-              game_versions: [$game_version],
+              game_versions: $game_versions,
               loaders: [$modloader],
               changelog: $changelog,
               file_parts: ["file"],
