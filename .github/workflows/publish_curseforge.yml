@@ -40,7 +40,61 @@ jobs:
           else
             echo "Unknown branch $BRANCH → skip"
           fi
-    
+
+      - name: Parse Minecraft versions from branch
+        if: env.PUBLISH == 'true'
+        run: |
+          BRANCH="${TRIGGER_BRANCH#Neo/}"
+
+          echo "Branch payload: $BRANCH"
+
+          expand_patch_range() {
+            local start="$1"
+            local end="$2"
+
+            IFS='.' read -ra S <<< "$start"
+            IFS='.' read -ra E <<< "$end"
+
+            # major.minor должны совпадать
+            if [[ "${S[0]}.${S[1]}" != "${E[0]}.${E[1]}" ]]; then
+              echo "Range crosses major/minor boundary: $start -> $end"
+              exit 1
+            fi
+
+            local prefix="${S[0]}.${S[1]}"
+            local start_patch="${S[2]:-0}"
+            local end_patch="${E[2]:-0}"
+
+            local versions=()
+
+            for ((i=start_patch; i<=end_patch; i++)); do
+              if [[ "$i" == "0" && "${#S[@]}" -lt 3 ]]; then
+                versions+=("$prefix")
+              else
+                versions+=("$prefix.$i")
+              fi
+            done
+
+            printf '%s\n' "${versions[@]}"
+          }
+
+          if [[ "$BRANCH" =~ ^([0-9]+\.[0-9]+(\.[0-9]+)?)-([0-9]+\.[0-9]+(\.[0-9]+)?)$ ]]; then
+            START="${BASH_REMATCH[1]}"
+            END="${BASH_REMATCH[3]}"
+
+            mapfile -t GAME_VERSIONS < <(expand_patch_range "$START" "$END")
+
+          else
+            GAME_VERSIONS=("$BRANCH")
+          fi
+
+          printf 'Detected versions:\n'
+          printf ' - %s\n' "${GAME_VERSIONS[@]}"
+
+          GAME_VERSIONS_JSON=$(printf '%s\n' "${GAME_VERSIONS[@]}" | jq -R . | jq -s -c .)
+
+          echo "GAME_VERSIONS_JSON=$GAME_VERSIONS_JSON" >> $GITHUB_ENV
+          
       - name: Checkout CI branch
         if: env.PUBLISH == 'true'
         uses: actions/checkout@v4
@@ -92,7 +146,7 @@ jobs:
           fi
           FILENAME=$(basename "$JAR_FILE")
           echo "FILENAME=$FILENAME" >> "$GITHUB_ENV"
-          GAME_VERSION=$(echo "$FILENAME" | cut -d'-' -f2)
+          #GAME_VERSION=$(echo "$FILENAME" | cut -d'-' -f2)
           VERSION_PART=$(echo "$FILENAME" | sed -E 's/^[^-]*-[^-]*-(.*)\.jar$/\1/')
           
           # Определяем JAVA_VERSION
@@ -141,7 +195,7 @@ jobs:
               ;;
           esac
           
-          echo "GAME_VERSION=$GAME_VERSION" >> $GITHUB_ENV
+          #echo "GAME_VERSION=$GAME_VERSION" >> $GITHUB_ENV
           echo "MOD_VERSION=$MOD_VERSION" >> $GITHUB_ENV
           echo "RELEASE_TYPE=$RELEASE_TYPE" >> $GITHUB_ENV
           echo "FULL_VERSION=${MOD_VERSION}${SUFFIX_FOR_VERSION}" >> $GITHUB_ENV
@@ -183,7 +237,9 @@ jobs:
           # --- создаём массив ID для остальных тегов ---
           GAME_VERSION_IDS=($MOD_LOADER_ID)
           # добавляем версию игры в начало массива
-          TAG_ARRAY=("$GAME_VERSION" "${TAG_ARRAY[@]}")
+          mapfile -t MC_VERSIONS < <(echo "$GAME_VERSIONS_JSON" | jq -r '.[]')
+          TAG_ARRAY=("${MC_VERSIONS[@]}" "${TAG_ARRAY[@]}")
+          #TAG_ARRAY=("$GAME_VERSION" "${TAG_ARRAY[@]}")
 
           for TAG in "${TAG_ARRAY[@]}"; do
             ID=$(jq -r --arg t "$TAG" '
@@ -266,7 +322,7 @@ jobs:
               displayName: $displayName,
               releaseType: $releaseType,
               gameVersions: $gameVersions,
-              isMarkedForManualRelease: false
+              isMarkedForManualRelease: true
             }' | jq -c .) # -c делает JSON в одну строку
             
           echo "=== METADATA preview ==="
