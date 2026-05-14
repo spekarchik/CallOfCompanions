@@ -16,7 +16,7 @@ public class Config
     public static final ModConfigSpec.IntValue DEEP_CRYSTAL_DATA_CAPACITY;
     public static final ModConfigSpec.IntValue CRYSTAL_COOLDOWN;
     public static final ModConfigSpec.IntValue DEEP_CRYSTAL_COOLDOWN;
-    public static final ModConfigSpec.BooleanValue DEEP_CRYSTAL_DISALLOW_UNTAMED;
+    public static final ModConfigSpec.BooleanValue DEEP_CRYSTAL_ALLOW_UNTAMED;
     public static final ModConfigSpec.BooleanValue DEEP_CRYSTAL_ALLOW_INTERDIMENSIONAL;
     public static final ModConfigSpec.DoubleValue DEEP_CRYSTAL_CROSS_DIMENSION_DELAY_MULTIPLIER;
     public static final ModConfigSpec.ConfigValue<String> DATETIME_FORMAT;
@@ -89,11 +89,12 @@ public class Config
                 .comment("Cooldown in ticks for using a Deep Call Crystal. 20 ticks = 1 second")
                 .defineInRange("cooldown_ticks", 400, 0, 72000);
 
-        // When true, Deep Call Crystal will NOT allow adding untamed animals (even if they are named).
-        // Default is false to preserve previous behavior. Set to true to restrict Deep Call Crystals to tamed animals only.
-        DEEP_CRYSTAL_DISALLOW_UNTAMED = BUILDER
-                .comment("If true, Deep Call Crystals cannot add untamed animals (even if named).")
-                .define("disallow_untamed", false);
+        // When true, Deep Call Crystal will allow adding untamed animals (if they are named).
+        // Default is true to preserve previous behavior where named untamed animals could be bound.
+        // Set to false to restrict Deep Call Crystals to tamed animals only.
+        DEEP_CRYSTAL_ALLOW_UNTAMED = BUILDER
+                .comment("If false, Deep Call Crystals cannot add untamed animals (even if named).")
+                .define("allow_untamed", true);
 
         // When true, Deep Call Crystal will allow calling animals across dimensions (cross-dimensional teleports).
         // Default is true to preserve previous behavior where deep crystals allowed inter-dimensional teleports.

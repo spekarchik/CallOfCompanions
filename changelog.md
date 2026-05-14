@@ -1,3 +1,10 @@
+## 📦 Version 1.7.1
+
+### 📝 Improvements
+- Renamed the `disallow_untamed` config option to `allow_untamed` for improved consistency with other config options.
+  - ⚠ If you previously changed this setting from its default value, you may need to update it again after upgrading.
+
+
 ## 📦 Version 1.7.0
 
 ### ✨ New
