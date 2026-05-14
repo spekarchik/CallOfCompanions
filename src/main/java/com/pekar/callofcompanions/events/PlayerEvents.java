@@ -63,7 +63,7 @@ public class PlayerEvents implements IEventHandler
 
             if (target instanceof Animal animal)
             {
-                if (isTameAnimal || isTamedHorse || (isDeepCallCrystal && Config.DEEP_CRYSTAL_DISALLOW_UNTAMED.isFalse() && animal.hasCustomName()))
+                if (isTameAnimal || isTamedHorse || (isDeepCallCrystal && Config.DEEP_CRYSTAL_ALLOW_UNTAMED.isTrue() && animal.hasCustomName()))
                 {
                     short dataCapacity = isDeepCallCrystal ? (short) Config.DEEP_CRYSTAL_DATA_CAPACITY.getAsInt() : (short) Config.CRYSTAL_DATA_CAPACITY.getAsInt();
                     var companionData = itemStack.getOrDefault(DataRegistry.COMPANIONS, new CompanionData(dataCapacity));
@@ -116,7 +116,7 @@ public class PlayerEvents implements IEventHandler
                     if (player instanceof ServerPlayer serverPlayer)
                     {
                         // For deep crystals we may allow binding named animals depending on config
-                        if (isDeepCallCrystal && Config.DEEP_CRYSTAL_DISALLOW_UNTAMED.isFalse())
+                        if (isDeepCallCrystal && Config.DEEP_CRYSTAL_ALLOW_UNTAMED.isTrue())
                         {
                             serverPlayer.sendOverlayMessage(Component.translatable("message.callofcompanions.cant_bind_tame_or_named"));
                         }
