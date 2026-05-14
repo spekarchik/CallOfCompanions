@@ -368,8 +368,7 @@ public class CallCrystal extends ModItem implements ITooltipProvider
                     .withFormatting(ChatFormatting.DARK_GREEN, true)
                     .apply();
 
-            var player = context.player();
-            if (Config.CONSUME_XP_ON_CALL.isTrue() && player != null && !player.isCreative())
+            if (Config.CONSUME_XP_ON_CALL.isTrue())
             {
                 tooltip.addLine(getDescriptionId(), 6)
                         .fillWith(requiredXpAmountToCall())

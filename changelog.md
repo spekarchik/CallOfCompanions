@@ -1,3 +1,9 @@
+## 📦 Version 1.7.2
+
+### 🐞 Fixed
+- Fixed crash on NeoForge 26.1 due to usage of API introduced in 26.1.2.
+
+
 ## 📦 Version 1.7.1
 
 ### 📝 Improvements
