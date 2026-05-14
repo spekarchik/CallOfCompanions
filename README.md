@@ -48,6 +48,7 @@ An upgraded, darker version infused with sculk energy.
 - Stores up to **8 companions**
 - Works with **tamed *and named* animals**
 - Faster summoning & shorter cooldown
+- Can summon companions across dimensions
 - Crafted by upgrading a Call Crystal with a **Sculk Shrieker**
 - Keeps your existing companion list
 
@@ -94,10 +95,11 @@ Your companions can carry the world with you.
 
 The system adapts automatically:
 
-- Close → they walk to you  
-- Far (loaded) → instant teleport  
-- Far (unloaded) → chunks are loaded to find them  
-- Wolves, cats, parrots → use their natural teleport behavior  
+- Close → they walk to you
+- Far (loaded) → instant teleport
+- Far (unloaded) → chunks are loaded to find them
+- Across dimensions → **Deep Call Crystal** can call them through the void itself
+- Wolves, cats, parrots → use their natural teleport behavior
 
 It feels natural. Seamless. Almost alive.
 
@@ -105,9 +107,10 @@ It feels natural. Seamless. Almost alive.
 
 ## 🌍 Important Details
 
-- Works **only within the same dimension**
-- If a companion is too far (another dimension), you'll be notified
-- Each summon consumes **XP (configurable)**
+- **Call Crystal** works only within the same dimension
+- **Deep Call Crystal** can optionally summon companions across dimensions
+- If cross-dimensional summoning is unavailable, you'll be notified when a companion is too far away
+- Each summon consumes **XP** (configurable)
 - Crystals have a **cooldown after use**
 
 ---
@@ -139,11 +142,15 @@ A fresh start — without losing the crystal itself.
 
 Customize the experience:
 
-- XP cost (or disable it)
+- XP cost for summoning
+- Separate XP cost for cross-dimensional calls
 - Summon range behavior
 - Crystal capacity
 - Cooldown
 - Allow/disallow untamed animals in Deep Crystal
+- Enable/disable cross-dimensional summoning
+- Cross-dimensional summon delay
+- Tooltip time format and behavior
 
 Make it lightweight… or powerful.
 
