@@ -25,7 +25,7 @@ public class DeepCallCrystal extends CallCrystal implements ITooltipProvider
     @Override
     protected String getSummonableAnimalsInfoDescriptionId()
     {
-        return Config.DEEP_CRYSTAL_DISALLOW_UNTAMED.isTrue()
+        return Config.DEEP_CRYSTAL_ALLOW_UNTAMED.isFalse()
                 ? "item.callofcompanions.call_crystal"
                 : getDescriptionId();
     }
