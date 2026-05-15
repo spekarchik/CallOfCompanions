@@ -22,6 +22,7 @@ public class Config
     public static final ModConfigSpec.ConfigValue<String> DATETIME_FORMAT;
     public static final ModConfigSpec.BooleanValue TOOLTIP_USE_REALTIME;
     public static final ModConfigSpec.BooleanValue TOOLTIP_AGE_COLORING;
+    public static final ModConfigSpec.BooleanValue TOOLTIP_SHOW_LAST_POSITION;
     public static final ModConfigSpec.BooleanValue PREVENT_PETS_INVISIBILITY_WORKAROUND_1_21_1;
 
     static
@@ -143,6 +144,12 @@ public class Config
                 .comment("Enable/disable coloring tooltip lines depending on stored companion data age.")
                 .comment("Green when age <= 2 minutes; white when >2 and <=20 minutes.")
                 .define("age_coloring", true);
+
+        // When true, tooltips will display the last saved world coordinates and dimension
+        // for companions when the Alt key is held down.
+        TOOLTIP_SHOW_LAST_POSITION = BUILDER
+                .comment("If true, show last saved companion positions (coordinates + dimension) in tooltips when Alt is pressed.")
+                .define("show_last_position", true);
 
         BUILDER.pop();
 
