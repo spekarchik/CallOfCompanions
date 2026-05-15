@@ -35,6 +35,7 @@
   "message.callofcompanions.companions_updated": "Связь с животными обновлена.",
   "message.callofcompanions.summon_cancelled": "Призыв прерван.",
   "message.callofcompanions.no_summonable_companions": "Кристалл не привязан к вашим животным.",
+  "message.callofcompanions.single_crystal_only": "Для привязки требуется один кристалл.",
 
   "text.callofcompanions.none": "нет",
   "text.callofcompanions.seconds_ago": " сек. назад",

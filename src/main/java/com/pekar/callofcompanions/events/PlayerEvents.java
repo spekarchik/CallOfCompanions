@@ -63,6 +63,20 @@ public class PlayerEvents implements IEventHandler
 
             if (target instanceof Animal animal)
             {
+                // Require the player to use a single crystal when binding animals.
+                // Clean crystals may be stackable (64), but binding must be done using a single item.
+                if (itemStack.getCount() != 1)
+                {
+                    if (player instanceof ServerPlayer serverPlayer)
+                    {
+                        serverPlayer.sendOverlayMessage(Component.translatable("message.callofcompanions.single_crystal_only"));
+                    }
+
+                    event.setCanceled(true);
+                    event.setCancellationResult(InteractionResult.CONSUME);
+                    return;
+                }
+
                 if (isTameAnimal || isTamedHorse || (isDeepCallCrystal && Config.DEEP_CRYSTAL_ALLOW_UNTAMED.isTrue() && animal.hasCustomName()))
                 {
                     short dataCapacity = isDeepCallCrystal ? (short) Config.DEEP_CRYSTAL_DATA_CAPACITY.getAsInt() : (short) Config.CRYSTAL_DATA_CAPACITY.getAsInt();
