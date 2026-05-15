@@ -1,3 +1,10 @@
+## 📦 Version 1.8.0
+
+### ✨ New
+- You can now view a companion’s last known position in the crystal tooltip by holding *Alt*
+- This feature can be disabled in the config
+
+
 ## 📦 Version 1.7.3
 
 ### 🤝 Compatibility
