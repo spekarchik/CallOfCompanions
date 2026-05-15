@@ -41,6 +41,8 @@
   "text.callofcompanions.minutes_ago": " m ago",
   "text.callofcompanions.hours_ago": " h ago",
   "text.callofcompanions.days_ago": " days ago",
-
-  "description.press_shift": "§7Hold §9Shift§7 for details..."
+  "text.saved_pos": "Pos:",
+  "description.press_shift": "§7Hold §9Shift§7 for details...",
+  "description.press_alt": "§7Hold §9Alt§7 for more details...",
+  "description.press_shift_or_alt": "§7Hold §9Shift§7 or §9Alt§7 for details..."
 }
