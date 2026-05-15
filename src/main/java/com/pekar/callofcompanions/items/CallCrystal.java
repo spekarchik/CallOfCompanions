@@ -4,6 +4,7 @@ import com.mojang.logging.LogUtils;
 import com.pekar.callofcompanions.Config;
 import com.pekar.callofcompanions.controllers.*;
 import com.pekar.callofcompanions.data.CompanionData;
+import com.pekar.callofcompanions.data.CompanionEntry;
 import com.pekar.callofcompanions.data.DataRegistry;
 import com.pekar.callofcompanions.data.PositionStatus;
 import com.pekar.callofcompanions.network.SaveCompanionsPacket;
@@ -18,6 +19,7 @@ import net.minecraft.core.Direction;
 import net.minecraft.core.component.DataComponents;
 import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.network.chat.Component;
+import net.minecraft.resources.ResourceKey;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.sounds.SoundEvents;
@@ -37,8 +39,10 @@ import java.time.Instant;
 import java.time.ZoneId;
 import java.time.format.DateTimeFormatter;
 import java.time.format.DateTimeParseException;
+import java.util.Arrays;
 import java.util.UUID;
 import java.util.function.Consumer;
+import java.util.stream.Collectors;
 
 public class CallCrystal extends ModItem implements ITooltipProvider
 {
@@ -321,7 +325,13 @@ public class CallCrystal extends ModItem implements ITooltipProvider
                 var name = CallCrystalHelper.buildAnimalName(companionEntry.type(), companionEntry.name());
                 var status = companionEntry.positionStatus() == PositionStatus.LOST ? "" : "✓";
                 if (flag.hasShiftDown())
+                {
                     status += getTimeString(level, companionEntry.timestamp(), companionEntry.gameTimestamp());
+                }
+                else if (flag.hasAltDown() && Config.TOOLTIP_SHOW_LAST_POSITION.isTrue())
+                {
+                    status += getAnimalLocationString(companionEntry);
+                }
 
                 String ownerName;
                 if (companionEntry.ownerName().isPresent())
@@ -376,10 +386,26 @@ public class CallCrystal extends ModItem implements ITooltipProvider
                         .apply();
             }
         }
-        else
+        else if (!flag.hasAltDown())
         {
-            tooltip.addLineById("description.press_shift").apply();
+            if (Config.TOOLTIP_SHOW_LAST_POSITION.isTrue())
+                tooltip.addLineById("description.press_shift_or_alt").apply();
+            else
+                tooltip.addLineById("description.press_shift").apply();
         }
+    }
+
+    private String getAnimalLocationString(CompanionEntry companionEntry)
+    {
+        // Format position as: Pos: (-1500, 64, 100) - Overworld
+        var pos = companionEntry.pos();
+        String coords = "(" + pos.getX() + ", " + pos.getY() + ", " + pos.getZ() + ")";
+
+        // Map common dimensions to user-friendly names
+        var key = companionEntry.dimension();
+        String dimName = Component.translatable("dimension." + key.location().getNamespace() + "." + key.location().getPath()).getString();
+        String savedLabel = Component.translatable("text.saved_pos").getString();
+        return "  " + savedLabel + " " + coords + " - " + dimName;
     }
 
     private String getTimeString(Level level, long timestamp, long gameTimestamp)
