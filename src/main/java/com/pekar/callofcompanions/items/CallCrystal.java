@@ -57,6 +57,12 @@ public class CallCrystal extends ModItem implements ITooltipProvider
     }
 
     @Override
+    public int getMaxStackSize(ItemStack stack)
+    {
+        return stack.get(DataRegistry.CRYSTAL_ID) != null ? 1 : super.getMaxStackSize(stack);
+    }
+
+    @Override
     public InteractionResultHolder<ItemStack> use(Level level, Player player, InteractionHand hand)
     {
         var stack = player.getItemInHand(hand);
