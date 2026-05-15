@@ -41,6 +41,8 @@
   "text.callofcompanions.minutes_ago": " min temu",
   "text.callofcompanions.hours_ago": " godz. temu",
   "text.callofcompanions.days_ago": " dni temu",
-
-  "description.press_shift": "§7Przytrzymaj §9Shift§7, aby zobaczyć szczegóły..."
+  "text.saved_pos": "Pozycja:",
+  "description.press_shift": "§7Przytrzymaj §9Shift§7, aby zobaczyć szczegóły...",
+  "description.press_alt": "§7Przytrzymaj §9Alt§7, aby uzyskać więcej informacji...",
+  "description.press_shift_or_alt": "§7Przytrzymaj §9Shift§7 lub §9Alt§7, aby zobaczyć szczegóły..."
 }
