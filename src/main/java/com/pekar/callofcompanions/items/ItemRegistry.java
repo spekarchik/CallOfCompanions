@@ -15,8 +15,8 @@ public class ItemRegistry
 {
     public static final TagKey<Item> CALL_CRYSTALS_TAG = TagKey.create(Registries.ITEM, createResourceLocation(MODID, "call_crystals"));
 
-    public static final DeferredItem<Item> CALL_CRYSTAL = Main.ITEMS.registerItem("call_crystal", CallCrystal::new, p -> p.stacksTo(1).rarity(Rarity.UNCOMMON));
-    public static final DeferredItem<Item> DEEP_CALL_CRYSTAL = Main.ITEMS.registerItem("deep_call_crystal", DeepCallCrystal::new, p -> p.stacksTo(1).rarity(Rarity.RARE));
+    public static final DeferredItem<Item> CALL_CRYSTAL = Main.ITEMS.registerItem("call_crystal", CallCrystal::new, p -> p.rarity(Rarity.UNCOMMON));
+    public static final DeferredItem<Item> DEEP_CALL_CRYSTAL = Main.ITEMS.registerItem("deep_call_crystal", DeepCallCrystal::new, p -> p.rarity(Rarity.RARE));
 
     public static void initStatic()
     {

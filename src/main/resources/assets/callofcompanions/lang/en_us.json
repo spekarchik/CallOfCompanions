@@ -35,6 +35,7 @@
   "message.callofcompanions.companions_updated": "Link to animals refreshed.",
   "message.callofcompanions.summon_cancelled": "The call was interrupted.",
   "message.callofcompanions.no_summonable_companions": "The crystal has no bound animals for you.",
+  "message.callofcompanions.single_crystal_only": "Single crystal required for binding.",
 
   "text.callofcompanions.none": "None",
   "text.callofcompanions.seconds_ago": " s ago",

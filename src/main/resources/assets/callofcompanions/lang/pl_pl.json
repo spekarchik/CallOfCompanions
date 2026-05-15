@@ -35,6 +35,7 @@
   "message.callofcompanions.companions_updated": "Połączenie ze zwierzętami zostało odświeżone.",
   "message.callofcompanions.summon_cancelled": "Przywołanie przerwane.",
   "message.callofcompanions.no_summonable_companions": "Kryształ nie jest powiązany z twoimi zwierzętami.",
+  "message.callofcompanions.single_crystal_only": "Wymagany pojedynczy kryształ do powiązania.",
 
   "text.callofcompanions.none": "brak",
   "text.callofcompanions.seconds_ago": " s temu",

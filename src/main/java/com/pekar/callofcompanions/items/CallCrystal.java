@@ -19,7 +19,6 @@ import net.minecraft.core.Direction;
 import net.minecraft.core.component.DataComponents;
 import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.network.chat.Component;
-import net.minecraft.resources.ResourceKey;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.sounds.SoundEvents;
@@ -39,10 +38,8 @@ import java.time.Instant;
 import java.time.ZoneId;
 import java.time.format.DateTimeFormatter;
 import java.time.format.DateTimeParseException;
-import java.util.Arrays;
 import java.util.UUID;
 import java.util.function.Consumer;
-import java.util.stream.Collectors;
 
 public class CallCrystal extends ModItem implements ITooltipProvider
 {
@@ -57,6 +54,12 @@ public class CallCrystal extends ModItem implements ITooltipProvider
     public boolean shouldCauseReequipAnimation(ItemStack oldStack, ItemStack newStack, boolean slotChanged)
     {
         return slotChanged;
+    }
+
+    @Override
+    public int getMaxStackSize(ItemStack stack)
+    {
+        return stack.get(DataRegistry.CRYSTAL_ID) != null ? 1 : super.getMaxStackSize(stack);
     }
 
     @Override
