@@ -4,6 +4,9 @@
 - You can now view a companion’s last known position in the crystal tooltip by holding *Alt*
 - This feature can be disabled in the config
 
+### 📝 Improvements
+- Clean crystals with no bound animals can now stack up to 64.
+
 
 ## 📦 Version 1.7.3
 
