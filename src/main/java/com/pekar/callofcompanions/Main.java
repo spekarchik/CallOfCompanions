@@ -4,7 +4,6 @@ import com.mojang.logging.LogUtils;
 import com.pekar.callofcompanions.data.DataRegistry;
 import com.pekar.callofcompanions.events.EventRegistry;
 import com.pekar.callofcompanions.items.ItemRegistry;
-import com.pekar.callofcompanions.menus.MenuRegistry;
 import com.pekar.callofcompanions.tab.MainTab;
 import net.minecraft.core.component.DataComponentType;
 import net.minecraft.core.registries.Registries;
@@ -53,7 +52,6 @@ public class Main
     {
         ItemRegistry.initStatic();
         DataRegistry.initStatic();
-        MenuRegistry.initStatic();
     }
 
     // You can use SubscribeEvent and let the Event Bus discover methods to call
