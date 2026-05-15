@@ -1,3 +1,11 @@
+## 📦 Version 1.7.3
+
+### 🤝 Compatibility
+- Improved compatibility with other mods by removing the custom crafting menu override.
+- The crafting preview tooltip no longer shows bound animals before the item is crafted.
+- Crafted crystals still correctly preserve all bound animal data.
+
+
 ## 📦 Version 1.7.1
 
 ### 📝 Improvements
