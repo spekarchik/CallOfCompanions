@@ -69,7 +69,7 @@ public class PlayerEvents implements IEventHandler
                 {
                     if (player instanceof ServerPlayer serverPlayer)
                     {
-                        serverPlayer.sendOverlayMessage(Component.translatable("message.callofcompanions.single_crystal_only"));
+                        serverPlayer.sendSystemMessage(Component.translatable("message.callofcompanions.single_crystal_only"), true);
                     }
 
                     event.setCanceled(true);
