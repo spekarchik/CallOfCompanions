@@ -9,6 +9,7 @@ public class EventRegistry
     public static void registerEvents()
     {
         register(new PlayerEvents());
+        register(new AnimalEvents());
         register(new TickEvents());
         register(new WorldEvents());
         register(new CustomizationEvents());
