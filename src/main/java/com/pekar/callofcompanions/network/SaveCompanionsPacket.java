@@ -35,8 +35,6 @@ public class SaveCompanionsPacket extends ServerToClientPacket
         {
             if (!CallCrystalHelper.hasSameId(itemStack, crystalId)) continue;
 
-            itemStack.remove(DataRegistry.CRYSTAL_ID);
-            itemStack.set(DataRegistry.CRYSTAL_ID, crystalId);
             itemStack.remove(DataRegistry.COMPANIONS);
             itemStack.set(DataRegistry.COMPANIONS, companionData);
             break;

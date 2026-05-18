@@ -1,3 +1,16 @@
+## 📦 Version 1.9.0
+
+### ✨ New
+- Companion positions are now automatically updated on dismount or interaction.
+  - All crystals in the player's inventory linked to the animal are updated automatically.
+  - This behavior can be configured separately for dismount and interaction events.
+  - A crystal is **not updated** if the animal moved less than the configured distance threshold (32 blocks by default).
+  - The threshold is configurable.
+
+### 📝 Improvements
+- Improved consistency of some tooltip texts.
+
+
 ## 📦 Version 1.8.0
 
 ### ✨ New

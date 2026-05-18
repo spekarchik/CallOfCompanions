@@ -19,6 +19,11 @@ public class Config
     public static final ModConfigSpec.BooleanValue DEEP_CRYSTAL_ALLOW_UNTAMED;
     public static final ModConfigSpec.BooleanValue DEEP_CRYSTAL_ALLOW_INTERDIMENSIONAL;
     public static final ModConfigSpec.DoubleValue DEEP_CRYSTAL_CROSS_DIMENSION_DELAY_MULTIPLIER;
+    public static final ModConfigSpec.BooleanValue AUTO_UPDATE_ON_DISMOUNT;
+    public static final ModConfigSpec.BooleanValue AUTO_UPDATE_ON_INTERACT;
+    public static final ModConfigSpec.BooleanValue SHOW_UPDATE_MESSAGE_ON_DISMOUNT;
+    public static final ModConfigSpec.BooleanValue SHOW_UPDATE_MESSAGE_ON_INTERACT;
+    public static final ModConfigSpec.IntValue AUTO_UPDATE_DISTANCE_THRESHOLD;
     public static final ModConfigSpec.ConfigValue<String> DATETIME_FORMAT;
     public static final ModConfigSpec.BooleanValue TOOLTIP_USE_REALTIME;
     public static final ModConfigSpec.BooleanValue TOOLTIP_AGE_COLORING;
@@ -109,6 +114,44 @@ public class Config
         DEEP_CRYSTAL_CROSS_DIMENSION_DELAY_MULTIPLIER = BUILDER
                 .comment("Multiplier applied to waiting time for cross-dimensional calls.")
                 .defineInRange("cross_dimension_delay_multiplier", 4.0D, 0.0D, 20.0D);
+
+        BUILDER.pop();
+
+        // -----------------------------------
+
+        BUILDER.push("tracking");
+
+        // When true, automatically update companion position when the player dismounts an animal.
+        // This controls whether the mod will refresh stored companion positions on animal dismount events.
+        AUTO_UPDATE_ON_DISMOUNT = BUILDER
+                .comment("When dismounting, companion crystals in the player's inventory are checked automatically.",
+                        "Linked creature positions are updated.")
+                .define("auto_update_on_dismount", true);
+
+        // When true, automatically update companion position when the player interacts with an animal.
+        // This controls whether the mod will refresh stored companion positions on animal interaction events.
+        AUTO_UPDATE_ON_INTERACT = BUILDER
+                .comment("When interacting with an animal, companion crystals in the player's inventory are checked automatically.",
+                        "Linked creature positions are updated.")
+                .define("auto_update_on_interact", true);
+
+        // When true, show an overlay message to the player when an automatic update occurs after dismounting.
+        SHOW_UPDATE_MESSAGE_ON_DISMOUNT = BUILDER
+                .comment("Show overlay message when companion position is auto-updated on dismount.")
+                .define("show_update_message_on_dismount", true);
+
+        // When true, show an overlay message to the player when an automatic update occurs after interacting.
+        SHOW_UPDATE_MESSAGE_ON_INTERACT = BUILDER
+                .comment("Show overlay message when companion position is auto-updated on interaction.")
+                .define("show_update_message_on_interact", true);
+
+        // Distance threshold (in blocks) used to determine whether an automatic update is needed.
+        // If the stored companion position is within this many blocks of the actual animal
+        // position, the mod will consider the stored position up-to-date and will not refresh it.
+        AUTO_UPDATE_DISTANCE_THRESHOLD = BUILDER
+                .comment("Distance threshold (in blocks) required to trigger an auto-update of the stored companion position.",
+                        "Updates occur on dismount or interaction events.")
+                .defineInRange("auto_update_distance_threshold_blocks", 32, 0, 1000);
 
         BUILDER.pop();
 
