@@ -49,6 +49,11 @@ public class CompanionData
         return true;
     }
 
+    public CompanionEntry getCompanion(UUID uuid)
+    {
+        return companions.stream().filter(entry -> entry.uuid().equals(uuid)).findFirst().orElse(null);
+    }
+
     public UUID uuid()
     {
         return this.uuid;
