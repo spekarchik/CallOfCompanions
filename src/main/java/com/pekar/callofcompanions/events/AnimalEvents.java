@@ -58,7 +58,7 @@ public class AnimalEvents implements IEventHandler
         if (!(animal.level() instanceof ServerLevel animalLevel)) return false;
 
         boolean companionUpdated = false;
-        for (var itemStack : serverPlayer.getInventory().getNonEquipmentItems())
+        for (var itemStack : serverPlayer.getInventory().items)
         {
             if (!itemStack.is(ItemRegistry.CALL_CRYSTALS_TAG)) continue;
             var data = itemStack.get(DataRegistry.COMPANIONS);
