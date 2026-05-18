@@ -35,7 +35,7 @@ public class AnimalEvents implements IEventHandler
         boolean updated = updateAnimalPos(player, animal);
         if (updated && Config.SHOW_UPDATE_MESSAGE_ON_DISMOUNT.get())
         {
-            player.sendOverlayMessage(Component.translatable("message.callofcompanions.companion_updated"));
+            player.sendSystemMessage(Component.translatable("message.callofcompanions.companion_updated"), true);
         }
     }
 
@@ -49,7 +49,7 @@ public class AnimalEvents implements IEventHandler
         boolean updated = updateAnimalPos(player, animal);
         if (updated && Config.SHOW_UPDATE_MESSAGE_ON_INTERACT.get())
         {
-            player.sendOverlayMessage(Component.translatable("message.callofcompanions.companion_updated"));
+            player.sendSystemMessage(Component.translatable("message.callofcompanions.companion_updated"), true);
         }
     }
 
