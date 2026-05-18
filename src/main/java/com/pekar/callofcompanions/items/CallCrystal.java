@@ -262,27 +262,6 @@ public class CallCrystal extends ModItem implements ITooltipProvider
         CompanionEntryScheduler.listen(serverPlayer, taskEndListener);
     }
 
-    private void updateAnimalPos(ServerPlayer serverPlayer, Animal animal)
-    {
-        if (!(animal.level() instanceof ServerLevel animalLevel)) return;
-        for (var itemStack : serverPlayer.getInventory().getNonEquipmentItems())
-        {
-            if (!itemStack.is(ItemRegistry.CALL_CRYSTALS_TAG)) continue;
-            var data = itemStack.get(DataRegistry.COMPANIONS);
-            if (data == null) continue;
-            var entry = data.getCompanion(animal.getUUID());
-            if (entry == null) continue;
-
-            var oldPos = entry.pos();
-            if (entry.dimension().equals(animalLevel.dimension()) && animal.distanceToSqr(oldPos.getX(), oldPos.getY(), oldPos.getZ()) < 100)
-                continue;
-
-            CallCrystalHelper.updateCompanionPos(animalLevel, data, entry);
-            itemStack.set(DataComponents.ENCHANTMENT_GLINT_OVERRIDE, false);
-            saveStackChanges(serverPlayer, itemStack, itemStack.get(DataRegistry.CRYSTAL_ID), data);
-        }
-    }
-
     private void saveStackChanges(ServerPlayer serverPlayer, ItemStack stack, UUID crystalId, CompanionData companionData)
     {
         LOGGER.debug("Saving call crystal companion data: player={}, crystalId={}, companionCount={}",
