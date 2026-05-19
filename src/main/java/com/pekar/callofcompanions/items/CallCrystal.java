@@ -89,7 +89,8 @@ public class CallCrystal extends ModItem implements ITooltipProvider
 
             if (companionsUpdated)
             {
-                saveStackChanges(serverPlayer, stack, crystalId, companionData);
+                var slotIndex = player.getInventory().getSelectedSlot();
+                saveStackChanges(serverPlayer, stack, crystalId, companionData, slotIndex);
                 serverPlayer.sendOverlayMessage(Component.translatable("message.callofcompanions.companions_updated"));
             }
         }
@@ -168,7 +169,8 @@ public class CallCrystal extends ModItem implements ITooltipProvider
                 }
             };
 
-            scheduleSaveDataOnTasksEnd(serverPlayer, crystalId, companionData, farTeleportListener);
+            var slotIndex = player.getInventory().getSelectedSlot();
+            scheduleSaveDataOnTasksEnd(serverPlayer, crystalId, companionData, farTeleportListener, slotIndex);
 
             var companionList = companionData.companions();
             var iterator = companionList.iterator();
@@ -236,7 +238,7 @@ public class CallCrystal extends ModItem implements ITooltipProvider
         player.giveExperienceLevels(-Math.min(levelsToConsume, player.experienceLevel));
     }
 
-    private void scheduleSaveDataOnTasksEnd(ServerPlayer serverPlayer, UUID crystalId, CompanionData companionData, TeleportListener teleportListener)
+    private void scheduleSaveDataOnTasksEnd(ServerPlayer serverPlayer, UUID crystalId, CompanionData companionData, TeleportListener teleportListener, int slotIndex)
     {
         var taskEndListener = new TaskEndListener()
         {
@@ -248,7 +250,7 @@ public class CallCrystal extends ModItem implements ITooltipProvider
                     if (!CallCrystalHelper.hasSameId(itemStack, crystalId)) continue;
 
                     itemStack.set(DataComponents.ENCHANTMENT_GLINT_OVERRIDE, false);
-                    saveStackChanges(serverPlayer, itemStack, crystalId, companionData);
+                    saveStackChanges(serverPlayer, itemStack, crystalId, companionData, slotIndex);
 
                     if (teleportListener.teleported())
                     {
@@ -262,16 +264,16 @@ public class CallCrystal extends ModItem implements ITooltipProvider
         CompanionEntryScheduler.listen(serverPlayer, taskEndListener);
     }
 
-    private void saveStackChanges(ServerPlayer serverPlayer, ItemStack stack, UUID crystalId, CompanionData companionData)
+    private void saveStackChanges(ServerPlayer serverPlayer, ItemStack stack, UUID crystalId, CompanionData companionData, int slotIndex)
     {
         LOGGER.debug("Saving call crystal companion data: player={}, crystalId={}, companionCount={}",
                 serverPlayer.getName().getString(),
                 crystalId,
                 companionData.companions().size());
+
         var data = companionData.copy();
-        stack.remove(DataRegistry.COMPANIONS);
         stack.set(DataRegistry.COMPANIONS, data);
-        new SaveCompanionsPacket(crystalId, data).sendToPlayer(serverPlayer);
+        new SaveCompanionsPacket(crystalId, slotIndex, data).sendToPlayer(serverPlayer);
     }
 
     private void showSummonParticles(ServerLevel serverLevel, BlockPos clickPos)

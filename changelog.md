@@ -1,3 +1,11 @@
+## 📦 Version 1.9.1
+
+### 📝 Improvements
+- Crystals held in the player's offhand are now also auto-updated on dismount or interaction.
+- Other crystals are no longer auto-updated when interacting with an animal using a crystal.
+- Performance optimizations for crystal auto-updating.
+
+
 ## 📦 Version 1.9.0
 
 ### ✨ New
