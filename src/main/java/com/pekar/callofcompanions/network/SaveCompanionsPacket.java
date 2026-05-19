@@ -7,6 +7,8 @@ import com.pekar.callofcompanions.network.base.IPacket;
 import com.pekar.callofcompanions.network.base.ServerToClientPacket;
 import net.minecraft.nbt.NbtOps;
 import net.minecraft.network.FriendlyByteBuf;
+import net.minecraft.world.entity.player.Inventory;
+import net.minecraft.world.item.ItemStack;
 import net.neoforged.neoforge.network.handling.IPayloadContext;
 
 import java.util.UUID;
@@ -15,27 +17,49 @@ public class SaveCompanionsPacket extends ServerToClientPacket
 {
     private final UUID crystalId;
     private final CompanionData companionData;
+    private final int slotId;
 
     SaveCompanionsPacket()
     {
-        this(null, null);
+        this(null, Inventory.NOT_FOUND_INDEX, null);
     }
 
-    public SaveCompanionsPacket(UUID crystalId, CompanionData companionData)
+    public SaveCompanionsPacket(UUID crystalId, int slotId, CompanionData companionData)
     {
         this.crystalId = crystalId;
         this.companionData = companionData;
+        this.slotId = slotId;
     }
 
     @Override
     public void onReceive(IPayloadContext context)
     {
         var player = context.player();
+
+        if (slotId == Inventory.SLOT_OFFHAND)
+        {
+            var offHandItem = player.getOffhandItem();
+            if (CallCrystalHelper.hasSameId(offHandItem, crystalId))
+            {
+                offHandItem.set(DataRegistry.COMPANIONS, companionData);
+                return;
+            }
+        }
+        else if (slotId >= 0)
+        {
+            var slot = player.getSlot(slotId);
+            var slotItem = slot != null ? slot.get() : ItemStack.EMPTY;
+            if (CallCrystalHelper.hasSameId(slotItem, crystalId))
+            {
+                slotItem.set(DataRegistry.COMPANIONS, companionData);
+                return;
+            }
+        }
+
         for (var itemStack : player.getInventory().items)
         {
             if (!CallCrystalHelper.hasSameId(itemStack, crystalId)) continue;
 
-            itemStack.remove(DataRegistry.COMPANIONS);
             itemStack.set(DataRegistry.COMPANIONS, companionData);
             break;
         }
@@ -45,6 +69,7 @@ public class SaveCompanionsPacket extends ServerToClientPacket
     public void encode(FriendlyByteBuf buffer)
     {
         buffer.writeUUID(crystalId);
+        buffer.writeInt(slotId);
         var data = CompanionData.CODEC.encodeStart(NbtOps.INSTANCE, companionData).getOrThrow();
         buffer.writeNbt(data);
     }
@@ -58,9 +83,10 @@ public class SaveCompanionsPacket extends ServerToClientPacket
     @Override
     public IPacket decode(FriendlyByteBuf buffer)
     {
-        var id = buffer.readUUID();
+        var crystalId = buffer.readUUID();
+        var slotId = buffer.readInt();
         var dataTag = buffer.readNbt();
         var data = CompanionData.CODEC.parse(NbtOps.INSTANCE, dataTag).getOrThrow();
-        return new SaveCompanionsPacket(id, data);
+        return new SaveCompanionsPacket(crystalId, slotId, data);
     }
 }
