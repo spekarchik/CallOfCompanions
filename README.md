@@ -62,15 +62,19 @@ Each crystal remembers your companions — including their last known location.
 
 You can:
 
-- **Bind animals** by right-clicking them  
-- **Refresh their status** to update their location  
-- **Summon them** to your position  
+- **Bind animals** by right-clicking them
+- **Refresh their status** with a right-click in the air
+- **Summon them** by using the crystal on a block
+
+Companion locations update automatically during most normal interactions —  
+just keep the crystal in your inventory when interacting.
 
 The crystal intelligently handles everything:
 
 - Nearby companions will **run to you**
 - Distant ones will **teleport**
 - Even animals in **unloaded chunks** can be found and brought back
+- Unreachable or missing companions are clearly marked in the tooltip
 
 Your world feels… connected.
 
@@ -86,6 +90,13 @@ The system adapts automatically:
 - Across dimensions → **Deep Call Crystal** can call them through the void itself
 - Wolves, cats, parrots → use their natural teleport behavior
 
+Summoning also adapts to each companion:
+
+- Large creatures require more open space
+- Aquatic companions search for nearby water
+- Striders prefer lava when possible
+- Unsafe or obstructed locations are avoided automatically
+
 It feels natural. Seamless. Almost alive.
 
 ---
@@ -95,7 +106,9 @@ It feels natural. Seamless. Almost alive.
 - **Call Crystal** works only within the same dimension
 - **Deep Call Crystal** can optionally summon companions across dimensions
 - If cross-dimensional summoning is unavailable, you'll be notified when a companion is too far away
-- Each summon consumes **XP** (configurable)
+- Calling distant companions from unloaded chunks consumes **XP** (configurable)
+- Nearby or already loaded companions can be summoned for free
+- Cross-dimensional summoning requires more XP
 - Crystals have a **cooldown after use**
 
 ---
@@ -135,6 +148,7 @@ Customize the experience:
 - Allow/disallow untamed animals in Deep Crystal
 - Enable/disable cross-dimensional summoning
 - Cross-dimensional summon delay
+- Automatic companion tracking behavior
 - Tooltip time format and behavior
 
 Make it lightweight… or powerful.
