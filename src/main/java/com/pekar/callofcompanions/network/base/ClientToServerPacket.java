@@ -3,8 +3,8 @@ package com.pekar.callofcompanions.network.base;
 import com.mojang.logging.LogUtils;
 import net.minecraft.client.Minecraft;
 import net.minecraft.network.protocol.common.ServerboundCustomPayloadPacket;
-import net.neoforged.neoforge.network.handling.IPayloadContext;
-import net.neoforged.neoforge.network.handling.ServerPayloadContext;
+import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.world.entity.player.Player;
 import org.slf4j.Logger;
 
 public abstract class ClientToServerPacket extends Packet implements IClientToServerPacket
@@ -35,9 +35,8 @@ public abstract class ClientToServerPacket extends Packet implements IClientToSe
     }
 
     @Override
-    protected final void onReceive(IPayloadContext context)
+    protected final void onReceive(Player player)
     {
-        var serverContext = (ServerPayloadContext)context;
-        onReceive(serverContext.player());
+        onReceive((ServerPlayer) player);
     }
 }
