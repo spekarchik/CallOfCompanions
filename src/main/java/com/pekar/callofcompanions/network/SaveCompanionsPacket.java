@@ -5,11 +5,11 @@ import com.pekar.callofcompanions.data.CompanionData;
 import com.pekar.callofcompanions.data.DataRegistry;
 import com.pekar.callofcompanions.network.base.IPacket;
 import com.pekar.callofcompanions.network.base.ServerToClientPacket;
+import net.minecraft.client.player.LocalPlayer;
 import net.minecraft.nbt.NbtOps;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.item.ItemStack;
-import net.neoforged.neoforge.network.handling.IPayloadContext;
 
 import java.util.UUID;
 
@@ -32,10 +32,8 @@ public class SaveCompanionsPacket extends ServerToClientPacket
     }
 
     @Override
-    public void onReceive(IPayloadContext context)
+    public void onReceive(LocalPlayer player)
     {
-        var player = context.player();
-
         if (slotId == Inventory.SLOT_OFFHAND)
         {
             var offHandItem = player.getOffhandItem();

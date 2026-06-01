@@ -1,6 +1,8 @@
 package com.pekar.callofcompanions.network.base;
 
+import com.pekar.callofcompanions.Main;
 import net.minecraft.network.FriendlyByteBuf;
+import net.minecraft.network.chat.Component;
 import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.network.codec.StreamDecoder;
 import net.minecraft.network.codec.StreamEncoder;
@@ -31,7 +33,14 @@ public class PacketInfoProvider<T extends Packet> implements IPacketInfoProvider
     @Override
     public IPayloadHandler<T> getHandler()
     {
-        return getPacketHandler();
+        return (packet, context) -> {
+            context.enqueueWork(() -> packet.onReceive(context.player()))
+                    .exceptionally(e ->
+                    {
+                        context.disconnect(Component.translatable(Main.MODID + " networking failed: ", e.getMessage()));
+                        return null;
+                    });
+        };
     }
 
     private StreamEncoder<FriendlyByteBuf, T> getEncoder()
@@ -42,10 +51,5 @@ public class PacketInfoProvider<T extends Packet> implements IPacketInfoProvider
     private StreamDecoder<FriendlyByteBuf, T> getDecoder()
     {
         return buffer -> (T)packet.decode(buffer);
-    }
-
-    private IPayloadHandler<T> getPacketHandler()
-    {
-        return (packet, context) -> packet.handlePacket(context);
     }
 }
