@@ -1,21 +1,26 @@
 package com.pekar.callofcompanions.controllers;
 
+import com.pekar.callofcompanions.Config;
 import com.pekar.callofcompanions.blocks.BlockRegistry;
 import com.pekar.callofcompanions.data.CompanionData;
 import com.pekar.callofcompanions.data.CompanionEntry;
 import com.pekar.callofcompanions.data.DataRegistry;
+import com.pekar.callofcompanions.data.PositionStatus;
 import com.pekar.callofcompanions.items.ItemRegistry;
 import net.minecraft.core.BlockPos;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.tags.FluidTags;
 import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.OwnableEntity;
 import net.minecraft.world.entity.TamableAnimal;
+import net.minecraft.world.entity.animal.Animal;
 import net.minecraft.world.entity.animal.horse.AbstractHorse;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Blocks;
 
+import java.util.Optional;
 import java.util.UUID;
 
 import static net.minecraft.world.level.material.Fluids.LAVA;
@@ -23,6 +28,50 @@ import static net.minecraft.world.level.material.Fluids.WATER;
 
 public class CallCrystalHelper
 {
+    public static boolean canBindAnimal(Animal animal, boolean allowNamedUntamed)
+    {
+        boolean isTameAnimal = animal instanceof TamableAnimal tamable && tamable.isTame();
+        boolean isTamedHorse = animal instanceof AbstractHorse horse && horse.isTamed();
+        return isTameAnimal || isTamedHorse || (allowNamedUntamed && animal.hasCustomName());
+    }
+
+    public static short crystalDataCapacity(boolean isDeepCallCrystal)
+    {
+        return isDeepCallCrystal
+                ? (short) Config.DEEP_CRYSTAL_DATA_CAPACITY.getAsInt()
+                : (short) Config.CRYSTAL_DATA_CAPACITY.getAsInt();
+    }
+
+    public static UUID ensureCrystalId(ItemStack stack)
+    {
+        var crystalId = stack.get(DataRegistry.CRYSTAL_ID);
+        if (crystalId != null) return crystalId;
+
+        crystalId = UUID.randomUUID();
+        stack.set(DataRegistry.CRYSTAL_ID, crystalId);
+        return crystalId;
+    }
+
+    public static CompanionEntry createCompanionEntry(Animal animal, long gameTime)
+    {
+        var name = animal.getDisplayName().getString();
+        var companionType = getAnimalType(animal);
+        var owner = animal instanceof OwnableEntity ownable ? ownable.getOwner() : null;
+        var ownerId = animal instanceof OwnableEntity ownable ? ownable.getOwnerUUID() : null;
+
+        return new CompanionEntry(
+                animal.getUUID(),
+                name,
+                companionType,
+                animal.level().dimension(),
+                animal.blockPosition(),
+                PositionStatus.FRESH,
+                Optional.ofNullable(ownerId),
+                owner != null ? Optional.of(owner.getDisplayName().getString()) : Optional.empty(),
+                System.currentTimeMillis(),
+                gameTime);
+    }
+
     public static boolean hasSameId(ItemStack stack, UUID crystalId)
     {
         if (!stack.is(ItemRegistry.CALL_CRYSTALS_TAG)) return false;

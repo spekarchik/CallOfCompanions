@@ -4,9 +4,7 @@ import com.mojang.logging.LogUtils;
 import com.pekar.callofcompanions.Config;
 import com.pekar.callofcompanions.controllers.CallCrystalHelper;
 import com.pekar.callofcompanions.data.CompanionData;
-import com.pekar.callofcompanions.data.CompanionEntry;
 import com.pekar.callofcompanions.data.DataRegistry;
-import com.pekar.callofcompanions.data.PositionStatus;
 import com.pekar.callofcompanions.items.ItemRegistry;
 import com.pekar.callofcompanions.scheduler.CompanionEntryScheduler;
 import net.minecraft.core.component.DataComponents;
@@ -18,11 +16,9 @@ import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.entity.LivingEntity;
-import net.minecraft.world.entity.OwnableEntity;
-import net.minecraft.world.entity.TamableAnimal;
 import net.minecraft.world.entity.animal.Animal;
-import net.minecraft.world.entity.animal.horse.AbstractHorse;
 import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.ItemStack;
 import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.fml.LogicalSide;
 import net.neoforged.neoforge.event.entity.EntityTeleportEvent;
@@ -31,9 +27,6 @@ import net.neoforged.neoforge.event.entity.living.LivingEquipmentChangeEvent;
 import net.neoforged.neoforge.event.entity.player.PlayerEvent;
 import net.neoforged.neoforge.event.entity.player.PlayerInteractEvent;
 import org.slf4j.Logger;
-
-import java.util.Optional;
-import java.util.UUID;
 
 public class PlayerEvents implements IEventHandler
 {
@@ -49,111 +42,95 @@ public class PlayerEvents implements IEventHandler
         var player = event.getEntity();
 
         boolean isDeepCallCrystal = itemStack.is(ItemRegistry.DEEP_CALL_CRYSTAL);
-        if (isDeepCallCrystal || itemStack.is(ItemRegistry.CALL_CRYSTAL))
+        if (!isDeepCallCrystal && !itemStack.is(ItemRegistry.CALL_CRYSTAL)) return;
+
+        if (player.getCooldowns().isOnCooldown(itemStack.getItem()))
         {
-            if (player.getCooldowns().isOnCooldown(itemStack.getItem()))
-            {
-                event.setCanceled(true);
-                event.setCancellationResult(InteractionResult.CONSUME);
-                return;
-            }
-
-            boolean isTameAnimal = target instanceof TamableAnimal tamable && tamable.isTame();
-            boolean isTamedHorse = target instanceof AbstractHorse horse && horse.isTamed();
-
-            if (target instanceof Animal animal)
-            {
-                // Require the player to use a single crystal when binding animals.
-                // Clean crystals may be stackable (64), but binding must be done using a single item.
-                if (itemStack.getCount() != 1)
-                {
-                    if (player instanceof ServerPlayer serverPlayer)
-                    {
-                        serverPlayer.sendSystemMessage(Component.translatable("message.callofcompanions.single_crystal_only"), true);
-                    }
-
-                    event.setCanceled(true);
-                    event.setCancellationResult(InteractionResult.CONSUME);
-                    return;
-                }
-
-                if (isTameAnimal || isTamedHorse || (isDeepCallCrystal && Config.DEEP_CRYSTAL_ALLOW_UNTAMED.isTrue() && animal.hasCustomName()))
-                {
-                    short dataCapacity = isDeepCallCrystal ? (short) Config.DEEP_CRYSTAL_DATA_CAPACITY.getAsInt() : (short) Config.CRYSTAL_DATA_CAPACITY.getAsInt();
-                    var companionData = itemStack.getOrDefault(DataRegistry.COMPANIONS, new CompanionData(dataCapacity));
-                    var id = itemStack.get(DataRegistry.CRYSTAL_ID);
-                    if (id == null)
-                        itemStack.set(DataRegistry.CRYSTAL_ID, UUID.randomUUID());
-
-                    var name = target.getDisplayName().getString();
-                    var companionType = CallCrystalHelper.getAnimalType(animal);
-                    var owner = target instanceof OwnableEntity ownable ? ownable.getOwner() : null;
-                    var ownerId = target instanceof OwnableEntity ownable ? ownable.getOwnerUUID() : null;
-                    Optional<UUID> ownerIdOpt = ownerId != null ? Optional.of(ownerId) : Optional.empty();
-                    Optional<String> ownerName = owner != null ? Optional.of(owner.getDisplayName().getString()) : Optional.empty();
-                    var level = event.getLevel();
-
-                    var entry = new CompanionEntry(
-                            target.getUUID(),
-                            name,
-                            companionType,
-                            target.level().dimension(),
-                            target.blockPosition(),
-                            PositionStatus.FRESH,
-                            ownerIdOpt,
-                            ownerName,
-                            System.currentTimeMillis(),
-                            level.getGameTime());
-
-                    var result = companionData.add(entry);
-                    if (result)
-                    {
-                        if (level instanceof ServerLevel serverLevel)
-                        {
-                            playAddAnimalSound(serverLevel, animal);
-                        }
-
-                        itemStack.remove(DataRegistry.COMPANIONS);
-                        itemStack.set(DataRegistry.COMPANIONS, companionData.copy());
-
-                        event.setCanceled(true);
-                        event.setCancellationResult(InteractionResult.sidedSuccess(event.getSide() == LogicalSide.CLIENT));
-                        return;
-                    }
-                    else if (player instanceof ServerPlayer serverPlayer)
-                    {
-                        serverPlayer.sendSystemMessage(Component.translatable("message.callofcompanions.limit_reached"), true);
-                    }
-                }
-                else
-                {
-                    if (player instanceof ServerPlayer serverPlayer)
-                    {
-                        // For deep crystals we may allow binding named animals depending on config
-                        if (isDeepCallCrystal && Config.DEEP_CRYSTAL_ALLOW_UNTAMED.isTrue())
-                        {
-                            serverPlayer.sendSystemMessage(Component.translatable("message.callofcompanions.cant_bind_tame_or_named"), true);
-                        }
-                        else
-                        {
-                            serverPlayer.sendSystemMessage(Component.translatable("message.callofcompanions.cant_bind_tame_only"), true);
-                        }
-                    }
-                }
-            }
-            else if (target instanceof LivingEntity && player instanceof ServerPlayer serverPlayer)
-            {
-                serverPlayer.sendSystemMessage(Component.translatable("message.callofcompanions.cant_bind_entity_type", target.getDisplayName()), true);
-            }
-
-            event.setCanceled(true);
-            event.setCancellationResult(InteractionResult.CONSUME);
+            consumeInteraction(event);
+            return;
         }
+
+        if (target instanceof Animal animal)
+        {
+            handleAnimalCrystalUse(event, player, itemStack, animal, isDeepCallCrystal);
+            return;
+        }
+
+        if (target instanceof LivingEntity && player instanceof ServerPlayer serverPlayer)
+        {
+            serverPlayer.sendSystemMessage(Component.translatable("message.callofcompanions.cant_bind_entity_type", target.getDisplayName()), true);
+        }
+
+        // Keep consume fallback so crystals suppress vanilla entity interactions on failed/non-bind attempts.
+        consumeInteraction(event);
     }
 
-    private void playAddAnimalSound(ServerLevel level, Animal animal)
+    private void handleAnimalCrystalUse(PlayerInteractEvent.EntityInteractSpecific event, Player player, ItemStack itemStack, Animal animal, boolean isDeepCallCrystal)
     {
-        level.playSound(null, animal.blockPosition(), SoundEvents.PLAYER_LEVELUP, SoundSource.PLAYERS, 0.1F, 1.6F);
+        // Clean crystals may be stackable, but binding must use exactly one item.
+        if (itemStack.getCount() != 1)
+        {
+            if (player instanceof ServerPlayer serverPlayer)
+            {
+                serverPlayer.sendSystemMessage(Component.translatable("message.callofcompanions.single_crystal_only"), true);
+            }
+
+            consumeInteraction(event);
+            return;
+        }
+
+        boolean allowNamedUntamed = isDeepCallCrystal && Config.DEEP_CRYSTAL_ALLOW_UNTAMED.isTrue();
+        if (!CallCrystalHelper.canBindAnimal(animal, allowNamedUntamed))
+        {
+            if (player instanceof ServerPlayer serverPlayer)
+            {
+                serverPlayer.sendSystemMessage(Component.translatable(
+                        allowNamedUntamed
+                                ? "message.callofcompanions.cant_bind_tame_or_named"
+                                : "message.callofcompanions.cant_bind_tame_only"
+                ), true);
+            }
+
+            consumeInteraction(event);
+            return;
+        }
+
+        short dataCapacity = CallCrystalHelper.crystalDataCapacity(isDeepCallCrystal);
+        var companionData = itemStack.getOrDefault(DataRegistry.COMPANIONS, new CompanionData(dataCapacity));
+        CallCrystalHelper.ensureCrystalId(itemStack);
+
+        var level = event.getLevel();
+        var entry = CallCrystalHelper.createCompanionEntry(animal, level.getGameTime());
+        if (companionData.add(entry))
+        {
+            if (level instanceof ServerLevel serverLevel)
+            {
+                playAddAnimalSound(serverLevel, animal);
+            }
+
+            itemStack.remove(DataRegistry.COMPANIONS);
+            itemStack.set(DataRegistry.COMPANIONS, companionData.copy());
+            succeedInteraction(event);
+            return;
+        }
+
+        if (player instanceof ServerPlayer serverPlayer)
+        {
+            serverPlayer.sendSystemMessage(Component.translatable("message.callofcompanions.limit_reached"), true);
+        }
+        consumeInteraction(event);
+    }
+
+    private static void consumeInteraction(PlayerInteractEvent.EntityInteractSpecific event)
+    {
+        event.setCanceled(true);
+        event.setCancellationResult(InteractionResult.CONSUME);
+    }
+
+    private static void succeedInteraction(PlayerInteractEvent.EntityInteractSpecific event)
+    {
+        event.setCanceled(true);
+        event.setCancellationResult(InteractionResult.sidedSuccess(event.getSide() == LogicalSide.CLIENT));
     }
 
     @SubscribeEvent
@@ -236,6 +213,11 @@ public class PlayerEvents implements IEventHandler
         {
             cancelTasksFor(serverPlayer);
         }
+    }
+
+    private void playAddAnimalSound(ServerLevel level, Animal animal)
+    {
+        level.playSound(null, animal.blockPosition(), SoundEvents.PLAYER_LEVELUP, SoundSource.PLAYERS, 0.1F, 1.6F);
     }
 
     private static void cancelTasksFor(ServerPlayer player)
