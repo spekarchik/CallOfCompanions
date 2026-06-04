@@ -156,7 +156,7 @@ public class CallCrystal extends ModItem implements ITooltipProvider
     {
         stack.set(DataComponents.ENCHANTMENT_GLINT_OVERRIDE, true);
 
-        var serverLevel = serverPlayer.level();
+        var serverLevel = (ServerLevel) serverPlayer.level();
         playSummonSound(serverLevel, serverPlayer.blockPosition());
         showSummonParticles(serverLevel, useOnPos);
 
