@@ -11,9 +11,7 @@ import net.minecraft.core.component.DataComponents;
 import net.minecraft.network.chat.Component;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
-import net.minecraft.world.entity.TamableAnimal;
 import net.minecraft.world.entity.animal.Animal;
-import net.minecraft.world.entity.animal.horse.AbstractHorse;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.item.ItemStack;
 import net.neoforged.bus.api.SubscribeEvent;
@@ -61,9 +59,7 @@ public class AnimalEvents implements IEventHandler
 
     private boolean isCorrectAnimalForBinding(Animal animal)
     {
-        boolean isTameAnimal = animal instanceof TamableAnimal tamable && tamable.isTame();
-        boolean isTamedHorse = animal instanceof AbstractHorse horse && horse.isTamed();
-        return isTameAnimal || isTamedHorse || (Config.DEEP_CRYSTAL_ALLOW_UNTAMED.isTrue() && animal.hasCustomName());
+        return CallCrystalHelper.canBindAnimal(animal, Config.DEEP_CRYSTAL_ALLOW_UNTAMED.isTrue());
     }
 
     private boolean updateAnimalPos(ServerPlayer serverPlayer, Animal animal)
