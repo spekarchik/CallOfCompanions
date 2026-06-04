@@ -77,13 +77,10 @@ public class CallCrystal extends ModItem implements ITooltipProvider
         {
             playUpdateCrystalSound(serverLevel, player.blockPosition());
 
-            var companionList = companionData.companions();
-            var iterator = companionList.iterator();
             boolean companionsUpdated = false;
-            while (iterator.hasNext())
+            for (var companionEntry : companionData.companions())
             {
-                var companion = iterator.next();
-                CallCrystalHelper.updateCompanionPos(serverLevel, companionData, companion);
+                CallCrystalHelper.updateCompanionPos(serverLevel, companionData, companionEntry);
                 companionsUpdated = true;
             }
 
@@ -112,21 +109,12 @@ public class CallCrystal extends ModItem implements ITooltipProvider
 
         if (player.getCooldowns().isOnCooldown(stack)) return InteractionResult.FAIL;
 
-        var level = context.getLevel();
-        var clickPos = context.getClickedPos();
-        var clickedTopFace = context.getClickedFace() == Direction.UP;
-        var hasNoCollisions = CallCrystalHelper.noCollisionOrIsWater(level, clickPos);
-
-        if (!clickedTopFace && !hasNoCollisions) return InteractionResult.FAIL;
-
-        var useOnPos = hasNoCollisions ? clickPos.below() : clickPos;
-        if (!CallCrystalHelper.canApplyCrystalAt(level, useOnPos.above())) return InteractionResult.FAIL;
+        var useOnPos = resolveUseOnPos(context);
+        if (useOnPos == null) return InteractionResult.FAIL;
 
         if (!hasEnoughXp(player))
         {
-            if (player instanceof ServerPlayer serverPlayer)
-                serverPlayer.sendSystemMessage(Component.translatable("message.callofcompanions.not_enough_xp"), true);
-
+            sendNotEnoughXpMessage(player);
             return InteractionResult.FAIL;
         }
 
@@ -136,89 +124,123 @@ public class CallCrystal extends ModItem implements ITooltipProvider
 
         if (player instanceof ServerPlayer serverPlayer)
         {
-            stack.set(DataComponents.ENCHANTMENT_GLINT_OVERRIDE, true);
-
-            var serverLevel = (ServerLevel) serverPlayer.level();
-            playSummonSound(serverLevel, player.blockPosition());
-            showSummonParticles(serverLevel, useOnPos);
-
-            var farTeleportListener = new TeleportListener()
-            {
-                private boolean farTeleportUsed = false;
-                private boolean crossDimTeleportUsed = false;
-
-                @Override
-                public void onTeleport(TeleportType teleportType)
-                {
-                    if (teleportType == TeleportType.FAR_TELEPORT)
-                        farTeleportUsed = true;
-                    else if (teleportType == TeleportType.CROSS_DIMENSION_TELEPORT)
-                        crossDimTeleportUsed = true;
-                }
-
-                @Override
-                public boolean teleported()
-                {
-                    return farTeleportUsed || crossDimTeleportUsed;
-                }
-
-                @Override
-                public boolean isCrossDimensional()
-                {
-                    return crossDimTeleportUsed;
-                }
-            };
-
-            var slotIndex = player.getInventory().getSelectedSlot();
-            scheduleSaveDataOnTasksEnd(serverPlayer, crystalId, companionData, farTeleportListener, slotIndex);
-
-            var companionList = companionData.companions();
-            var iterator = companionList.iterator();
-            boolean anySummoned = false;
-
-            while (iterator.hasNext())
-            {
-                var companionEntry = iterator.next();
-                var animalLevel = serverLevel.getServer().getLevel(companionEntry.dimension());
-                if (animalLevel == null) continue;
-
-                var entity = animalLevel.getEntity(companionEntry.uuid());
-                Animal animal = entity instanceof Animal a ? a : null;
-
-                if (!CallCrystalHelper.canSummonAnimal(entity, companionEntry.ownerUuid().orElse(null), player))
-                {
-                    LOGGER.debug("Skipped: companion can't be summoned by player, companionType={}, companionId={}, player={}", companionEntry.type(), companionEntry.uuid(), player.getDisplayName());
-
-                    var animalDisplayName = CallCrystalHelper.buildAnimalName(companionEntry.type(), companionEntry.name());
-                    serverPlayer.sendSystemMessage(Component.translatable("message.callofcompanions.not_owner", animalDisplayName));
-
-                    continue;
-                }
-
-                anySummoned = true;
-
-                var summonContext = new SummonAnimalContext(
-                        serverPlayer,
-                        animal,
-                        companionData,
-                        companionEntry,
-                        stack,
-                        callDelayFactor(),
-                        farTeleportListener,
-                        allowInterDimensionalTeleports()
-                );
-
-                AnimalSummonFactory.get(summonContext).run(useOnPos.above());
-            }
-
-            if (!anySummoned)
-            {
-                stack.set(DataComponents.ENCHANTMENT_GLINT_OVERRIDE, false);
-                serverPlayer.sendSystemMessage(Component.translatable("message.callofcompanions.no_summonable_companions"), true);
-            }
+            runServerSummonPipeline(serverPlayer, stack, crystalId, companionData, useOnPos);
         }
 
         return sidedSuccess(player.level().isClientSide());
+    }
+
+    private BlockPos resolveUseOnPos(UseOnContext context)
+    {
+        var level = context.getLevel();
+        var clickPos = context.getClickedPos();
+        var clickedTopFace = context.getClickedFace() == Direction.UP;
+        var hasNoCollisions = CallCrystalHelper.noCollisionOrIsWater(level, clickPos);
+
+        if (!clickedTopFace && !hasNoCollisions) return null;
+
+        var useOnPos = hasNoCollisions ? clickPos.below() : clickPos;
+        if (!CallCrystalHelper.canApplyCrystalAt(level, useOnPos.above())) return null;
+        return useOnPos;
+    }
+
+    private void sendNotEnoughXpMessage(Player player)
+    {
+        if (player instanceof ServerPlayer serverPlayer)
+        {
+            serverPlayer.sendSystemMessage(Component.translatable("message.callofcompanions.not_enough_xp"), true);
+        }
+    }
+
+    private void runServerSummonPipeline(ServerPlayer serverPlayer, ItemStack stack, UUID crystalId, CompanionData companionData, BlockPos useOnPos)
+    {
+        stack.set(DataComponents.ENCHANTMENT_GLINT_OVERRIDE, true);
+
+        var serverLevel = serverPlayer.level();
+        playSummonSound(serverLevel, serverPlayer.blockPosition());
+        showSummonParticles(serverLevel, useOnPos);
+
+        var farTeleportListener = createTeleportListener();
+        var slotIndex = serverPlayer.getInventory().getSelectedSlot();
+        scheduleSaveDataOnTasksEnd(serverPlayer, crystalId, companionData, farTeleportListener, slotIndex);
+
+        boolean anySummoned = false;
+        for (var companionEntry : companionData.companions())
+        {
+            if (!trySummonCompanion(serverPlayer, stack, companionData, companionEntry, farTeleportListener, useOnPos))
+                continue;
+
+            anySummoned = true;
+        }
+
+        if (!anySummoned)
+        {
+            stack.set(DataComponents.ENCHANTMENT_GLINT_OVERRIDE, false);
+            serverPlayer.sendSystemMessage(Component.translatable("message.callofcompanions.no_summonable_companions"), true);
+        }
+    }
+
+    private boolean trySummonCompanion(ServerPlayer serverPlayer, ItemStack stack, CompanionData companionData, CompanionEntry companionEntry, TeleportListener teleportListener, BlockPos useOnPos)
+    {
+        var animalLevel = serverPlayer.level().getServer().getLevel(companionEntry.dimension());
+        if (animalLevel == null) return false;
+
+        var entity = animalLevel.getEntity(companionEntry.uuid());
+        Animal animal = entity instanceof Animal a ? a : null;
+
+        if (!CallCrystalHelper.canSummonAnimal(entity, companionEntry.ownerUuid().orElse(null), serverPlayer))
+        {
+            LOGGER.debug("Skipped: companion can't be summoned by player, companionType={}, companionId={}, player={}", companionEntry.type(), companionEntry.uuid(), serverPlayer.getDisplayName());
+
+            var animalDisplayName = CallCrystalHelper.buildAnimalName(companionEntry.type(), companionEntry.name());
+            serverPlayer.sendSystemMessage(Component.translatable("message.callofcompanions.not_owner", animalDisplayName));
+
+            return false;
+        }
+
+        var summonContext = new SummonAnimalContext(
+                serverPlayer,
+                animal,
+                companionData,
+                companionEntry,
+                stack,
+                callDelayFactor(),
+                teleportListener,
+                allowInterDimensionalTeleports()
+        );
+
+        AnimalSummonFactory.get(summonContext).run(useOnPos.above());
+        return true;
+    }
+
+    private static TeleportListener createTeleportListener()
+    {
+        return new TeleportListener()
+        {
+            private boolean farTeleportUsed = false;
+            private boolean crossDimTeleportUsed = false;
+
+            @Override
+            public void onTeleport(TeleportType teleportType)
+            {
+                if (teleportType == TeleportType.FAR_TELEPORT)
+                    farTeleportUsed = true;
+                else if (teleportType == TeleportType.CROSS_DIMENSION_TELEPORT)
+                    crossDimTeleportUsed = true;
+            }
+
+            @Override
+            public boolean teleported()
+            {
+                return farTeleportUsed || crossDimTeleportUsed;
+            }
+
+            @Override
+            public boolean isCrossDimensional()
+            {
+                return crossDimTeleportUsed;
+            }
+        };
     }
 
     private boolean hasEnoughXp(Player player)
