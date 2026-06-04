@@ -35,6 +35,8 @@ Even if the world itself forgot about them.
 ### 💜 Call Crystal
 A simple yet powerful tool.
 
+![Call Crystal recipe](https://github.com/spekarchik/CallOfCompanions/blob/main/docs/images/CallCrystalRecipe.png?raw=true)
+
 - Stores up to **4 companions**
 - Works with **tamed animals only**
 - Slower summoning & longer cooldown
@@ -44,6 +46,8 @@ A reliable way to never lose your closest friends.
 
 ### ❤️ Deep Call Crystal
 An upgraded, darker version infused with sculk energy.
+
+![Deep Call Crystal recipe](https://github.com/spekarchik/CallOfCompanions/blob/main/docs/images/DeepCallCrystalRecipe.png?raw=true)
 
 - Stores up to **8 companions**
 - Works with **tamed *and named* animals**
@@ -69,6 +73,8 @@ You can:
 Companion locations update automatically during most normal interactions —  
 just keep the crystal in your inventory when interacting.
 
+![Call Crystal tooltip](https://github.com/spekarchik/CallOfCompanions/blob/main/docs/images/CallCrystalTooltip.jpg?raw=true)
+
 The crystal intelligently handles everything:
 
 - Nearby companions will **run to you**
@@ -77,6 +83,23 @@ The crystal intelligently handles everything:
 - Unreachable or missing companions are clearly marked in the tooltip
 
 Your world feels… connected.
+
+---
+
+## 🚚 Advanced Use: Transport
+
+Sometimes… your companions carry more than just your trust.
+
+- Llamas with chests can store items for you  
+- Summon them anytime to access your storage  
+- Create your own **mobile supply caravan**
+
+No more relying only on Ender Chests.  
+No more running out of space mid-journey.
+
+![Storage on Demand](https://github.com/spekarchik/CallOfCompanions/blob/main/docs/images/Llamas.jpg?raw=true)
+
+Your companions can carry the world with you.
 
 ---
 
@@ -96,6 +119,8 @@ Summoning also adapts to each companion:
 - Aquatic companions search for nearby water
 - Striders prefer lava when possible
 - Unsafe or obstructed locations are avoided automatically
+
+![Nautilus teleported](https://github.com/spekarchik/CallOfCompanions/blob/main/docs/images/Nautilus.jpg?raw=true)
 
 It feels natural. Seamless. Almost alive.
 
@@ -132,6 +157,8 @@ Sometimes… bonds need to be rewritten.
 
 Surround a Deep Call Crystal with **Flint** to wipe all stored companions.
 
+![Cleansing Recipe](https://github.com/spekarchik/CallOfCompanions/blob/main/docs/images/CleanDeepCallCrystal.jpg?raw=true)
+
 A fresh start — without losing the crystal itself.
 
 ---
@@ -152,6 +179,8 @@ Customize the experience:
 - Tooltip time format and behavior
 
 Make it lightweight… or powerful.
+
+![Configuration](https://github.com/spekarchik/CallOfCompanions/blob/main/docs/images/Configuration4.png?raw=true)
 
 *The configuration file is generated automatically after launching the game and can be found in the standard mod config directory.*
 
@@ -177,6 +206,8 @@ No menus.
 No complicated UI.  
 No unnecessary mechanics.
 
+![Strider teleported](https://github.com/spekarchik/CallOfCompanions/blob/main/docs/images/Strider.jpg?raw=true)
+
 Just a crystal in your hand…  
 and the quiet certainty that your companions will answer.
 
@@ -188,6 +219,8 @@ You don’t have to worry about losing them anymore.
 
 They’re not gone.  
 They’re just… waiting for your call.
+
+![Waiting Fox](https://github.com/spekarchik/CallOfCompanions/blob/main/docs/images/WaitingFox.jpg?raw=true)
 
 ---
 
