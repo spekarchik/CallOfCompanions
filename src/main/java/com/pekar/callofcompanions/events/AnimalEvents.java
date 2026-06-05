@@ -7,6 +7,7 @@ import com.pekar.callofcompanions.data.CompanionData;
 import com.pekar.callofcompanions.data.DataRegistry;
 import com.pekar.callofcompanions.items.ItemRegistry;
 import com.pekar.callofcompanions.network.SaveCompanionsPacket;
+import com.pekar.callofcompanions.utils.Players;
 import net.minecraft.core.component.DataComponents;
 import net.minecraft.network.chat.Component;
 import net.minecraft.server.level.ServerLevel;
@@ -37,7 +38,7 @@ public class AnimalEvents implements IEventHandler
         boolean updated = updateAnimalPos(player, animal);
         if (updated && Config.SHOW_UPDATE_MESSAGE_ON_DISMOUNT.get())
         {
-            player.sendSystemMessage(Component.translatable("message.callofcompanions.companion_updated"), true);
+            Players.sendOverlayMessage(player, Component.translatable("message.callofcompanions.companion_updated"));
         }
     }
 
@@ -53,7 +54,7 @@ public class AnimalEvents implements IEventHandler
         boolean updated = updateAnimalPos(player, animal);
         if (updated && Config.SHOW_UPDATE_MESSAGE_ON_INTERACT.get())
         {
-            player.sendSystemMessage(Component.translatable("message.callofcompanions.companion_updated"), true);
+            Players.sendOverlayMessage(player, Component.translatable("message.callofcompanions.companion_updated"));
         }
     }
 
