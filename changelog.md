@@ -4,6 +4,10 @@
 - A new call with a crystal can no longer be started while a previous one is in progress.
 - This issue could cause animals' positions to not update properly.
 
+### 📝 Improvements
+- Default value for the `far_teleport_chunk_radius` config parameter increased to 8.
+- The parameter description clarified.
+
 
 ## 📦 Version 1.9.1
 
