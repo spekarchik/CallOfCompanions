@@ -5,6 +5,7 @@ import com.pekar.callofcompanions.Config;
 import com.pekar.callofcompanions.data.CompanionEntry;
 import com.pekar.callofcompanions.scheduler.CompanionEntryScheduler;
 import com.pekar.callofcompanions.scheduler.CompanionEntryTask;
+import com.pekar.callofcompanions.utils.Players;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.SectionPos;
 import net.minecraft.core.particles.ParticleTypes;
@@ -150,7 +151,7 @@ class FarTeleportController extends AnimalSummonController
             }
             else
             {
-                player.sendSystemMessage(Component.translatable("message.callofcompanions.cant_teleport", name), true);
+                Players.sendOverlayMessage(player, Component.translatable("message.callofcompanions.cant_teleport", name));
                 LOGGER.debug("Far teleport failed: companion couldn't find a safe place to teleport, companionType={}, companionId={}, companionPos={}, companionDimension={}", entry.type(), entry.uuid(), entry.pos(), entry.dimension());
             }
         }
