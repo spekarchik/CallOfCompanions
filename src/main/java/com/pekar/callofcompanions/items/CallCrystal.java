@@ -107,6 +107,8 @@ public class CallCrystal extends ModItem implements ITooltipProvider
         var crystalId = stack.get(DataRegistry.CRYSTAL_ID);
         if (crystalId == null) return InteractionResult.FAIL;
 
+        if (Boolean.TRUE.equals(stack.get(DataComponents.ENCHANTMENT_GLINT_OVERRIDE))) return InteractionResult.FAIL;
+
         if (player.getCooldowns().isOnCooldown(stack)) return InteractionResult.FAIL;
 
         var useOnPos = resolveUseOnPos(context);
@@ -161,8 +163,6 @@ public class CallCrystal extends ModItem implements ITooltipProvider
         showSummonParticles(serverLevel, useOnPos);
 
         var farTeleportListener = createTeleportListener();
-        var slotIndex = serverPlayer.getInventory().getSelectedSlot();
-        scheduleSaveDataOnTasksEnd(serverPlayer, crystalId, companionData, farTeleportListener, slotIndex);
 
         boolean anySummoned = false;
         for (var companionEntry : companionData.companions())
@@ -173,11 +173,15 @@ public class CallCrystal extends ModItem implements ITooltipProvider
             anySummoned = true;
         }
 
-        if (!anySummoned)
+        if (anySummoned)
         {
-            stack.set(DataComponents.ENCHANTMENT_GLINT_OVERRIDE, false);
-            serverPlayer.sendOverlayMessage(Component.translatable("message.callofcompanions.no_summonable_companions"));
+            var slotIndex = serverPlayer.getInventory().getSelectedSlot();
+            scheduleSaveDataOnTasksEnd(serverPlayer, crystalId, companionData, farTeleportListener, slotIndex);
+            return;
         }
+
+        stack.set(DataComponents.ENCHANTMENT_GLINT_OVERRIDE, false);
+        serverPlayer.sendOverlayMessage(Component.translatable("message.callofcompanions.no_summonable_companions"));
     }
 
     private boolean trySummonCompanion(ServerPlayer serverPlayer, ItemStack stack, CompanionData companionData, CompanionEntry companionEntry, TeleportListener teleportListener, BlockPos useOnPos)
@@ -271,8 +275,8 @@ public class CallCrystal extends ModItem implements ITooltipProvider
                 {
                     if (!CallCrystalHelper.hasSameId(itemStack, crystalId)) continue;
 
-                    itemStack.set(DataComponents.ENCHANTMENT_GLINT_OVERRIDE, false);
                     saveStackChanges(serverPlayer, itemStack, crystalId, companionData, slotIndex);
+                    itemStack.set(DataComponents.ENCHANTMENT_GLINT_OVERRIDE, false);
 
                     if (teleportListener.teleported())
                     {
