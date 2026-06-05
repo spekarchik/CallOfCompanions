@@ -205,8 +205,10 @@ public class Config
         // Lower values may cause animals to not be found in remote chunks. Change at your own risk.
         // Valid range: 1..32 (1 = minimal, 12 = large area).
         FAR_TELEPORT_CHUNK_RADIUS = BUILDER
-                .comment("Radius in chunks to load around a companion when doing a far teleport. Change at your own risk; higher values increase server memory/CPU usage.")
-                .defineInRange("far_teleport_chunk_radius", 6, 1, 32);
+                .comment("Radius in chunks to search around a companion's saved location during a far teleport.")
+                .comment("Increase this value if companions often move away before being teleported.")
+                .comment("Higher values increase chunk loading.")
+                .defineInRange("far_teleport_chunk_radius", 8, 1, 32);
 
         // How many ticks the far-teleport task will wait while trying to load/find the companion
         // before giving up. This controls the timeout used when searching for the entity
