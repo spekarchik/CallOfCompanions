@@ -5,6 +5,7 @@ import com.pekar.callofcompanions.entity.EntityRegistry;
 import com.pekar.callofcompanions.data.CompanionEntry;
 import com.pekar.callofcompanions.scheduler.CompanionEntryScheduler;
 import com.pekar.callofcompanions.scheduler.CompanionEntryTask;
+import com.pekar.callofcompanions.utils.Players;
 import net.minecraft.core.BlockPos;
 import net.minecraft.network.chat.Component;
 import org.slf4j.Logger;
@@ -73,7 +74,7 @@ class VanillaTeleportController extends LoadedAnimalSummonController
             else
             {
                 var name = CallCrystalHelper.buildAnimalName(entry.type(), entry.name());
-                player.sendSystemMessage(Component.translatable("message.callofcompanions.cant_teleport", name), true);
+                Players.sendOverlayMessage(player, Component.translatable("message.callofcompanions.cant_teleport", name));
                 LOGGER.debug("Vanilla teleport failed: companion couldn't find a safe place to teleport, companionType={}, companionId={}", entry.type(), entry.uuid());
             }
         }

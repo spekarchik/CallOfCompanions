@@ -7,6 +7,7 @@ import com.pekar.callofcompanions.data.CompanionData;
 import com.pekar.callofcompanions.data.DataRegistry;
 import com.pekar.callofcompanions.items.ItemRegistry;
 import com.pekar.callofcompanions.scheduler.CompanionEntryScheduler;
+import com.pekar.callofcompanions.utils.Players;
 import net.minecraft.core.component.DataComponents;
 import net.minecraft.network.chat.Component;
 import net.minecraft.server.level.ServerLevel;
@@ -58,7 +59,7 @@ public class PlayerEvents implements IEventHandler
 
         if (target instanceof LivingEntity && player instanceof ServerPlayer serverPlayer)
         {
-            serverPlayer.sendSystemMessage(Component.translatable("message.callofcompanions.cant_bind_entity_type", target.getDisplayName()), true);
+            Players.sendOverlayMessage(serverPlayer, Component.translatable("message.callofcompanions.cant_bind_entity_type", target.getDisplayName()));
         }
 
         // Keep consume fallback so crystals suppress vanilla entity interactions on failed/non-bind attempts.
@@ -72,7 +73,7 @@ public class PlayerEvents implements IEventHandler
         {
             if (player instanceof ServerPlayer serverPlayer)
             {
-                serverPlayer.sendSystemMessage(Component.translatable("message.callofcompanions.single_crystal_only"), true);
+                Players.sendOverlayMessage(serverPlayer, Component.translatable("message.callofcompanions.single_crystal_only"));
             }
 
             consumeInteraction(event);
@@ -84,11 +85,11 @@ public class PlayerEvents implements IEventHandler
         {
             if (player instanceof ServerPlayer serverPlayer)
             {
-                serverPlayer.sendSystemMessage(Component.translatable(
+                Players.sendOverlayMessage(serverPlayer, Component.translatable(
                         allowNamedUntamed
                                 ? "message.callofcompanions.cant_bind_tame_or_named"
                                 : "message.callofcompanions.cant_bind_tame_only"
-                ), true);
+                ));
             }
 
             consumeInteraction(event);
@@ -116,7 +117,7 @@ public class PlayerEvents implements IEventHandler
 
         if (player instanceof ServerPlayer serverPlayer)
         {
-            serverPlayer.sendSystemMessage(Component.translatable("message.callofcompanions.limit_reached"), true);
+            Players.sendOverlayMessage(serverPlayer, Component.translatable("message.callofcompanions.limit_reached"));
         }
         consumeInteraction(event);
     }
@@ -223,7 +224,7 @@ public class PlayerEvents implements IEventHandler
     private static void cancelTasksFor(ServerPlayer player)
     {
         if (CompanionEntryScheduler.hasTasks(player))
-            player.sendSystemMessage(Component.translatable("message.callofcompanions.summon_cancelled"), true);
+            Players.sendOverlayMessage(player, Component.translatable("message.callofcompanions.summon_cancelled"));
 
         CompanionEntryScheduler.DELAY_TASKS.clearFor(player);
         CompanionEntryScheduler.TELEPORT_TASKS.clearFor(player);

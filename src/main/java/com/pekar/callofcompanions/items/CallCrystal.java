@@ -13,6 +13,7 @@ import com.pekar.callofcompanions.scheduler.TaskEndListener;
 import com.pekar.callofcompanions.tooltip.ITooltip;
 import com.pekar.callofcompanions.tooltip.ITooltipProvider;
 import com.pekar.callofcompanions.tooltip.TextStyle;
+import com.pekar.callofcompanions.utils.Players;
 import net.minecraft.ChatFormatting;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
@@ -88,7 +89,7 @@ public class CallCrystal extends ModItem implements ITooltipProvider
             {
                 var slotIndex = player.getInventory().selected;
                 saveStackChanges(serverPlayer, stack, crystalId, companionData, slotIndex);
-                serverPlayer.sendSystemMessage(Component.translatable("message.callofcompanions.companions_updated"), true);
+                Players.sendOverlayMessage(serverPlayer, Component.translatable("message.callofcompanions.companions_updated"));
             }
         }
 
@@ -150,7 +151,7 @@ public class CallCrystal extends ModItem implements ITooltipProvider
     {
         if (player instanceof ServerPlayer serverPlayer)
         {
-            serverPlayer.sendSystemMessage(Component.translatable("message.callofcompanions.not_enough_xp"), true);
+            Players.sendOverlayMessage(serverPlayer, Component.translatable("message.callofcompanions.not_enough_xp"));
         }
     }
 
@@ -181,7 +182,7 @@ public class CallCrystal extends ModItem implements ITooltipProvider
         }
 
         stack.set(DataComponents.ENCHANTMENT_GLINT_OVERRIDE, false);
-        serverPlayer.sendSystemMessage(Component.translatable("message.callofcompanions.no_summonable_companions"), true);
+        Players.sendOverlayMessage(serverPlayer, Component.translatable("message.callofcompanions.no_summonable_companions"));
     }
 
     private boolean trySummonCompanion(ServerPlayer serverPlayer, ItemStack stack, CompanionData companionData, CompanionEntry companionEntry, TeleportListener teleportListener, BlockPos useOnPos)
