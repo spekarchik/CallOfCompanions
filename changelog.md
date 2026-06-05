@@ -1,3 +1,10 @@
+## 📦 Version 1.9.2
+
+### 🐞 Fixed
+- A new call with a crystal can no longer be started while a previous one is in progress.
+- This issue could cause animals' positions to not update properly.
+
+
 ## 📦 Version 1.9.1
 
 ### 📝 Improvements
