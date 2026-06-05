@@ -4,7 +4,6 @@ import net.minecraft.client.player.LocalPlayer;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.level.chunk.LevelChunk;
-import net.neoforged.neoforge.network.handling.IPayloadContext;
 
 public interface IServerToClientPacket extends IPacket
 {

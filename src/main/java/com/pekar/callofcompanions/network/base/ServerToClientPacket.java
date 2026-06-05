@@ -6,7 +6,9 @@ import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.chunk.LevelChunk;
-import net.neoforged.neoforge.network.PacketDistributor;
+
+import net.fabricmc.fabric.api.networking.v1.PlayerLookup;
+import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
 
 public abstract class ServerToClientPacket extends Packet implements IServerToClientPacket
 {
@@ -15,17 +17,26 @@ public abstract class ServerToClientPacket extends Packet implements IServerToCl
 
     public final void sendToPlayer(ServerPlayer player)
     {
-        PacketDistributor.sendToPlayer(player, this);
+        ServerPlayNetworking.send(player, this);
     }
 
     public final void sendToEntity(Entity entity)
     {
-        PacketDistributor.sendToPlayersTrackingEntity(entity, this);
+        for (var player : PlayerLookup.tracking(entity))
+        {
+            ServerPlayNetworking.send(player, this);
+        }
     }
 
     public final void sendToChunk(LevelChunk chunk)
     {
-        PacketDistributor.sendToPlayersTrackingChunk((ServerLevel) chunk.getLevel(), chunk.getPos(), this);
+        var level = (ServerLevel) chunk.getLevel();
+        var chunkPos = chunk.getPos();
+
+        for (var player : PlayerLookup.tracking(level, chunkPos))
+        {
+            ServerPlayNetworking.send(player, this);
+        }
     }
 
     @Override
