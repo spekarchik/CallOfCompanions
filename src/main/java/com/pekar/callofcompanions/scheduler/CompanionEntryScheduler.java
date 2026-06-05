@@ -12,6 +12,7 @@ public class CompanionEntryScheduler
     public static final CompanionEntryScheduler DELAY_TASKS = new CompanionEntryScheduler();
     public static final CompanionEntryScheduler TELEPORT_TASKS = new CompanionEntryScheduler();
     public static final CompanionEntryScheduler UPDATE_POS_TASKS = new CompanionEntryScheduler();
+
     private static final Dictionary<UUID, Integer> playerTaskCounters = new Hashtable<>();
     private static final Dictionary<UUID, TaskEndListener> playerTaskEndListeners = new Hashtable<>();
 
@@ -20,6 +21,7 @@ public class CompanionEntryScheduler
 
     public static void listen(ServerPlayer player, TaskEndListener listener)
     {
+        // we need only one listener per player, so we can safely override existing one if present
         playerTaskEndListeners.put(player.getUUID(), listener);
     }
 
@@ -31,10 +33,13 @@ public class CompanionEntryScheduler
     public void add(CompanionEntryTask task)
     {
         pendingAdds.add(task);
+        incrementTaskCount(task.initiator().getUUID());
     }
 
     public void clear()
     {
+        addPendingTasks();
+
         var iterator = tasks.iterator();
         while (iterator.hasNext())
         {
@@ -46,6 +51,8 @@ public class CompanionEntryScheduler
 
     public void clearFor(ServerPlayer player)
     {
+        addPendingTasks();
+
         var iterator = tasks.iterator();
         while (iterator.hasNext())
         {
@@ -59,6 +66,8 @@ public class CompanionEntryScheduler
 
     public void tick()
     {
+        addPendingTasks();
+
         var iterator = tasks.iterator();
         while (iterator.hasNext())
         {
@@ -69,13 +78,6 @@ public class CompanionEntryScheduler
                 removeTask(task, iterator);
             }
         }
-
-        for (var task : pendingAdds)
-        {
-            if (tasks.add(task))
-                incrementTaskCount(task.initiator().getUUID());
-        }
-        pendingAdds.clear();
     }
 
     private int taskCount(UUID uuid)
@@ -113,5 +115,15 @@ public class CompanionEntryScheduler
     {
         iterator.remove();
         decrementTaskCount(task.initiator().getUUID());
+    }
+
+    private void addPendingTasks()
+    {
+        for (var task : pendingAdds)
+        {
+            if (!tasks.add(task))
+                decrementTaskCount(task.initiator().getUUID());
+        }
+        pendingAdds.clear();
     }
 }
