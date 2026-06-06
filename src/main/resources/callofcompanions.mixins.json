@@ -1,0 +1,12 @@
+{
+  "required": true,
+  "package": "com.pekar.callofcompanions.mixin",
+  "compatibilityLevel": "JAVA_21",
+  "mixins": [
+    "EntityStopRidingMixin"
+  ],
+  "injectors": {
+    "defaultRequire": 1
+  }
+}
+

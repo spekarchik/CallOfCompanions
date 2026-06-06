@@ -12,6 +12,9 @@
       "com.pekar.callofcompanions.Main"
     ]
   },
+  "mixins": [
+    "callofcompanions.mixins.json"
+  ],
   "contact": {
     "homepage": "https://www.curseforge.com/minecraft/mc-mods/call-of-companions",
     "sources": "https://github.com/spekarchik/CallOfCompanions"

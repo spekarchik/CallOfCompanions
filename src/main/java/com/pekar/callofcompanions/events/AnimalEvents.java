@@ -5,6 +5,8 @@ import com.pekar.callofcompanions.Config;
 import com.pekar.callofcompanions.controllers.CallCrystalHelper;
 import com.pekar.callofcompanions.data.CompanionData;
 import com.pekar.callofcompanions.data.DataRegistry;
+import com.pekar.callofcompanions.events.params.EntityInteract;
+import com.pekar.callofcompanions.events.params.EntityMountEvent;
 import com.pekar.callofcompanions.items.ItemRegistry;
 import com.pekar.callofcompanions.network.SaveCompanionsPacket;
 import com.pekar.callofcompanions.utils.Players;
@@ -15,9 +17,6 @@ import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.entity.animal.Animal;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.item.ItemStack;
-import net.neoforged.bus.api.SubscribeEvent;
-import net.neoforged.neoforge.event.entity.EntityMountEvent;
-import net.neoforged.neoforge.event.entity.player.PlayerInteractEvent;
 import org.slf4j.Logger;
 
 import java.util.UUID;
@@ -26,7 +25,6 @@ public class AnimalEvents implements IEventHandler
 {
     private static final Logger LOGGER = LogUtils.getLogger();
 
-    @SubscribeEvent
     public void onEntityMount(EntityMountEvent event)
     {
         if (!Config.AUTO_UPDATE_ON_DISMOUNT.get()) return;
@@ -42,8 +40,7 @@ public class AnimalEvents implements IEventHandler
         }
     }
 
-    @SubscribeEvent
-    public void onPlayerInteract(PlayerInteractEvent.EntityInteract event)
+    public void onPlayerInteract(EntityInteract event)
     {
         if (!Config.AUTO_UPDATE_ON_INTERACT.get()) return;
         if (!(event.getEntity() instanceof ServerPlayer player)) return;
