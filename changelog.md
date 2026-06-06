@@ -1,3 +1,9 @@
+## 📦 Version 1.10.1
+
+### 🐞 Fixed
+- Re-added changes that were unintentionally not included in 1.10.0 release.
+
+
 ## 📦 Version 1.10.0
 
 ### 📝 Improvements
