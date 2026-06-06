@@ -1,15 +1,17 @@
 package com.pekar.callofcompanions.tab;
 
+import net.minecraft.core.Registry;
+import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.world.item.CreativeModeTab;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
-import net.neoforged.neoforge.registries.DeferredHolder;
 
 import java.util.Collection;
 
-import static com.pekar.callofcompanions.Main.CREATIVE_MODE_TABS;
+import static com.pekar.callofcompanions.Main.MODID;
+import static com.pekar.callofcompanions.utils.Resources.createResourceLocation;
 
 public abstract class ModTab
 {
@@ -26,15 +28,18 @@ public abstract class ModTab
         return "itemGroup." + getTabName();
     }
 
-    public final DeferredHolder<CreativeModeTab, CreativeModeTab> createTab()
+    public final CreativeModeTab createTab()
     {
-
-        return CREATIVE_MODE_TABS.register(getTabName(), () -> CreativeModeTab.builder()
-                .title(Component.translatable(getTitle()))
-                .withTabsBefore(getTabsBefore())
-                .icon(this::getIconItem)
-                .displayItems(this::addItems)
-                .build());
+        return Registry.register(
+                BuiltInRegistries.CREATIVE_MODE_TAB,
+                createResourceLocation(MODID, getTabName()),
+                CreativeModeTab.builder()
+                        .title(Component.translatable(getTitle()))
+                        .withTabsBefore(getTabsBefore())
+                        .icon(this::getIconItem)
+                        .displayItems(this::addItems)
+                        .build()
+        );
     }
 
     private void addItems(CreativeModeTab.ItemDisplayParameters itemDisplayParameters, CreativeModeTab.Output output)
