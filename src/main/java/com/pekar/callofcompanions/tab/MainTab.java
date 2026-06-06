@@ -1,9 +1,6 @@
 package com.pekar.callofcompanions.tab;
 
 import com.pekar.callofcompanions.items.ItemRegistry;
-import net.minecraft.resources.ResourceKey;
-import net.minecraft.world.item.CreativeModeTab;
-import net.minecraft.world.item.CreativeModeTabs;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 
@@ -33,12 +30,4 @@ public class MainTab extends ModTab
         );
     }
 
-    @Override
-    protected ResourceKey<CreativeModeTab>[] getTabsBefore()
-    {
-        return new ResourceKey[]
-                {
-                        CreativeModeTabs.SPAWN_EGGS
-                };
-    }
 }

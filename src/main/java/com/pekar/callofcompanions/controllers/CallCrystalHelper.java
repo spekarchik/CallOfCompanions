@@ -8,6 +8,7 @@ import com.pekar.callofcompanions.data.DataRegistry;
 import com.pekar.callofcompanions.data.PositionStatus;
 import com.pekar.callofcompanions.items.ItemRegistry;
 import net.minecraft.core.BlockPos;
+import net.minecraft.core.component.DataComponents;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.tags.FluidTags;
 import net.minecraft.world.entity.Entity;
@@ -49,6 +50,7 @@ public class CallCrystalHelper
 
         crystalId = UUID.randomUUID();
         stack.set(DataRegistry.CRYSTAL_ID, crystalId);
+        stack.set(DataComponents.MAX_STACK_SIZE, 1);
         return crystalId;
     }
 

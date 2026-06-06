@@ -6,6 +6,7 @@ import com.pekar.callofcompanions.data.DataRegistry;
 import com.pekar.callofcompanions.network.base.IPacket;
 import com.pekar.callofcompanions.network.base.ServerToClientPacket;
 import net.minecraft.client.player.LocalPlayer;
+import net.minecraft.core.component.DataComponents;
 import net.minecraft.nbt.NbtOps;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.world.entity.player.Inventory;
@@ -40,6 +41,7 @@ public class SaveCompanionsPacket extends ServerToClientPacket
             if (CallCrystalHelper.hasSameId(offHandItem, crystalId))
             {
                 offHandItem.set(DataRegistry.COMPANIONS, companionData);
+                offHandItem.set(DataComponents.MAX_STACK_SIZE, 1);
                 return;
             }
         }
@@ -50,6 +52,7 @@ public class SaveCompanionsPacket extends ServerToClientPacket
             if (CallCrystalHelper.hasSameId(slotItem, crystalId))
             {
                 slotItem.set(DataRegistry.COMPANIONS, companionData);
+                slotItem.set(DataComponents.MAX_STACK_SIZE, 1);
                 return;
             }
         }
@@ -59,6 +62,7 @@ public class SaveCompanionsPacket extends ServerToClientPacket
             if (!CallCrystalHelper.hasSameId(itemStack, crystalId)) continue;
 
             itemStack.set(DataRegistry.COMPANIONS, companionData);
+            itemStack.set(DataComponents.MAX_STACK_SIZE, 1);
             break;
         }
     }

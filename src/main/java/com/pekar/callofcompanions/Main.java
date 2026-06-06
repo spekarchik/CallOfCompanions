@@ -15,24 +15,17 @@ import org.slf4j.Logger;
 
 import java.io.IOException;
 
-// The value here should match an entry in the META-INF/neoforge.mods.toml file
-//@Mod(Main.MODID)
 public class Main implements ModInitializer
 {
     public static final String MODID = "callofcompanions";
     public static final Logger LOGGER = LogUtils.getLogger();
-//    public static final DeferredRegister.Items ITEMS = DeferredRegister.createItems(MODID);
-//    public static final DeferredRegister<CreativeModeTab> CREATIVE_MODE_TABS = DeferredRegister.create(Registries.CREATIVE_MODE_TAB, MODID);
-//    public static final DeferredHolder<CreativeModeTab, CreativeModeTab> MAIN_TAB = new MainTab().createTab();
-//    public static final DeferredRegister<DataComponentType<?>> DATA_COMPONENTS = DeferredRegister.create(Registries.DATA_COMPONENT_TYPE, MODID);
-//    public static final DeferredRegister<MenuType<?>> MENUS = DeferredRegister.create(Registries.MENU, MODID);
 
     @Override
     public void onInitialize()
     {
         var configPath = FabricLoader.getInstance()
                 .getConfigDir()
-                .resolve("enchantonce-common.toml");
+                .resolve(MODID + "-common.toml");
 
         try
         {
@@ -54,23 +47,4 @@ public class Main implements ModInitializer
         FabricLifecycleEventHooks.init();
         FabricPlayerEventHooks.init();
     }
-
-//    public Main(IEventBus modEventBus, ModContainer modContainer)
-//    {
-//        initializeRegistry();
-//
-//        ITEMS.register(modEventBus);
-//        CREATIVE_MODE_TABS.register(modEventBus);
-//        DATA_COMPONENTS.register(modEventBus);
-//
-//        NeoForge.EVENT_BUS.register(this);
-//
-//        modContainer.registerConfig(ModConfig.Type.COMMON, Config.SPEC);
-//    }
-
-//    private void initializeRegistry()
-//    {
-//        ItemRegistry.initStatic();
-//        DataRegistry.initStatic();
-//    }
 }

@@ -1,6 +1,7 @@
 package com.pekar.callofcompanions.items;
 
 import com.mojang.logging.LogUtils;
+import com.mojang.blaze3d.platform.InputConstants;
 import com.pekar.callofcompanions.Config;
 import com.pekar.callofcompanions.controllers.*;
 import com.pekar.callofcompanions.data.CompanionData;
@@ -18,6 +19,7 @@ import net.minecraft.ChatFormatting;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.component.DataComponents;
+import net.minecraft.client.Minecraft;
 import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.network.chat.Component;
 import net.minecraft.server.level.ServerLevel;
@@ -49,18 +51,6 @@ public class CallCrystal extends ModItem implements ITooltipProvider
     public CallCrystal(Properties properties)
     {
         super(properties);
-    }
-
-    @Override
-    public boolean shouldCauseReequipAnimation(ItemStack oldStack, ItemStack newStack, boolean slotChanged)
-    {
-        return slotChanged;
-    }
-
-    @Override
-    public int getMaxStackSize(ItemStack stack)
-    {
-        return stack.get(DataRegistry.CRYSTAL_ID) != null ? 1 : super.getMaxStackSize(stack);
     }
 
     @Override
@@ -343,7 +333,7 @@ public class CallCrystal extends ModItem implements ITooltipProvider
     @Override
     public void addTooltip(ItemStack stack, TooltipContext context, ITooltip tooltip, TooltipFlag flag)
     {
-        var level = context.level();
+        var level = Minecraft.getInstance().level;
         if (level == null) return;
 
         var companionData = stack.get(DataRegistry.COMPANIONS);
@@ -356,11 +346,11 @@ public class CallCrystal extends ModItem implements ITooltipProvider
             {
                 var name = CallCrystalHelper.buildAnimalName(companionEntry.type(), companionEntry.name());
                 var status = companionEntry.positionStatus() == PositionStatus.LOST ? "" : "✓";
-                if (flag.hasShiftDown())
+                if (hasShiftDown())
                 {
                     status += getTimeString(level, companionEntry.timestamp(), companionEntry.gameTimestamp());
                 }
-                else if (flag.hasAltDown() && Config.TOOLTIP_SHOW_LAST_POSITION.isTrue())
+                else if (hasAltDown() && Config.TOOLTIP_SHOW_LAST_POSITION.isTrue())
                 {
                     status += getAnimalLocationString(companionEntry);
                 }
@@ -387,7 +377,7 @@ public class CallCrystal extends ModItem implements ITooltipProvider
 
         tooltip.addEmptyLine();
 
-        if (flag.hasShiftDown())
+        if (hasShiftDown())
         {
             int companionsAdded = companionData != null ? companionData.companions().size() : 0;
             int dataCapacity = companionData != null ? companionData.capacity() : crystalDataCapacity();
@@ -418,7 +408,7 @@ public class CallCrystal extends ModItem implements ITooltipProvider
                         .apply();
             }
         }
-        else if (!flag.hasAltDown())
+        else if (!hasAltDown())
         {
             if (Config.TOOLTIP_SHOW_LAST_POSITION.isTrue())
                 tooltip.addLineById("description.press_shift_or_alt").apply();
@@ -438,6 +428,20 @@ public class CallCrystal extends ModItem implements ITooltipProvider
         String dimName = Component.translatable("dimension." + key.identifier().getNamespace() + "." + key.identifier().getPath()).getString();
         String savedLabel = Component.translatable("text.saved_pos").getString();
         return "  " + savedLabel + " " + coords + " - " + dimName;
+    }
+
+    private static boolean hasShiftDown()
+    {
+        var window = Minecraft.getInstance().getWindow();
+        return InputConstants.isKeyDown(window, InputConstants.KEY_LSHIFT)
+                || InputConstants.isKeyDown(window, InputConstants.KEY_RSHIFT);
+    }
+
+    private static boolean hasAltDown()
+    {
+        var window = Minecraft.getInstance().getWindow();
+        return InputConstants.isKeyDown(window, InputConstants.KEY_LALT)
+                || InputConstants.isKeyDown(window, InputConstants.KEY_RALT);
     }
 
     private String getTimeString(Level level, long timestamp, long gameTimestamp)

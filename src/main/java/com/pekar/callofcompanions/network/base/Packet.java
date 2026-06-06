@@ -24,5 +24,5 @@ public abstract class Packet implements IPacket, CustomPacketPayload
 
     public abstract boolean isServerToClient();
 
-    protected abstract void onReceive(Player player);
+    public abstract void onReceive(Player player);
 }

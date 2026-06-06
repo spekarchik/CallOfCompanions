@@ -46,7 +46,7 @@ public abstract class ServerToClientPacket extends Packet implements IServerToCl
     }
 
     @Override
-    protected final void onReceive(Player player)
+    public final void onReceive(Player player)
     {
         onReceive((LocalPlayer) player);
     }

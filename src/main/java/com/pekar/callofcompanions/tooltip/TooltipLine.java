@@ -4,8 +4,6 @@ import net.minecraft.ChatFormatting;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
 
-import javax.annotation.CheckReturnValue;
-
 public class TooltipLine implements IMutableTooltipLine
 {
     public static final String PLACEHOLDER = "{}";
@@ -34,7 +32,6 @@ public class TooltipLine implements IMutableTooltipLine
         this.ignoreEmptyLines = false;
     }
 
-    @CheckReturnValue
     @Override
     public ITooltipLine styledAs(TextStyle style, boolean applyStyle)
     {
@@ -53,42 +50,36 @@ public class TooltipLine implements IMutableTooltipLine
         return this;
     }
 
-    @CheckReturnValue
     @Override
     public final ITooltipLine asHeader()
     {
         return styledAs(TextStyle.Header);
     }
 
-    @CheckReturnValue
     @Override
     public final ITooltipLine asSubHeader()
     {
         return styledAs(TextStyle.Subheader);
     }
 
-    @CheckReturnValue
     @Override
     public final ITooltipLine asNotice()
     {
         return styledAs(TextStyle.Notice);
     }
 
-    @CheckReturnValue
     @Override
     public final ITooltipLine asImportantNotice()
     {
         return styledAs(TextStyle.ImportantNotice);
     }
 
-    @CheckReturnValue
     @Override
     public final ITooltipLine asDarkGrey()
     {
         return styledAs(TextStyle.DarkGray);
     }
 
-    @CheckReturnValue
     @Override
     public final ITooltipLine withFormatting(ChatFormatting formatting, boolean applyFormatting)
     {

@@ -35,7 +35,7 @@ public abstract class ClientToServerPacket extends Packet implements IClientToSe
     }
 
     @Override
-    protected final void onReceive(Player player)
+    public final void onReceive(Player player)
     {
         onReceive((ServerPlayer) player);
     }

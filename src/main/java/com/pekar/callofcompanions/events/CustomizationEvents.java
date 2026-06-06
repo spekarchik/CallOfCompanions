@@ -4,6 +4,7 @@ import com.pekar.callofcompanions.Config;
 import com.pekar.callofcompanions.data.DataRegistry;
 import com.pekar.callofcompanions.events.params.PlayerEvent;
 import com.pekar.callofcompanions.items.ItemRegistry;
+import net.minecraft.core.component.DataComponents;
 
 import java.util.UUID;
 
@@ -23,6 +24,7 @@ public class CustomizationEvents implements IEventHandler
                     if (companionData != null)
                     {
                         result.set(DataRegistry.CRYSTAL_ID, UUID.randomUUID());
+                        result.set(DataComponents.MAX_STACK_SIZE, 1);
                         result.set(DataRegistry.COMPANIONS,
                                 companionData.copyWithCapacity((short) Config.DEEP_CRYSTAL_DATA_CAPACITY.getAsInt()));
                     }

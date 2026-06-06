@@ -3,7 +3,6 @@ package com.pekar.callofcompanions.tab;
 import net.minecraft.core.Registry;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.network.chat.Component;
-import net.minecraft.resources.ResourceKey;
 import net.minecraft.world.item.CreativeModeTab;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
@@ -21,8 +20,6 @@ public abstract class ModTab
 
     protected abstract Collection<Item> getTabItems();
 
-    protected abstract ResourceKey<CreativeModeTab>[] getTabsBefore();
-
     protected String getTitle()
     {
         return "itemGroup." + getTabName();
@@ -33,9 +30,8 @@ public abstract class ModTab
         return Registry.register(
                 BuiltInRegistries.CREATIVE_MODE_TAB,
                 createResourceLocation(MODID, getTabName()),
-                CreativeModeTab.builder()
+                CreativeModeTab.builder(CreativeModeTab.Row.TOP, 7)
                         .title(Component.translatable(getTitle()))
-                        .withTabsBefore(getTabsBefore())
                         .icon(this::getIconItem)
                         .displayItems(this::addItems)
                         .build()
