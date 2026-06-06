@@ -1,6 +1,6 @@
 package com.pekar.callofcompanions;
 
-import net.neoforged.neoforge.common.ModConfigSpec;
+import com.pekar.callofcompanions.config.ModConfigSpec;
 
 public class Config
 {

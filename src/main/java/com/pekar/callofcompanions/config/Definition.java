@@ -23,6 +23,11 @@ abstract class Definition<T>
         return value;
     }
 
+    public T get()
+    {
+        return getValue();
+    }
+
     public void setValue(T value)
     {
         this.value = value;
