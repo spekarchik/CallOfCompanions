@@ -12,8 +12,9 @@ public class CompanionEntryScheduler
     public static final CompanionEntryScheduler DELAY_TASKS = new CompanionEntryScheduler();
     public static final CompanionEntryScheduler TELEPORT_TASKS = new CompanionEntryScheduler();
     public static final CompanionEntryScheduler UPDATE_POS_TASKS = new CompanionEntryScheduler();
-    private static final Dictionary<UUID, Integer> playerTaskCounters = new Hashtable<>();
-    private static final Dictionary<UUID, TaskEndListener> playerTaskEndListeners = new Hashtable<>();
+
+    private static final Map<UUID, Integer> playerTaskCounters = new HashMap<>();
+    private static final Map<UUID, TaskEndListener> playerTaskEndListeners = new HashMap<>();
 
     private CompanionEntryScheduler()
     {}
