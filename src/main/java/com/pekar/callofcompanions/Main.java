@@ -7,6 +7,7 @@ import com.pekar.callofcompanions.events.fabric.FabricCustomizationEventHooks;
 import com.pekar.callofcompanions.events.fabric.FabricLifecycleEventHooks;
 import com.pekar.callofcompanions.events.fabric.FabricPlayerEventHooks;
 import com.pekar.callofcompanions.items.ItemRegistry;
+import com.pekar.callofcompanions.network.Networking;
 import com.pekar.callofcompanions.tab.MainTab;
 import net.fabricmc.api.ModInitializer;
 import net.fabricmc.loader.api.FabricLoader;
@@ -46,6 +47,8 @@ public class Main implements ModInitializer
         ItemRegistry.initStatic();
         new MainTab().createTab();
 
+        Networking.init();
+
         FabricAnimalEventHooks.init();
         FabricCustomizationEventHooks.init();
         FabricLifecycleEventHooks.init();
@@ -61,8 +64,6 @@ public class Main implements ModInitializer
 //        DATA_COMPONENTS.register(modEventBus);
 //
 //        NeoForge.EVENT_BUS.register(this);
-//        EventRegistry.registerEvents();
-//        EventRegistry.registerEventsOnModBus(modEventBus);
 //
 //        modContainer.registerConfig(ModConfig.Type.COMMON, Config.SPEC);
 //    }
