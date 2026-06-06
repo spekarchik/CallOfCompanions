@@ -5,6 +5,11 @@ import com.pekar.callofcompanions.Config;
 import com.pekar.callofcompanions.controllers.CallCrystalHelper;
 import com.pekar.callofcompanions.data.CompanionData;
 import com.pekar.callofcompanions.data.DataRegistry;
+import com.pekar.callofcompanions.events.params.EntityTeleportEvent;
+import com.pekar.callofcompanions.events.params.LivingDeathEvent;
+import com.pekar.callofcompanions.events.params.LivingEquipmentChangeEvent;
+import com.pekar.callofcompanions.events.params.PlayerEvent;
+import com.pekar.callofcompanions.events.params.PlayerInteractEvent;
 import com.pekar.callofcompanions.items.ItemRegistry;
 import com.pekar.callofcompanions.scheduler.CompanionEntryScheduler;
 import com.pekar.callofcompanions.utils.Players;
@@ -20,20 +25,12 @@ import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.animal.Animal;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
-import net.neoforged.bus.api.SubscribeEvent;
-import net.neoforged.fml.LogicalSide;
-import net.neoforged.neoforge.event.entity.EntityTeleportEvent;
-import net.neoforged.neoforge.event.entity.living.LivingDeathEvent;
-import net.neoforged.neoforge.event.entity.living.LivingEquipmentChangeEvent;
-import net.neoforged.neoforge.event.entity.player.PlayerEvent;
-import net.neoforged.neoforge.event.entity.player.PlayerInteractEvent;
 import org.slf4j.Logger;
 
 public class PlayerEvents implements IEventHandler
 {
     private static final Logger LOGGER = LogUtils.getLogger();
 
-    @SubscribeEvent
     public void onPlayerInteractionEvent(PlayerInteractEvent.EntityInteractSpecific event)
     {
         var target = event.getTarget();
@@ -131,10 +128,9 @@ public class PlayerEvents implements IEventHandler
     private static void succeedInteraction(PlayerInteractEvent.EntityInteractSpecific event)
     {
         event.setCanceled(true);
-        event.setCancellationResult(event.getSide() == LogicalSide.CLIENT ? InteractionResult.SUCCESS : InteractionResult.SUCCESS_SERVER);
+        event.setCancellationResult(InteractionResult.SUCCESS);
     }
 
-    @SubscribeEvent
     public void onPlayerEquipmentChangeEvent(LivingEquipmentChangeEvent event)
     {
         if (event.getEntity() instanceof ServerPlayer serverPlayer)
@@ -171,7 +167,6 @@ public class PlayerEvents implements IEventHandler
         }
     }
 
-    @SubscribeEvent
     public void onPlayerLoggedOutEvent(PlayerEvent.PlayerLoggedOutEvent event)
     {
         if (event.getEntity() instanceof ServerPlayer serverPlayer)
@@ -180,7 +175,6 @@ public class PlayerEvents implements IEventHandler
         }
     }
 
-    @SubscribeEvent
     public void onPlayerDeathEvent(LivingDeathEvent event)
     {
         if (event.getEntity() instanceof ServerPlayer serverPlayer)
@@ -189,7 +183,6 @@ public class PlayerEvents implements IEventHandler
         }
     }
 
-    @SubscribeEvent
     public void onPlayerChangedDimensionEvent(PlayerEvent.PlayerChangedDimensionEvent event)
     {
         if (event.getEntity() instanceof ServerPlayer serverPlayer)
@@ -198,7 +191,6 @@ public class PlayerEvents implements IEventHandler
         }
     }
 
-    @SubscribeEvent
     public void onPlayerRespawnedEvent(PlayerEvent.PlayerRespawnEvent event)
     {
         if (event.getEntity() instanceof ServerPlayer serverPlayer)
@@ -207,7 +199,6 @@ public class PlayerEvents implements IEventHandler
         }
     }
 
-    @SubscribeEvent
     public void onPlayerTeleportEvent(EntityTeleportEvent event)
     {
         if (event.getEntity() instanceof ServerPlayer serverPlayer)
