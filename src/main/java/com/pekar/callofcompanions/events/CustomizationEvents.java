@@ -2,15 +2,13 @@ package com.pekar.callofcompanions.events;
 
 import com.pekar.callofcompanions.Config;
 import com.pekar.callofcompanions.data.DataRegistry;
+import com.pekar.callofcompanions.events.params.PlayerEvent;
 import com.pekar.callofcompanions.items.ItemRegistry;
-import net.neoforged.bus.api.SubscribeEvent;
-import net.neoforged.neoforge.event.entity.player.PlayerEvent;
 
 import java.util.UUID;
 
 public class CustomizationEvents implements IEventHandler
 {
-    @SubscribeEvent
     public void onItemCraftedEvent(PlayerEvent.ItemCraftedEvent event)
     {
         var result = event.getCrafting();
