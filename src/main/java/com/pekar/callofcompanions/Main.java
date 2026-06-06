@@ -1,6 +1,11 @@
 package com.pekar.callofcompanions;
 
 import com.mojang.logging.LogUtils;
+import com.pekar.callofcompanions.data.DataRegistry;
+import com.pekar.callofcompanions.items.ItemRegistry;
+import com.pekar.callofcompanions.tab.MainTab;
+import net.fabricmc.api.ModInitializer;
+import net.fabricmc.loader.api.FabricLoader;
 import org.slf4j.Logger;
 
 import java.io.IOException;
@@ -33,6 +38,9 @@ public class Main implements ModInitializer
             throw new RuntimeException("Failed to load config", e);
         }
 
+        DataRegistry.initStatic();
+        ItemRegistry.initStatic();
+        new MainTab().createTab();
     }
 
 //    public Main(IEventBus modEventBus, ModContainer modContainer)
