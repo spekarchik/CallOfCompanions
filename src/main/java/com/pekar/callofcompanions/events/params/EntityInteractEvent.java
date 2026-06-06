@@ -4,13 +4,13 @@ import net.minecraft.world.InteractionHand;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.player.Player;
 
-public final class EntityInteract
+public final class EntityInteractEvent
 {
     private final Player entity;
     private final Entity target;
     private final InteractionHand hand;
 
-    public EntityInteract(Player entity, Entity target, InteractionHand hand)
+    public EntityInteractEvent(Player entity, Entity target, InteractionHand hand)
     {
         this.entity = entity;
         this.target = target;

@@ -5,7 +5,7 @@ import com.pekar.callofcompanions.Config;
 import com.pekar.callofcompanions.controllers.CallCrystalHelper;
 import com.pekar.callofcompanions.data.CompanionData;
 import com.pekar.callofcompanions.data.DataRegistry;
-import com.pekar.callofcompanions.events.params.EntityInteract;
+import com.pekar.callofcompanions.events.params.EntityInteractEvent;
 import com.pekar.callofcompanions.events.params.EntityMountEvent;
 import com.pekar.callofcompanions.items.ItemRegistry;
 import com.pekar.callofcompanions.network.SaveCompanionsPacket;
@@ -40,7 +40,7 @@ public class AnimalEvents implements IEventHandler
         }
     }
 
-    public void onPlayerInteract(EntityInteract event)
+    public void onPlayerInteract(EntityInteractEvent event)
     {
         if (!Config.AUTO_UPDATE_ON_INTERACT.get()) return;
         if (!(event.getEntity() instanceof ServerPlayer player)) return;

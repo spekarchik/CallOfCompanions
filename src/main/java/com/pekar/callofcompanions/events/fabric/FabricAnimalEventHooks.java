@@ -1,7 +1,7 @@
 package com.pekar.callofcompanions.events.fabric;
 
 import com.pekar.callofcompanions.events.AnimalEvents;
-import com.pekar.callofcompanions.events.params.EntityInteract;
+import com.pekar.callofcompanions.events.params.EntityInteractEvent;
 import com.pekar.callofcompanions.events.params.EntityMountEvent;
 import net.fabricmc.fabric.api.event.player.UseEntityCallback;
 import net.minecraft.world.InteractionResult;
@@ -22,7 +22,7 @@ public final class FabricAnimalEventHooks
 
         UseEntityCallback.EVENT.register((player, level, hand, entity, hitResult) ->
         {
-            ANIMAL_EVENTS.onPlayerInteract(new EntityInteract(player, entity, hand));
+            ANIMAL_EVENTS.onPlayerInteract(new EntityInteractEvent(player, entity, hand));
             return InteractionResult.PASS;
         });
     }
