@@ -3,6 +3,7 @@ package com.pekar.callofcompanions;
 import com.mojang.logging.LogUtils;
 import com.pekar.callofcompanions.data.DataRegistry;
 import com.pekar.callofcompanions.events.fabric.FabricAnimalEventHooks;
+import com.pekar.callofcompanions.events.fabric.FabricLifecycleEventHooks;
 import com.pekar.callofcompanions.items.ItemRegistry;
 import com.pekar.callofcompanions.tab.MainTab;
 import net.fabricmc.api.ModInitializer;
@@ -44,6 +45,7 @@ public class Main implements ModInitializer
         new MainTab().createTab();
 
         FabricAnimalEventHooks.init();
+        FabricLifecycleEventHooks.init();
     }
 
 //    public Main(IEventBus modEventBus, ModContainer modContainer)
