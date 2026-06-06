@@ -103,13 +103,13 @@ public abstract class AnimalSummonController
         LOGGER.debug("Teleport attempt started: entityId={}, loaded={}", uuid, entity != null);
         if (entity instanceof Animal animal)
         {
-            orderToStand(animal);
             var randomPos = getRandomPos(pos, animal);
             if (randomPos == null) return false;
 
             if (level.dimension().equals(fromDimension))
             {
                 LOGGER.debug("Teleporting to the same dimension: entityId={}, dimension={}", uuid, fromDimension);
+                orderToStand(animal);
                 animal.teleportTo(randomPos.getX() + 0.5, randomPos.getY(), randomPos.getZ() + 0.5);
             }
             else
@@ -117,6 +117,7 @@ public abstract class AnimalSummonController
                 if (!animal.canTeleport(fromLevel, level)) return false;
 
                 LOGGER.debug("Teleporting across dimensions: entityId={}, fromDimension={}, toDimension={}", uuid, level.dimension(), fromDimension);
+                orderToStand(animal);
 
                 animal.teleportTo(
                         level,
@@ -222,6 +223,11 @@ public abstract class AnimalSummonController
 
     protected void orderToStand(Animal animal)
     {
+        if (animal.isPassenger())
+        {
+            animal.stopRiding();
+        }
+
         if (animal instanceof TamableAnimal tamable)
         {
             if (tamable.isInSittingPose())

@@ -1,3 +1,12 @@
+## 📦 Version 1.10.0
+
+### 📝 Improvements
+- Animals in boats are now also affected by the crystal teleport.
+
+### 🐞 Fixed
+- Tamed animals will now remain sitting if the crystal cannot teleport them due to game restrictions (e.g. unsafe destination or incompatible dimension).
+
+
 ## 📦 Version 1.9.2
 
 ### 🐞 Fixed

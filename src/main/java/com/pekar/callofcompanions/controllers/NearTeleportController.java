@@ -21,7 +21,6 @@ class NearTeleportController extends LoadedAnimalSummonController
     @Override
     public void run(BlockPos teleportPos)
     {
-        orderToStand(animal);
         showAnimalTeleportParticles(playerLevel, animal);
         int delay = playerLevel.getRandom().nextIntBetweenInclusive(applyDelayFactor(10), applyDelayFactor(100));
         var task = new CompanionEntryTask(
