@@ -14,6 +14,7 @@ import net.fabricmc.fabric.api.event.lifecycle.v1.ServerEntityEvents;
 import net.fabricmc.fabric.api.event.player.UseEntityCallback;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.InteractionResult;
+import net.minecraft.world.entity.player.Player;
 
 public final class FabricPlayerEventHooks
 {
@@ -35,7 +36,7 @@ public final class FabricPlayerEventHooks
             // Client side: suppress vanilla interaction for call crystals, but avoid mutating any state.
             if (level.isClientSide())
             {
-                if (entity instanceof net.minecraft.world.entity.player.Player) return InteractionResult.PASS;
+                if (entity instanceof Player) return InteractionResult.PASS;
 
                 if (!held.is(ItemRegistry.DEEP_CALL_CRYSTAL) && !held.is(ItemRegistry.CALL_CRYSTAL))
                 {

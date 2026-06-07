@@ -5,11 +5,7 @@ import com.pekar.callofcompanions.Config;
 import com.pekar.callofcompanions.controllers.CallCrystalHelper;
 import com.pekar.callofcompanions.data.CompanionData;
 import com.pekar.callofcompanions.data.DataRegistry;
-import com.pekar.callofcompanions.events.params.EntityTeleportEvent;
-import com.pekar.callofcompanions.events.params.LivingDeathEvent;
-import com.pekar.callofcompanions.events.params.LivingEquipmentChangeEvent;
-import com.pekar.callofcompanions.events.params.PlayerEvent;
-import com.pekar.callofcompanions.events.params.PlayerInteractEvent;
+import com.pekar.callofcompanions.events.params.*;
 import com.pekar.callofcompanions.items.ItemRegistry;
 import com.pekar.callofcompanions.scheduler.CompanionEntryScheduler;
 import com.pekar.callofcompanions.utils.Players;
@@ -108,7 +104,7 @@ public class PlayerEvents implements IEventHandler
 
             itemStack.remove(DataRegistry.COMPANIONS);
             itemStack.set(DataRegistry.COMPANIONS, companionData.copy());
-            succeedInteraction(event);
+            succeedInteraction(event, level.isClientSide());
             return;
         }
 
@@ -125,10 +121,10 @@ public class PlayerEvents implements IEventHandler
         event.setCancellationResult(InteractionResult.CONSUME);
     }
 
-    private static void succeedInteraction(PlayerInteractEvent.EntityInteractSpecific event)
+    private static void succeedInteraction(PlayerInteractEvent.EntityInteractSpecific event, boolean isClientSide)
     {
         event.setCanceled(true);
-        event.setCancellationResult(InteractionResult.SUCCESS);
+        event.setCancellationResult(isClientSide ? InteractionResult.SUCCESS : InteractionResult.SUCCESS_SERVER);
     }
 
     public void onPlayerEquipmentChangeEvent(LivingEquipmentChangeEvent event)
