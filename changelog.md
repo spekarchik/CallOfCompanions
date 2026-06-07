@@ -1,3 +1,8 @@
+## 📦 Version 1.10.2
+
+- Ported to Fabric.
+
+
 ## 📦 Version 1.10.0
 
 ### 📝 Improvements
