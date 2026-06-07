@@ -6,15 +6,12 @@ import com.pekar.callofcompanions.events.params.LivingDeathEvent;
 import com.pekar.callofcompanions.events.params.LivingEquipmentChangeEvent;
 import com.pekar.callofcompanions.events.params.PlayerEvent;
 import com.pekar.callofcompanions.events.params.PlayerInteractEvent;
-import com.pekar.callofcompanions.items.ItemRegistry;
 import net.fabricmc.fabric.api.entity.event.v1.ServerEntityLevelChangeEvents;
 import net.fabricmc.fabric.api.entity.event.v1.ServerLivingEntityEvents;
 import net.fabricmc.fabric.api.entity.event.v1.ServerPlayerEvents;
 import net.fabricmc.fabric.api.event.lifecycle.v1.ServerEntityEvents;
 import net.fabricmc.fabric.api.event.player.UseEntityCallback;
 import net.minecraft.server.level.ServerPlayer;
-import net.minecraft.world.InteractionResult;
-import net.minecraft.world.entity.player.Player;
 
 public final class FabricPlayerEventHooks
 {
@@ -32,19 +29,6 @@ public final class FabricPlayerEventHooks
         UseEntityCallback.EVENT.register((player, level, hand, entity, hitResult) ->
         {
             var held = player.getItemInHand(hand);
-
-            // Client side: suppress vanilla interaction for call crystals, but avoid mutating any state.
-            if (level.isClientSide())
-            {
-                if (entity instanceof Player) return InteractionResult.PASS;
-
-                if (!held.is(ItemRegistry.DEEP_CALL_CRYSTAL) && !held.is(ItemRegistry.CALL_CRYSTAL))
-                {
-                    return InteractionResult.PASS;
-                }
-
-                return InteractionResult.SUCCESS;
-            }
 
             var event = new PlayerInteractEvent.EntityInteractSpecific(player, level, hand, entity, held, hitResult);
             PLAYER_EVENTS.onPlayerInteractionEvent(event);
