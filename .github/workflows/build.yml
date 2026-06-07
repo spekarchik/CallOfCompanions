@@ -3,7 +3,7 @@ name: Build NeoForge Mod
 on:
   push:
     branches:
-      - 'Neo/26.*'
+      - 'Fabric/26.*'
   workflow_dispatch:
 
 jobs:
