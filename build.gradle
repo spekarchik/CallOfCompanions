@@ -39,6 +39,21 @@ dependencies {
     implementation "net.fabricmc.fabric-api:fabric-api:${fabric_api_version}"
 }
 
+loom {
+    runs {
+        configureEach {
+            vmArg '-Dfabric-tag-conventions-v2.missingTagTranslationWarning=SILENCED'
+        }
+
+        client {
+            programArg '--username'
+            programArg 'DevPlayer'
+            programArg '--uuid'
+            programArg '00000000-0000-0000-0000-000000000001'
+        }
+    }
+}
+
 // This block of code expands all declared replace properties in the specified resource targets.
 // A missing property will result in an error. Properties are expanded using ${} Groovy notation.
 var generateModMetadata = tasks.register("generateModMetadata", ProcessResources) {
