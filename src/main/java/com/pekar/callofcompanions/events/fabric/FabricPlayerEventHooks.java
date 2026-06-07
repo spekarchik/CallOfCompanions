@@ -43,7 +43,7 @@ public final class FabricPlayerEventHooks
                     return InteractionResult.PASS;
                 }
 
-                return InteractionResult.CONSUME;
+                return InteractionResult.SUCCESS;
             }
 
             var event = new PlayerInteractEvent.EntityInteractSpecific(player, level, hand, entity, held, hitResult);
