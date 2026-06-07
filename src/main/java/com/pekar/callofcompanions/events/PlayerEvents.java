@@ -101,13 +101,14 @@ public class PlayerEvents implements IEventHandler
 
         var level = event.getLevel();
         var entry = CallCrystalHelper.createCompanionEntry(animal, level.getGameTime());
-        if (companionData.add(entry))
+        if (companionData.canAdd(entry))
         {
             if (level instanceof ServerLevel serverLevel)
             {
                 playAddAnimalSound(serverLevel, animal);
 
                 CallCrystalHelper.ensureCrystalId(itemStack);
+                companionData.add(entry);
                 itemStack.set(DataRegistry.COMPANIONS, companionData.copy());
             }
             succeedInteraction(event);
