@@ -98,7 +98,6 @@ public class PlayerEvents implements IEventHandler
 
         short dataCapacity = CallCrystalHelper.crystalDataCapacity(isDeepCallCrystal);
         var companionData = itemStack.getOrDefault(DataRegistry.COMPANIONS, new CompanionData(dataCapacity));
-        CallCrystalHelper.ensureCrystalId(itemStack);
 
         var level = event.getLevel();
         var entry = CallCrystalHelper.createCompanionEntry(animal, level.getGameTime());
@@ -107,10 +106,10 @@ public class PlayerEvents implements IEventHandler
             if (level instanceof ServerLevel serverLevel)
             {
                 playAddAnimalSound(serverLevel, animal);
-            }
 
-            itemStack.remove(DataRegistry.COMPANIONS);
-            itemStack.set(DataRegistry.COMPANIONS, companionData.copy());
+                CallCrystalHelper.ensureCrystalId(itemStack);
+                itemStack.set(DataRegistry.COMPANIONS, companionData.copy());
+            }
             succeedInteraction(event);
             return;
         }
