@@ -21,6 +21,7 @@ import net.minecraft.core.Direction;
 import net.minecraft.core.component.DataComponents;
 import net.minecraft.client.Minecraft;
 import net.minecraft.core.particles.ParticleTypes;
+import net.minecraft.locale.Language;
 import net.minecraft.network.chat.Component;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
@@ -424,10 +425,19 @@ public class CallCrystal extends ModItem implements ITooltipProvider
         String coords = "(" + pos.getX() + ", " + pos.getY() + ", " + pos.getZ() + ")";
 
         // Map common dimensions to user-friendly names
-        var key = companionEntry.dimension();
-        String dimName = Component.translatable("dimension." + key.identifier().getNamespace() + "." + key.identifier().getPath()).getString();
+        String dimName = getDimensionName(companionEntry);
         String savedLabel = Component.translatable("text.saved_pos").getString();
         return "  " + savedLabel + " " + coords + " - " + dimName;
+    }
+
+    private String getDimensionName(CompanionEntry companionEntry)
+    {
+        var id = companionEntry.dimension().identifier();
+        var translationKey = "dimension.callofcompanions." + id.getNamespace() + "." + id.getPath();
+        if (Language.getInstance().has(translationKey))
+            return Component.translatable(translationKey).getString();
+
+        return id.toString();
     }
 
     private static boolean hasShiftDown()
