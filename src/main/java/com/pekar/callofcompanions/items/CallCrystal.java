@@ -409,7 +409,7 @@ public class CallCrystal extends ModItem implements ITooltipProvider
                         .apply();
             }
         }
-        else if (!hasAltDown())
+        else if (!hasAltDown() || Config.TOOLTIP_SHOW_LAST_POSITION.isFalse())
         {
             if (Config.TOOLTIP_SHOW_LAST_POSITION.isTrue())
                 tooltip.addLineById("description.press_shift_or_alt").apply();
