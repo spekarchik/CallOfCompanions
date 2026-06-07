@@ -1,4 +1,4 @@
-## 📦 Version 1.10.1
+## 📦 Version 1.10.2
 
 ### 🐞 Fixed
 - Pressing *Alt* no longer affects crystal tooltips if the `show_last_position` config option is disabled.
