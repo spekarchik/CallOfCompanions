@@ -8,12 +8,14 @@ import com.pekar.callofcompanions.data.CompanionEntry;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.core.particles.SimpleParticleType;
+import net.minecraft.nbt.CompoundTag;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.sounds.SoundEvent;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
+import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.RelativeMovement;
 import net.minecraft.world.entity.TamableAnimal;
 import net.minecraft.world.entity.animal.Animal;
@@ -93,7 +95,7 @@ public abstract class AnimalSummonController
         );
     }
 
-    protected boolean tryTeleportAnimalTo(ServerLevel level, UUID uuid, BlockPos pos, ResourceKey<Level> fromDimension)
+    protected boolean tryTeleportAnimalTo(ServerLevel level, UUID uuid, BlockPos pos, ResourceKey<Level> fromDimension, boolean recreate)
     {
         var server = level.getServer();
         var fromLevel = server.getLevel(fromDimension);
@@ -106,11 +108,15 @@ public abstract class AnimalSummonController
             var randomPos = getRandomPos(pos, animal);
             if (randomPos == null) return false;
 
+            var x = randomPos.getX() + 0.5;
+            var y = randomPos.getY();
+            var z = randomPos.getZ() + 0.5;
+
             if (level.dimension().equals(fromDimension))
             {
                 LOGGER.debug("Teleporting to the same dimension: entityId={}, dimension={}", uuid, fromDimension);
                 orderToStand(animal);
-                animal.teleportTo(randomPos.getX() + 0.5, randomPos.getY(), randomPos.getZ() + 0.5);
+                animal.teleportTo(x, y, z);
             }
             else
             {
@@ -121,16 +127,36 @@ public abstract class AnimalSummonController
 
                 animal.teleportTo(
                         level,
-                        randomPos.getX() + 0.5, randomPos.getY(), randomPos.getZ() + 0.5,
+                        x, y, z,
                         EnumSet.noneOf(RelativeMovement.class),
                         animal.getYRot(), animal.getXRot()
                         );
             }
+            if (recreate)
+                recreateAnimal(level, animal, x, y, z);
 
             return true;
         }
 
         return false;
+    }
+
+    protected void recreateAnimal(ServerLevel level, Animal oldAnimal, double x, double y, double z)
+    {
+        var entityType = oldAnimal.getType();
+        var tag = new CompoundTag();
+        oldAnimal.saveWithoutId(tag);
+        oldAnimal.remove(Entity.RemovalReason.DISCARDED);
+
+        var entity = entityType.create(level);
+        if (entity instanceof Animal newAnimal)
+        {
+            newAnimal.load(tag);
+            newAnimal.moveTo(x, y, z, oldAnimal.getYRot(), oldAnimal.getXRot());
+
+            level.addFreshEntity(newAnimal);
+        }
+        LOGGER.debug("Animal recreated: entityId={}, type={}, pos=({}, {}, {})", oldAnimal.getUUID(), entityType.getDescription().getString(), x, y, z);
     }
 
     private BlockPos getRandomPos(BlockPos pos, Animal animal)

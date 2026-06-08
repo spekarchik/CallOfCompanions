@@ -2,12 +2,15 @@ package com.pekar.callofcompanions.controllers;
 
 import com.mojang.logging.LogUtils;
 import com.pekar.callofcompanions.data.CompanionEntry;
+import com.pekar.callofcompanions.entity.EntityRegistry;
 import com.pekar.callofcompanions.scheduler.CompanionEntryScheduler;
 import com.pekar.callofcompanions.scheduler.CompanionEntryTask;
 import com.pekar.callofcompanions.utils.Players;
 import net.minecraft.core.BlockPos;
 import net.minecraft.network.chat.Component;
 import org.slf4j.Logger;
+
+import static com.pekar.callofcompanions.Config.PREVENT_PETS_INVISIBILITY_WORKAROUND_1_21_1;
 
 class FollowPlayerController extends LoadedAnimalSummonController
 {
@@ -41,6 +44,12 @@ class FollowPlayerController extends LoadedAnimalSummonController
                     moveAnimalTo(teleportPos, entry);
                 },
                 entry -> {
+                    if (PREVENT_PETS_INVISIBILITY_WORKAROUND_1_21_1.isTrue()
+                            && animal.getType().is(EntityRegistry.ANIMALS_CAN_TELEPORT_TO_PLAYER)
+                            && animal.distanceToSqr(player) < 10 * 10)
+                    {
+                        recreateAnimal(playerLevel, animal, animal.getX(), animal.getY(), animal.getZ());
+                    }
                     LOGGER.debug("Follow-player task cancelled: companionType={}, companionId={}", companionEntry.type(), companionEntry.uuid());
                 }
         );
@@ -53,7 +62,7 @@ class FollowPlayerController extends LoadedAnimalSummonController
         LOGGER.debug("Follow-player task completed: companionType={}, companionId={}", entry.type(), entry.uuid());
         if (animal.distanceToSqr(player) > MAX_ANIMAL_DISTANCE_TO_AVOID_TELEPORTING * MAX_ANIMAL_DISTANCE_TO_AVOID_TELEPORTING)
         {
-            var teleported = tryTeleportAnimalTo(playerLevel, animal.getUUID(), teleportPos, entry.dimension());
+            var teleported = tryTeleportAnimalTo(playerLevel, animal.getUUID(), teleportPos, entry.dimension(), true);
             if (teleported)
             {
                 setGoal(animal, player);
@@ -69,6 +78,10 @@ class FollowPlayerController extends LoadedAnimalSummonController
                 Players.sendOverlayMessage(player, Component.translatable("message.callofcompanions.cant_teleport", name));
                 LOGGER.debug("Follow-player teleport failed: companion couldn't find a safe place to teleport, companionType={}, companionId={}", entry.type(), entry.uuid());
             }
+        }
+        else if (PREVENT_PETS_INVISIBILITY_WORKAROUND_1_21_1.isTrue() && animal.getType().is(EntityRegistry.ANIMALS_CAN_TELEPORT_TO_PLAYER))
+        {
+            recreateAnimal(playerLevel, animal, animal.getX(), animal.getY(), animal.getZ());
         }
 
         CallCrystalHelper.updateCompanionPos(playerLevel, companionData, entry);

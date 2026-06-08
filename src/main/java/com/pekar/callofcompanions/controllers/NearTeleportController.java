@@ -49,7 +49,7 @@ class NearTeleportController extends LoadedAnimalSummonController
 
     private void moveAnimalTo(BlockPos teleportPos, CompanionEntry entry)
     {
-        boolean teleported = tryTeleportAnimalTo(playerLevel, entry.uuid(), teleportPos, entry.dimension());
+        boolean teleported = tryTeleportAnimalTo(playerLevel, entry.uuid(), teleportPos, entry.dimension(), true);
         if (teleported)
         {
             playTeleportSound(playerLevel, animal);

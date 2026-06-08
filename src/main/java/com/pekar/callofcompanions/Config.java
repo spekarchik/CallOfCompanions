@@ -28,6 +28,7 @@ public class Config
     public static final ModConfigSpec.BooleanValue TOOLTIP_USE_REALTIME;
     public static final ModConfigSpec.BooleanValue TOOLTIP_AGE_COLORING;
     public static final ModConfigSpec.BooleanValue TOOLTIP_SHOW_LAST_POSITION;
+    public static final ModConfigSpec.BooleanValue PREVENT_PETS_INVISIBILITY_WORKAROUND_1_21_1;
 
     static
     {
@@ -215,6 +216,15 @@ public class Config
         FAR_TELEPORT_WAIT_TICKS = BUILDER
                 .comment("Maximum wait time for chunk loading and companion search task. 20 ticks = 1 second")
                 .defineInRange("far_teleport_wait_ticks", 100, 1, 12000);
+
+        // Workaround for a Minecraft 1.21.1 bug where dogs, cats or parrots sometimes appear invisible after teleporting.
+        // When true, the mod will recreate the animal after calling to prevent invisibility. This prevents the
+        // invisibility but causes a noticeable single position shift/jump when calling the same type of animal
+        // and the animal is nearby (the animal comes to the player and is recreated to avoid the invisibility).
+        // Default: false. Specific to Minecraft 1.21.1; enable only if players observe the invisible-animal issue.
+        PREVENT_PETS_INVISIBILITY_WORKAROUND_1_21_1 = BUILDER
+                .comment("Workaround for MC 1.21.1: recreate dogs/cats/parrots on call to avoid invisibility after teleporting; causes a single position jump.")
+                .define("prevent_pets_invisibility_workaround_1_21_1", false);
 
         BUILDER.pop();
 

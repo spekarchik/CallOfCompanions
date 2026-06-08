@@ -2,6 +2,7 @@ package com.pekar.callofcompanions.controllers;
 
 import com.mojang.logging.LogUtils;
 import com.pekar.callofcompanions.data.CompanionEntry;
+import com.pekar.callofcompanions.entity.EntityRegistry;
 import com.pekar.callofcompanions.scheduler.CompanionEntryScheduler;
 import com.pekar.callofcompanions.scheduler.CompanionEntryTask;
 import com.pekar.callofcompanions.utils.Players;
@@ -46,6 +47,10 @@ class VanillaTeleportController extends LoadedAnimalSummonController
                     LOGGER.debug("Vanilla teleport cancelled: companionType={}, companionId={}", companionEntry.type(), companionEntry.uuid());
                     playAnimalNotRespondSound(playerLevel, teleportPos.below());
                     showAnimalNotRespondParticles(playerLevel, teleportPos.below());
+                    if (animal.getType().is(EntityRegistry.ANIMALS_CAN_TELEPORT_TO_PLAYER) && animal.distanceToSqr(player) < 10 * 10)
+                    {
+                        recreateAnimal(playerLevel, animal, animal.getX(), animal.getY(), animal.getZ());
+                    }
                 }
         );
         CompanionEntryScheduler.UPDATE_POS_TASKS.add(task);
@@ -57,7 +62,7 @@ class VanillaTeleportController extends LoadedAnimalSummonController
         LOGGER.debug("Vanilla teleport completing: companionType={}, companionId={}", entry.type(), entry.uuid());
         if (animal.distanceToSqr(player) > MAX_ANIMAL_DISTANCE_TO_AVOID_TELEPORTING * MAX_ANIMAL_DISTANCE_TO_AVOID_TELEPORTING)
         {
-            var teleported = tryTeleportAnimalTo(playerLevel, animal.getUUID(), teleportPos, entry.dimension());
+            var teleported = tryTeleportAnimalTo(playerLevel, animal.getUUID(), teleportPos, entry.dimension(), false);
             if (teleported)
             {
                 playTeleportSound(playerLevel, animal);
@@ -73,6 +78,7 @@ class VanillaTeleportController extends LoadedAnimalSummonController
                 LOGGER.debug("Vanilla teleport failed: companion couldn't find a safe place to teleport, companionType={}, companionId={}", entry.type(), entry.uuid());
             }
         }
+        recreateAnimal(playerLevel, animal, animal.getX(), animal.getY(), animal.getZ());
         setGoal(animal, player);
         CallCrystalHelper.updateCompanionPos(playerLevel, companionData, entry);
     }

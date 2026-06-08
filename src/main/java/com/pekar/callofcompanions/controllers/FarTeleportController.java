@@ -129,7 +129,7 @@ class FarTeleportController extends AnimalSummonController
             return;
         }
 
-        var teleported = tryTeleportAnimalTo(playerLevel, entry.uuid(), teleportPos, entry.dimension());
+        var teleported = tryTeleportAnimalTo(playerLevel, entry.uuid(), teleportPos, entry.dimension(), true);
         if (teleported)
         {
             if (playerLevel.getEntity(entry.uuid()) instanceof Animal animal)
