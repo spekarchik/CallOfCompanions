@@ -4,6 +4,7 @@ on:
   push:
     branches:
       - 'Fabric/1.21.*'
+  workflow_dispatch:
 
 jobs:
   build:
