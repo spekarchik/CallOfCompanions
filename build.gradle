@@ -36,6 +36,8 @@ dependencies {
 }
 
 loom {
+    log4jConfigs.setFrom(file('src/dev/log4j.xml'))
+
     runs {
         configureEach {
             vmArg '-Dfabric-tag-conventions-v2.missingTagTranslationWarning=SILENCED'
