@@ -10,6 +10,6 @@ public class Players
 
     public static void sendOverlayMessage(ServerPlayer player, Component message)
     {
-        player.sendOverlayMessage(message);
+        player.sendSystemMessage(message, true);
     }
 }

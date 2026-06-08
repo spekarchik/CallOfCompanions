@@ -23,9 +23,9 @@
   "icon": "logo.png",
   "environment": "*",
   "depends": {
-    "fabricloader": ">=${fabric_loader_min_version}",
-    "minecraft": ">=26.1 <=26.1.2",
-    "java": ">=25",
+    "fabricloader": ">=${loader_version}",
+    "minecraft": "~1.21.11",
+    "java": ">=21",
     "fabric-api": "*"
   }
 }

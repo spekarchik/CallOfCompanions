@@ -33,11 +33,11 @@ public final class Networking
 
         if (packet.isServerToClient())
         {
-            PayloadTypeRegistry.clientboundPlay().register(packetInfo.getType(), packetInfo.getStreamCodec());
+            PayloadTypeRegistry.playS2C().register(packetInfo.getType(), packetInfo.getStreamCodec());
         }
         else
         {
-            PayloadTypeRegistry.serverboundPlay().register(packetInfo.getType(), packetInfo.getStreamCodec());
+            PayloadTypeRegistry.playC2S().register(packetInfo.getType(), packetInfo.getStreamCodec());
             ServerPlayNetworking.registerGlobalReceiver(packetInfo.getType(), (payload, context) -> payload.onReceive(context.player()));
         }
     }

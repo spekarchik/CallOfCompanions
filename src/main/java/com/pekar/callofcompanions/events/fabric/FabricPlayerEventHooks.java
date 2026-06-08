@@ -6,7 +6,7 @@ import com.pekar.callofcompanions.events.params.LivingDeathEvent;
 import com.pekar.callofcompanions.events.params.LivingEquipmentChangeEvent;
 import com.pekar.callofcompanions.events.params.PlayerEvent;
 import com.pekar.callofcompanions.events.params.PlayerInteractEvent;
-import net.fabricmc.fabric.api.entity.event.v1.ServerEntityLevelChangeEvents;
+import net.fabricmc.fabric.api.entity.event.v1.ServerEntityWorldChangeEvents;
 import net.fabricmc.fabric.api.entity.event.v1.ServerLivingEntityEvents;
 import net.fabricmc.fabric.api.entity.event.v1.ServerPlayerEvents;
 import net.fabricmc.fabric.api.event.lifecycle.v1.ServerEntityEvents;
@@ -54,7 +54,7 @@ public final class FabricPlayerEventHooks
             }
         });
 
-        ServerEntityLevelChangeEvents.AFTER_PLAYER_CHANGE_LEVEL.register((player, origin, destination) ->
+        ServerEntityWorldChangeEvents.AFTER_PLAYER_CHANGE_WORLD.register((player, origin, destination) ->
                 PLAYER_EVENTS.onPlayerChangedDimensionEvent(new PlayerEvent.PlayerChangedDimensionEvent(player)));
 
         ServerPlayerEvents.AFTER_RESPAWN.register((oldPlayer, newPlayer, alive) ->

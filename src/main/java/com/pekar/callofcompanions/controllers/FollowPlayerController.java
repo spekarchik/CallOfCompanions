@@ -28,7 +28,7 @@ class FollowPlayerController extends LoadedAnimalSummonController
                 300,
                 companionEntry,
                 player,
-                (ticks, _) -> {
+                (ticks, entry) -> {
                     if (ticks % 5 == 0)
                     {
                         if (animal.getNavigation().isDone())
@@ -40,7 +40,7 @@ class FollowPlayerController extends LoadedAnimalSummonController
                 entry -> {
                     moveAnimalTo(teleportPos, entry);
                 },
-                _ -> {
+                entry -> {
                     LOGGER.debug("Follow-player task cancelled: companionType={}, companionId={}", companionEntry.type(), companionEntry.uuid());
                 }
         );
