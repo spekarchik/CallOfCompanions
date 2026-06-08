@@ -39,6 +39,7 @@ loom {
     runs {
         configureEach {
             vmArg '-Dfabric-tag-conventions-v2.missingTagTranslationWarning=SILENCED'
+            vmArg '-Dfabric.log.level=debug'
         }
 
         client {
