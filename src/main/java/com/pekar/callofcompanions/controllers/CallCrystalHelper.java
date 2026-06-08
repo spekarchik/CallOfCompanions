@@ -15,7 +15,7 @@ import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.OwnableEntity;
 import net.minecraft.world.entity.TamableAnimal;
 import net.minecraft.world.entity.animal.Animal;
-import net.minecraft.world.entity.animal.equine.AbstractHorse;
+import net.minecraft.world.entity.animal.horse.AbstractHorse;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
@@ -59,9 +59,7 @@ public class CallCrystalHelper
         var name = animal.getDisplayName().getString();
         var companionType = getAnimalType(animal);
         var owner = animal instanceof OwnableEntity ownable ? ownable.getOwner() : null;
-        var ownerId = animal instanceof OwnableEntity ownable && ownable.getOwnerReference() != null
-                ? ownable.getOwnerReference().getUUID()
-                : null;
+        var ownerId = animal instanceof OwnableEntity ownable ? ownable.getOwnerUUID() : null;
 
         return new CompanionEntry(
                 animal.getUUID(),
@@ -97,13 +95,13 @@ public class CallCrystalHelper
         if (entity instanceof TamableAnimal tamable)
         {
             if (!tamable.isTame() && !tamable.hasCustomName()) return false;
-            var ownerRef = tamable.getOwnerReference();
-            if (ownerRef != null && !ownerRef.matches(player)) return false; // don't rely on `tamable.isOwnedBy(player)`!
+            var ownerId = tamable.getOwnerUUID();
+            if (ownerId != null && !ownerId.equals(player.getUUID())) return false; // don't rely on `tamable.isOwnedBy(player)`!
         }
 
         if (entity instanceof AbstractHorse horse)
         {
-            if (horse.isTamed() && horse.getOwnerReference() != null && !horse.getOwnerReference().matches(player)) return false;
+            if (horse.isTamed() && horse.getOwnerUUID() != null && !horse.getOwnerUUID().equals(player.getUUID())) return false;
             return horse.isTamed() || horse.hasCustomName();
         }
 

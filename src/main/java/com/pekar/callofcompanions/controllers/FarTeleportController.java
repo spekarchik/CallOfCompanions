@@ -10,10 +10,9 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.core.SectionPos;
 import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.network.chat.Component;
-import net.minecraft.server.level.TicketType;
+import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.entity.animal.Animal;
-import net.minecraft.world.level.ChunkPos;
-import net.minecraft.world.level.Level;
+import net.minecraft.world.level.chunk.status.ChunkStatus;
 import org.slf4j.Logger;
 
 import java.util.UUID;
@@ -81,8 +80,16 @@ class FarTeleportController extends AnimalSummonController
             return;
         }
 
-        var chunkPos = new ChunkPos(SectionPos.blockToSectionCoord(companionEntry.pos().getX()), SectionPos.blockToSectionCoord(companionEntry.pos().getZ()));
-        animalLevel.getChunkSource().addTicketWithRadius(TicketType.PORTAL, chunkPos, LOAD_CHUNK_RADIUS);
+        int centerSectionX = SectionPos.blockToSectionCoord(companionEntry.pos().getX());
+        int centerSectionZ = SectionPos.blockToSectionCoord(companionEntry.pos().getZ());
+
+        for (int dx = -LOAD_CHUNK_RADIUS; dx <= LOAD_CHUNK_RADIUS; dx++)
+        {
+            for (int dz = -LOAD_CHUNK_RADIUS; dz <= LOAD_CHUNK_RADIUS; dz++)
+            {
+                animalLevel.getChunkSource().getChunk(centerSectionX + dx, centerSectionZ + dz, ChunkStatus.FULL, true);
+            }
+        }
 
         var task = new CompanionEntryTask(
                 Config.FAR_TELEPORT_WAIT_TICKS.getAsInt(),
@@ -98,11 +105,9 @@ class FarTeleportController extends AnimalSummonController
                 entry ->
                 {
                     teleportAnimalTo(teleportPos, entry, isCrossDimensionalTeleport);
-                    animalLevel.getChunkSource().removeTicketWithRadius(TicketType.PORTAL, chunkPos, LOAD_CHUNK_RADIUS);
                 },
                 entry ->
                 {
-                    animalLevel.getChunkSource().removeTicketWithRadius(TicketType.PORTAL, chunkPos, LOAD_CHUNK_RADIUS);
                     playAnimalNotRespondSound(playerLevel, teleportPos.below());
                     showAnimalNotRespondParticles(playerLevel, teleportPos.below());
                     LOGGER.debug("Far teleport cancelled: companionType={}, companionId={}", companionEntry.type(), companionEntry.uuid());
@@ -159,7 +164,7 @@ class FarTeleportController extends AnimalSummonController
         CallCrystalHelper.updateCompanionPos(playerLevel, companionData, entry);
     }
 
-    private boolean checkEntityLoaded(Level level, UUID uuid)
+    private boolean checkEntityLoaded(ServerLevel level, UUID uuid)
     {
         var entity = level.getEntity(uuid);
         return entity != null;

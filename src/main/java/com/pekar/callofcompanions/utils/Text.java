@@ -25,7 +25,7 @@ public class Text
 
     private static boolean hasShiftDown()
     {
-        var window = Minecraft.getInstance().getWindow();
+        var window = Minecraft.getInstance().getWindow().getWindow();
         return InputConstants.isKeyDown(window, InputConstants.KEY_LSHIFT)
                 || InputConstants.isKeyDown(window, InputConstants.KEY_RSHIFT);
     }

@@ -12,6 +12,6 @@ public class ModItem extends Item
 
     protected InteractionResult sidedSuccess(boolean isClientSide)
     {
-        return isClientSide ? InteractionResult.SUCCESS : InteractionResult.SUCCESS_SERVER;
+        return InteractionResult.sidedSuccess(isClientSide);
     }
 }

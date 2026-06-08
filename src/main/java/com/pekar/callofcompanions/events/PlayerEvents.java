@@ -38,7 +38,7 @@ public class PlayerEvents implements IEventHandler
         boolean isDeepCallCrystal = itemStack.is(ItemRegistry.DEEP_CALL_CRYSTAL);
         if (!isDeepCallCrystal && !itemStack.is(ItemRegistry.CALL_CRYSTAL)) return;
 
-        if (player.getCooldowns().isOnCooldown(itemStack))
+        if (player.getCooldowns().isOnCooldown(itemStack.getItem()))
         {
             consumeInteraction(event);
             return;
@@ -124,7 +124,7 @@ public class PlayerEvents implements IEventHandler
     private static void succeedInteraction(PlayerInteractEvent.EntityInteractSpecific event, boolean isClientSide)
     {
         event.setCanceled(true);
-        event.setCancellationResult(isClientSide ? InteractionResult.SUCCESS : InteractionResult.SUCCESS_SERVER);
+        event.setCancellationResult(InteractionResult.sidedSuccess(isClientSide));
     }
 
     public void onPlayerEquipmentChangeEvent(LivingEquipmentChangeEvent event)

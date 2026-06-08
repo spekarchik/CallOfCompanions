@@ -3,7 +3,6 @@ package com.pekar.callofcompanions.items;
 import net.minecraft.core.Registry;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.core.registries.Registries;
-import net.minecraft.resources.ResourceKey;
 import net.minecraft.tags.TagKey;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.Rarity;
@@ -28,8 +27,7 @@ public class ItemRegistry
     private static Item registerItem(String name, Function<Item.Properties, Item> itemFactory)
     {
         var id = createResourceLocation(MODID, name);
-        var key = ResourceKey.create(Registries.ITEM, id);
-        var item = itemFactory.apply(new Item.Properties().setId(key));
+        var item = itemFactory.apply(new Item.Properties());
         return Registry.register(BuiltInRegistries.ITEM, id, item);
     }
 }

@@ -8,8 +8,12 @@
     "AAA"
   ],
   "key": {
-    "A": "minecraft:flint",
-    "*": "callofcompanions:deep_call_crystal"
+    "A": {
+      "item": "minecraft:flint"
+    },
+    "*": {
+      "item": "callofcompanions:deep_call_crystal"
+    }
   },
   "result": {
     "id": "callofcompanions:deep_call_crystal",

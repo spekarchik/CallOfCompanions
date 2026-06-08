@@ -57,7 +57,7 @@ public class SaveCompanionsPacket extends ServerToClientPacket
             }
         }
 
-        for (var itemStack : player.getInventory().getNonEquipmentItems())
+        for (var itemStack : player.getInventory().items)
         {
             if (!CallCrystalHelper.hasSameId(itemStack, crystalId)) continue;
 

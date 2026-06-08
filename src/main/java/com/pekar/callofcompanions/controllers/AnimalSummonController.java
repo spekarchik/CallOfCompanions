@@ -14,15 +14,15 @@ import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.sounds.SoundEvent;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
+import net.minecraft.world.entity.RelativeMovement;
 import net.minecraft.world.entity.TamableAnimal;
 import net.minecraft.world.entity.animal.Animal;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
-import org.jspecify.annotations.Nullable;
 import org.slf4j.Logger;
 
-import java.util.Set;
+import java.util.EnumSet;
 import java.util.UUID;
 
 public abstract class AnimalSummonController
@@ -114,7 +114,7 @@ public abstract class AnimalSummonController
             }
             else
             {
-                if (!animal.canTeleport(fromLevel, level)) return false;
+                if (!animal.canChangeDimensions(fromLevel, level)) return false;
 
                 LOGGER.debug("Teleporting across dimensions: entityId={}, fromDimension={}, toDimension={}", uuid, level.dimension(), fromDimension);
                 orderToStand(animal);
@@ -122,9 +122,8 @@ public abstract class AnimalSummonController
                 animal.teleportTo(
                         level,
                         randomPos.getX() + 0.5, randomPos.getY(), randomPos.getZ() + 0.5,
-                        Set.of(),
-                        animal.getYRot(), animal.getXRot(),
-                        false
+                        EnumSet.noneOf(RelativeMovement.class),
+                        animal.getYRot(), animal.getXRot()
                         );
             }
 
@@ -174,7 +173,7 @@ public abstract class AnimalSummonController
         return null;
     }
 
-    private @Nullable BlockPos findPos(BlockPos pos, TeleportSafetyChecker safetyChecker, int delta)
+    private BlockPos findPos(BlockPos pos, TeleportSafetyChecker safetyChecker, int delta)
     {
         for (int dy = safetyChecker.getMinTeleportYOffset(); dy <= 0; dy++)
         {
@@ -196,7 +195,7 @@ public abstract class AnimalSummonController
         return null;
     }
 
-    private @Nullable BlockPos chooseRandomPos(BlockPos pos, int delta, TeleportSafetyChecker safetyChecker)
+    private BlockPos chooseRandomPos(BlockPos pos, int delta, TeleportSafetyChecker safetyChecker)
     {
         for (int i = 0; i < 10; i++)
         {

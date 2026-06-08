@@ -1,7 +1,7 @@
 package com.pekar.callofcompanions.items;
 
-import com.mojang.logging.LogUtils;
 import com.mojang.blaze3d.platform.InputConstants;
+import com.mojang.logging.LogUtils;
 import com.pekar.callofcompanions.Config;
 import com.pekar.callofcompanions.controllers.*;
 import com.pekar.callofcompanions.data.CompanionData;
@@ -16,10 +16,10 @@ import com.pekar.callofcompanions.tooltip.ITooltipProvider;
 import com.pekar.callofcompanions.tooltip.TextStyle;
 import com.pekar.callofcompanions.utils.Players;
 import net.minecraft.ChatFormatting;
+import net.minecraft.client.Minecraft;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.component.DataComponents;
-import net.minecraft.client.Minecraft;
 import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.locale.Language;
 import net.minecraft.network.chat.Component;
@@ -29,11 +29,11 @@ import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
+import net.minecraft.world.InteractionResultHolder;
 import net.minecraft.world.entity.animal.Animal;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.TooltipFlag;
-import net.minecraft.world.item.component.TooltipDisplay;
 import net.minecraft.world.item.context.UseOnContext;
 import net.minecraft.world.level.Level;
 import org.slf4j.Logger;
@@ -42,8 +42,8 @@ import java.time.Instant;
 import java.time.ZoneId;
 import java.time.format.DateTimeFormatter;
 import java.time.format.DateTimeParseException;
+import java.util.List;
 import java.util.UUID;
-import java.util.function.Consumer;
 
 public class CallCrystal extends ModItem implements ITooltipProvider
 {
@@ -55,15 +55,15 @@ public class CallCrystal extends ModItem implements ITooltipProvider
     }
 
     @Override
-    public InteractionResult use(Level level, Player player, InteractionHand hand)
+    public InteractionResultHolder<ItemStack> use(Level level, Player player, InteractionHand hand)
     {
-        if (hand != InteractionHand.MAIN_HAND) return InteractionResult.FAIL;
-
         var stack = player.getItemInHand(hand);
+        if (hand != InteractionHand.MAIN_HAND) return InteractionResultHolder.fail(stack);
+
         var companionData = stack.get(DataRegistry.COMPANIONS);
-        if (companionData == null || companionData.companions().isEmpty()) return InteractionResult.FAIL;
+        if (companionData == null || companionData.companions().isEmpty()) return InteractionResultHolder.fail(stack);
         var crystalId = stack.get(DataRegistry.CRYSTAL_ID);
-        if (crystalId == null) return InteractionResult.FAIL;
+        if (crystalId == null) return InteractionResultHolder.fail(stack);
 
         if (level instanceof ServerLevel serverLevel && player instanceof ServerPlayer serverPlayer)
         {
@@ -78,13 +78,13 @@ public class CallCrystal extends ModItem implements ITooltipProvider
 
             if (companionsUpdated)
             {
-                var slotIndex = player.getInventory().getSelectedSlot();
+                var slotIndex = player.getInventory().selected;
                 saveStackChanges(serverPlayer, stack, crystalId, companionData, slotIndex);
                 Players.sendOverlayMessage(serverPlayer, Component.translatable("message.callofcompanions.companions_updated"));
             }
         }
 
-        return sidedSuccess(level.isClientSide());
+        return InteractionResultHolder.sidedSuccess(stack, level.isClientSide());
     }
 
     @Override
@@ -101,7 +101,7 @@ public class CallCrystal extends ModItem implements ITooltipProvider
 
         if (Boolean.TRUE.equals(stack.get(DataComponents.ENCHANTMENT_GLINT_OVERRIDE))) return InteractionResult.FAIL;
 
-        if (player.getCooldowns().isOnCooldown(stack)) return InteractionResult.FAIL;
+        if (player.getCooldowns().isOnCooldown(stack.getItem())) return InteractionResult.FAIL;
 
         var useOnPos = resolveUseOnPos(context);
         if (useOnPos == null) return InteractionResult.FAIL;
@@ -112,7 +112,7 @@ public class CallCrystal extends ModItem implements ITooltipProvider
             return InteractionResult.FAIL;
         }
 
-        player.getCooldowns().addCooldown(stack, crystalCooldown());
+        player.getCooldowns().addCooldown(stack.getItem(), crystalCooldown());
 
         var companionData = savedCompanionData.copy();
 
@@ -150,7 +150,7 @@ public class CallCrystal extends ModItem implements ITooltipProvider
     {
         stack.set(DataComponents.ENCHANTMENT_GLINT_OVERRIDE, true);
 
-        var serverLevel = serverPlayer.level();
+        var serverLevel = (ServerLevel) serverPlayer.level();
         playSummonSound(serverLevel, serverPlayer.blockPosition());
         showSummonParticles(serverLevel, useOnPos);
 
@@ -167,7 +167,7 @@ public class CallCrystal extends ModItem implements ITooltipProvider
 
         if (anySummoned)
         {
-            var slotIndex = serverPlayer.getInventory().getSelectedSlot();
+            var slotIndex = serverPlayer.getInventory().selected;
             scheduleSaveDataOnTasksEnd(serverPlayer, crystalId, companionData, farTeleportListener, slotIndex);
             return;
         }
@@ -263,7 +263,7 @@ public class CallCrystal extends ModItem implements ITooltipProvider
             @Override
             public void onAllTasksEnd()
             {
-                for (var itemStack : serverPlayer.getInventory().getNonEquipmentItems())
+                for (var itemStack : serverPlayer.getInventory().items)
                 {
                     if (!CallCrystalHelper.hasSameId(itemStack, crystalId)) continue;
 
@@ -326,9 +326,9 @@ public class CallCrystal extends ModItem implements ITooltipProvider
     }
 
     @Override
-    public void appendHoverText(ItemStack itemStack, TooltipContext context, TooltipDisplay display, Consumer<Component> builder, TooltipFlag tooltipFlag)
+    public void appendHoverText(ItemStack itemStack, TooltipContext context, List<Component> tooltipComponents, TooltipFlag tooltipFlag)
     {
-        ITooltipProvider.appendHoverText(this, itemStack, context, display, builder, tooltipFlag);
+        ITooltipProvider.appendHoverText(this, itemStack, context, tooltipComponents, tooltipFlag);
     }
 
     @Override
@@ -432,7 +432,7 @@ public class CallCrystal extends ModItem implements ITooltipProvider
 
     private String getDimensionName(CompanionEntry companionEntry)
     {
-        var id = companionEntry.dimension().identifier();
+        var id = companionEntry.dimension().location();
         var translationKey = "dimension.callofcompanions." + id.getNamespace() + "." + id.getPath();
         if (Language.getInstance().has(translationKey))
             return Component.translatable(translationKey).getString();
@@ -442,14 +442,14 @@ public class CallCrystal extends ModItem implements ITooltipProvider
 
     private static boolean hasShiftDown()
     {
-        var window = Minecraft.getInstance().getWindow();
+        var window = Minecraft.getInstance().getWindow().getWindow();
         return InputConstants.isKeyDown(window, InputConstants.KEY_LSHIFT)
                 || InputConstants.isKeyDown(window, InputConstants.KEY_RSHIFT);
     }
 
     private static boolean hasAltDown()
     {
-        var window = Minecraft.getInstance().getWindow();
+        var window = Minecraft.getInstance().getWindow().getWindow();
         return InputConstants.isKeyDown(window, InputConstants.KEY_LALT)
                 || InputConstants.isKeyDown(window, InputConstants.KEY_RALT);
     }

@@ -19,6 +19,6 @@ public record SummonAnimalContext(ServerPlayer player,
 {
     public ServerLevel playerLevel()
     {
-        return player.level();
+        return (ServerLevel) player.level();
     }
 }
