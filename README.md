@@ -227,7 +227,8 @@ They’re just… waiting for your call.
 # 🛠️ Installation and Technical Information
 
 ## Installation
-- Make sure you have one of the supported **Minecraft** versions with **NeoForge** installed.
+- Make sure you have one of the supported **Minecraft** versions with **NeoForge** or **Fabric** installed.
+- **Fabric** version requires **Fabric API** to be installed as well.
 - Download the mod `.jar` file.
 - Place it into your `mods` folder.
 - Launch the game and enjoy your adventure!
