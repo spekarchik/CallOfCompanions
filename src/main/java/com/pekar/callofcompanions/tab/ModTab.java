@@ -22,7 +22,7 @@ public abstract class ModTab
 
     protected String getTitle()
     {
-        return "itemGroup." + getTabName();
+        return "itemGroup." + MODID + "." + getTabName();
     }
 
     public final CreativeModeTab createTab()

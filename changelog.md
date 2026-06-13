@@ -1,3 +1,9 @@
+## 📦 Version 1.10.3
+
+### 🐞 Fixed
+- Fixed an issue where the Creative Mode tab title could display the name of another mod.
+
+
 ## 📦 Version 1.10.2
 
 - Ported to Fabric.
