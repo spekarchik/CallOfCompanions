@@ -10,6 +10,7 @@ import net.neoforged.neoforge.registries.DeferredHolder;
 import java.util.Collection;
 
 import static com.pekar.callofcompanions.Main.CREATIVE_MODE_TABS;
+import static com.pekar.callofcompanions.Main.MODID;
 
 public abstract class ModTab
 {
@@ -23,7 +24,7 @@ public abstract class ModTab
 
     protected String getTitle()
     {
-        return "itemGroup." + getTabName();
+        return "itemGroup." + MODID + "." + getTabName();
     }
 
     public final DeferredHolder<CreativeModeTab, CreativeModeTab> createTab()
