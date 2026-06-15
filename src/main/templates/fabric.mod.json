@@ -16,15 +16,15 @@
     "callofcompanions.mixins.json"
   ],
   "contact": {
-    "homepage": "https://www.curseforge.com/minecraft/mc-mods/call-of-companions",
+    "homepage": "${home_page}",
     "sources": "https://github.com/spekarchik/CallOfCompanions"
   },
   "license": "${mod_license}",
-  "icon": "logo.png",
+  "icon": "${logo}",
   "environment": "*",
   "depends": {
-    "fabricloader": ">=${fabric_loader_min_version}",
-    "minecraft": ">=26.1 <=26.1.2",
+    "fabricloader": ">=${min_loader_version}",
+    "minecraft": "${minecraft_version_range}",
     "java": ">=25",
     "fabric-api": "*"
   }
