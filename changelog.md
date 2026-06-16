@@ -1,5 +1,7 @@
 ## 📦 Version 1.10.3
 
+- Now supports Minecraft 26.2
+
 ### 🐞 Fixed
 - Fixed an issue where the Creative Mode tab title could display the name of another mod.
 
