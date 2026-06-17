@@ -1,3 +1,9 @@
+## 📦 Version 1.10.5
+
+### 🐞 Fixed
+- Fixed a dedicated server startup crash on Fabric.
+
+
 ## 📦 Version 1.10.4
 
 - Now supports Minecraft 26.2
