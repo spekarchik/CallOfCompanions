@@ -441,17 +441,17 @@ public class CallCrystal extends ModItem implements ITooltipProvider
 
     private static boolean hasShiftDown()
     {
-        return isClient() && CallCrystalClientTooltip.hasShiftDown();
+        return isClient() && ClientSideCallCrystalTooltip.hasShiftDown();
     }
 
     private static boolean hasAltDown()
     {
-        return isClient() && CallCrystalClientTooltip.hasAltDown();
+        return isClient() && ClientSideCallCrystalTooltip.hasAltDown();
     }
 
     private static Level getClientTooltipLevel()
     {
-        return isClient() ? CallCrystalClientTooltip.getLevel() : null;
+        return isClient() ? ClientSideCallCrystalTooltip.getLevel() : null;
     }
 
     private static boolean isClient()
