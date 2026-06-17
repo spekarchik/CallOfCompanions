@@ -1,10 +1,8 @@
 package com.pekar.callofcompanions.network.base;
 
-import net.minecraft.client.player.LocalPlayer;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.entity.Entity;
-import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.chunk.LevelChunk;
 import net.neoforged.neoforge.network.PacketDistributor;
 
@@ -32,11 +30,5 @@ public abstract class ServerToClientPacket extends Packet implements IServerToCl
     public final boolean isServerToClient()
     {
         return true;
-    }
-
-    @Override
-    protected final void onReceive(Player player)
-    {
-        onReceive((LocalPlayer) player);
     }
 }
