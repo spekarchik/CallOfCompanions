@@ -1,7 +1,6 @@
 package com.pekar.callofcompanions.items;
 
 import com.pekar.callofcompanions.Main;
-import com.pekar.callofcompanions.utils.Resources;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.tags.TagKey;
 import net.minecraft.world.item.Item;
