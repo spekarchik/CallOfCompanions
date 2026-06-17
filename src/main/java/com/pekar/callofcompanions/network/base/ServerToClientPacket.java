@@ -1,14 +1,11 @@
 package com.pekar.callofcompanions.network.base;
 
-import net.minecraft.client.player.LocalPlayer;
+import net.fabricmc.fabric.api.networking.v1.PlayerLookup;
+import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.entity.Entity;
-import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.chunk.LevelChunk;
-
-import net.fabricmc.fabric.api.networking.v1.PlayerLookup;
-import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
 
 public abstract class ServerToClientPacket extends Packet implements IServerToClientPacket
 {
@@ -43,11 +40,5 @@ public abstract class ServerToClientPacket extends Packet implements IServerToCl
     public final boolean isServerToClient()
     {
         return true;
-    }
-
-    @Override
-    public final void onReceive(Player player)
-    {
-        onReceive((LocalPlayer) player);
     }
 }

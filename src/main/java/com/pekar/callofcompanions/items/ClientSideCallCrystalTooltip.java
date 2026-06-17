@@ -7,9 +7,9 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.world.level.Level;
 
 @Environment(EnvType.CLIENT)
-final class CallCrystalClientTooltip
+final class ClientSideCallCrystalTooltip
 {
-    private CallCrystalClientTooltip()
+    private ClientSideCallCrystalTooltip()
     {
     }
 

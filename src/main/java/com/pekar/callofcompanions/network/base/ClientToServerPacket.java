@@ -1,7 +1,6 @@
 package com.pekar.callofcompanions.network.base;
 
 import com.mojang.logging.LogUtils;
-import net.minecraft.client.Minecraft;
 import net.minecraft.network.protocol.common.ServerboundCustomPayloadPacket;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.entity.player.Player;
@@ -16,7 +15,7 @@ public abstract class ClientToServerPacket extends Packet implements IClientToSe
 
     public final void sendToServer()
     {
-        var connection = Minecraft.getInstance().getConnection();
+        var connection = ClientSidePacketHelper.getConnection();
         if (connection != null)
         {
             var wrapper = new ServerboundCustomPayloadPacket(this);
