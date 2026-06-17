@@ -36,6 +36,8 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.TooltipFlag;
 import net.minecraft.world.item.context.UseOnContext;
 import net.minecraft.world.level.Level;
+import net.fabricmc.api.EnvType;
+import net.fabricmc.loader.api.FabricLoader;
 import org.slf4j.Logger;
 
 import java.time.Instant;
@@ -334,8 +336,7 @@ public class CallCrystal extends ModItem implements ITooltipProvider
     @Override
     public void addTooltip(ItemStack stack, TooltipContext context, ITooltip tooltip, TooltipFlag flag)
     {
-        var level = Minecraft.getInstance().level;
-        if (level == null) return;
+        var level = getClientTooltipLevel();
 
         var companionData = stack.get(DataRegistry.COMPANIONS);
 
@@ -442,16 +443,22 @@ public class CallCrystal extends ModItem implements ITooltipProvider
 
     private static boolean hasShiftDown()
     {
-        var window = Minecraft.getInstance().getWindow().getWindow();
-        return InputConstants.isKeyDown(window, InputConstants.KEY_LSHIFT)
-                || InputConstants.isKeyDown(window, InputConstants.KEY_RSHIFT);
+        return isClient() && CallCrystalClientTooltip.hasShiftDown();
     }
 
     private static boolean hasAltDown()
     {
-        var window = Minecraft.getInstance().getWindow().getWindow();
-        return InputConstants.isKeyDown(window, InputConstants.KEY_LALT)
-                || InputConstants.isKeyDown(window, InputConstants.KEY_RALT);
+        return isClient() && CallCrystalClientTooltip.hasAltDown();
+    }
+
+    private static Level getClientTooltipLevel()
+    {
+        return isClient() ? CallCrystalClientTooltip.getLevel() : null;
+    }
+
+    private static boolean isClient()
+    {
+        return FabricLoader.getInstance().getEnvironmentType() == EnvType.CLIENT;
     }
 
     private String getTimeString(Level level, long timestamp, long gameTimestamp)
@@ -471,7 +478,7 @@ public class CallCrystal extends ModItem implements ITooltipProvider
         }
         else
         {
-            if (gameTimestamp != 0L)
+            if (level != null && gameTimestamp != 0L)
             {
                 long secondsAgo = Math.max(0L, (level.getGameTime() - gameTimestamp) / 20);
                 relative = formatRelativeInGame(secondsAgo);
@@ -574,6 +581,7 @@ public class CallCrystal extends ModItem implements ITooltipProvider
         }
 
         if (gameTimestamp == 0L) return AgeCategory.NONE;
+        if (level == null) return AgeCategory.NONE;
         long age = level.getGameTime() - gameTimestamp; // ticks
         if (age <= 2400L) return AgeCategory.RECENT; // <= 2 minutes (in ticks)
         if (age <= 24_000L) return AgeCategory.MEDIUM; // >2 and <=20 minutes
