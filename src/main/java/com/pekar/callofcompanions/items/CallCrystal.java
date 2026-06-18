@@ -1,8 +1,8 @@
 package com.pekar.callofcompanions.items;
 
-import com.mojang.blaze3d.platform.InputConstants;
 import com.mojang.logging.LogUtils;
 import com.pekar.callofcompanions.Config;
+import com.pekar.callofcompanions.clientaccess.ClientAccessor;
 import com.pekar.callofcompanions.controllers.*;
 import com.pekar.callofcompanions.data.CompanionData;
 import com.pekar.callofcompanions.data.CompanionEntry;
@@ -15,8 +15,9 @@ import com.pekar.callofcompanions.tooltip.ITooltip;
 import com.pekar.callofcompanions.tooltip.ITooltipProvider;
 import com.pekar.callofcompanions.tooltip.TextStyle;
 import com.pekar.callofcompanions.utils.Players;
+import net.fabricmc.api.EnvType;
+import net.fabricmc.loader.api.FabricLoader;
 import net.minecraft.ChatFormatting;
-import net.minecraft.client.Minecraft;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.component.DataComponents;
@@ -36,8 +37,6 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.TooltipFlag;
 import net.minecraft.world.item.context.UseOnContext;
 import net.minecraft.world.level.Level;
-import net.fabricmc.api.EnvType;
-import net.fabricmc.loader.api.FabricLoader;
 import org.slf4j.Logger;
 
 import java.time.Instant;
@@ -443,17 +442,17 @@ public class CallCrystal extends ModItem implements ITooltipProvider
 
     private static boolean hasShiftDown()
     {
-        return isClient() && ClientSideCallCrystalTooltip.hasShiftDown();
+        return isClient() && ClientAccessor.itemsAccessor().hasShiftDown();
     }
 
     private static boolean hasAltDown()
     {
-        return isClient() && ClientSideCallCrystalTooltip.hasAltDown();
+        return isClient() && ClientAccessor.itemsAccessor().hasAltDown();
     }
 
     private static Level getClientTooltipLevel()
     {
-        return isClient() ? ClientSideCallCrystalTooltip.getLevel() : null;
+        return isClient() ? ClientAccessor.itemsAccessor().getLevel() : null;
     }
 
     private static boolean isClient()
