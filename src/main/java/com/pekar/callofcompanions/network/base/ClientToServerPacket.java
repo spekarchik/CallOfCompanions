@@ -1,30 +1,17 @@
 package com.pekar.callofcompanions.network.base;
 
-import com.mojang.logging.LogUtils;
-import net.minecraft.network.protocol.common.ServerboundCustomPayloadPacket;
+import com.pekar.callofcompanions.clientaccess.ClientAccessor;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.entity.player.Player;
-import org.slf4j.Logger;
 
 public abstract class ClientToServerPacket extends Packet implements IClientToServerPacket
 {
-    private static final Logger LOGGER = LogUtils.getLogger();
-
     protected ClientToServerPacket()
     {}
 
     public final void sendToServer()
     {
-        var connection = ClientSidePacketHelper.getConnection();
-        if (connection != null)
-        {
-            var wrapper = new ServerboundCustomPayloadPacket(this);
-            connection.getConnection().send(wrapper);
-        }
-        else
-        {
-            LOGGER.warn("Unable to send packet to server: connection is null");
-        }
+        ClientAccessor.networkClientAccessor().sendToServer(this);
     }
 
     @Override
