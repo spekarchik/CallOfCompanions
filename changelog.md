@@ -1,5 +1,8 @@
 ## 📦 Version 1.10.6
 
+### ✨ New
+- Added an in-game config screen accessible via **Mods → Call of Companions → Config**.
+
 ### 📝 Improvements
 - Improved dedicated server compatibility.
 
