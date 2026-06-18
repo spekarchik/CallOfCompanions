@@ -2,14 +2,13 @@ package com.pekar.callofcompanions.network;
 
 import com.pekar.callofcompanions.network.base.Packet;
 import com.pekar.callofcompanions.network.base.PacketInfoProvider;
-import net.fabricmc.api.EnvType;
 import net.fabricmc.fabric.api.networking.v1.PayloadTypeRegistry;
 import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
-import net.fabricmc.loader.api.FabricLoader;
 
 public final class Networking
 {
     private static boolean initialized = false;
+    private static boolean clientInitialized = false;
 
     private Networking()
     {}
@@ -20,11 +19,14 @@ public final class Networking
         initialized = true;
 
         register(new SaveCompanionsPacket());
+    }
 
-        if (FabricLoader.getInstance().getEnvironmentType() == EnvType.CLIENT)
-        {
-            NetworkingClient.initClientReceivers();
-        }
+    public static void initClient()
+    {
+        if (clientInitialized) return;
+        clientInitialized = true;
+
+        NetworkingClient.initClientReceivers();
     }
 
     private static <T extends Packet> void register(T packet)
