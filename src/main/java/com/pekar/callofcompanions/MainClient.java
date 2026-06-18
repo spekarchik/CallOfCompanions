@@ -1,5 +1,7 @@
 package com.pekar.callofcompanions;
 
+import com.pekar.callofcompanions.client.NetworkClientAccessor;
+import com.pekar.callofcompanions.clientaccess.ClientAccessor;
 import net.neoforged.api.distmarker.Dist;
 import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.fml.ModContainer;
@@ -24,6 +26,6 @@ public class MainClient
     @SubscribeEvent
     static void onClientSetup(FMLClientSetupEvent event)
     {
-        // Some client setup code
+        ClientAccessor.init(new NetworkClientAccessor());
     }
 }
