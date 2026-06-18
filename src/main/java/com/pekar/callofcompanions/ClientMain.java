@@ -13,9 +13,9 @@ import net.neoforged.neoforge.client.gui.IConfigScreenFactory;
 
 @Mod(value = Main.MODID, dist = Dist.CLIENT)
 @EventBusSubscriber(modid = Main.MODID, value = Dist.CLIENT)
-public class MainClient
+public class ClientMain
 {
-    public MainClient(ModContainer container)
+    public ClientMain(ModContainer container)
     {
         // Allows NeoForge to create a config screen for this mod's configs.
         // The config screen is accessed by going to the Mods screen > clicking on your mod > clicking on config.
