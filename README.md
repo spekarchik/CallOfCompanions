@@ -187,6 +187,12 @@ Make it lightweight… or powerful.
 *By default, it is located at:*
 `config/callofcompanions-common.toml`
 
+Starting from **Call of Companions 1.10.6 for NeoForge**, configuration options can also be changed through the in-game config screen.
+
+From the main menu, navigate to *Mods → Call of Companions → Config* to access the configuration options.
+
+![NeoForge Config Screen](https://github.com/spekarchik/CallOfCompanions/blob/main/docs/images/ConfigNeoUI.png?raw=true)
+
 ---
 
 ## 🔗 Mod Compatibility
