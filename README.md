@@ -182,6 +182,8 @@ Make it lightweight… or powerful.
 
 ![Configuration](https://github.com/spekarchik/CallOfCompanions/blob/main/docs/images/Configuration4.png?raw=true)
 
+### 📁 Config Location
+
 *The configuration file is generated automatically after launching the game and can be found in the standard mod config directory.*
 
 *By default, it is located at:*
