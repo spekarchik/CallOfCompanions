@@ -1,5 +1,11 @@
 ## 📦 Version 1.10.6
 
+- Corrected the minimum required *Fabric Loader* version.
+- Promoted to **Release**.
+
+
+## 📦 Version 1.10.6-beta
+
 ### 📝 Improvements
 - Improved dedicated server compatibility.
 
