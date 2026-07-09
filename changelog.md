@@ -1,5 +1,11 @@
 ## 📦 Version 1.10.6
 
+- Corrected the Minecraft version range.
+- Promoted to **Release**.
+
+
+## 📦 Version 1.10.6-beta
+
 ### 📝 Improvements
 - Improved dedicated server compatibility.
 
