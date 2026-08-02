@@ -1,3 +1,12 @@
+## 📦 Version 1.10.8-alpha
+
+### ⚙️ Changed
+- Added compatibility with NeoForge **26.2.0.43-beta and newer**.
+- This file is marked as *Alpha* to prevent automatic installation on profiles using older, incompatible NeoForge versions.
+- The mod itself is not experimental.
+- Requires NeoForge **26.2.0.43-beta or newer**.
+
+
 ## 📦 Version 1.10.7
 
 ### ⚙️ Changed

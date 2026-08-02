@@ -34,7 +34,7 @@ public class PlayerEvents implements IEventHandler
     private static final Logger LOGGER = LogUtils.getLogger();
 
     @SubscribeEvent
-    public void onPlayerInteractionEvent(PlayerInteractEvent.EntityInteractSpecific event)
+    public void onPlayerInteractionEvent(PlayerInteractEvent.EntityInteract event)
     {
         var target = event.getTarget();
         if (target instanceof Player) return;
@@ -66,7 +66,7 @@ public class PlayerEvents implements IEventHandler
         consumeInteraction(event);
     }
 
-    private void handleAnimalCrystalUse(PlayerInteractEvent.EntityInteractSpecific event, Player player, ItemStack itemStack, Animal animal, boolean isDeepCallCrystal)
+    private void handleAnimalCrystalUse(PlayerInteractEvent.EntityInteract event, Player player, ItemStack itemStack, Animal animal, boolean isDeepCallCrystal)
     {
         // Clean crystals may be stackable, but binding must use exactly one item.
         if (itemStack.getCount() != 1)
@@ -122,13 +122,13 @@ public class PlayerEvents implements IEventHandler
         consumeInteraction(event);
     }
 
-    private static void consumeInteraction(PlayerInteractEvent.EntityInteractSpecific event)
+    private static void consumeInteraction(PlayerInteractEvent.EntityInteract event)
     {
         event.setCanceled(true);
         event.setCancellationResult(InteractionResult.CONSUME);
     }
 
-    private static void succeedInteraction(PlayerInteractEvent.EntityInteractSpecific event)
+    private static void succeedInteraction(PlayerInteractEvent.EntityInteract event)
     {
         event.setCanceled(true);
         event.setCancellationResult(event.getSide() == LogicalSide.CLIENT ? InteractionResult.SUCCESS : InteractionResult.SUCCESS_SERVER);
