@@ -1,3 +1,11 @@
+## 📦 Version 1.10.9-alpha
+
+### ⚙️ Updated
+- Updated mod metadata for NeoForge **26.2.0.50-beta and newer**:
+  - Replaced the deprecated `logoFile` property with `iconFile` and `bannerFile`.
+  - Moved the license URL to the new `licenseURL` property.
+
+
 ## 📦 Version 1.10.8-alpha
 
 ### ⚙️ Changed
