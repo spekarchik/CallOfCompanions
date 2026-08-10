@@ -133,7 +133,7 @@ jobs:
         if: env.PUBLISH == 'true'
         uses: actions/checkout@v4
         with:
-          ref: ${{ github.event.workflow_run.head_branch }}
+          ref: ${{ github.event.workflow_run.head_sha }}
 
       - name: Install jq
         if: env.PUBLISH == 'true'
