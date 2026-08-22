@@ -25,9 +25,8 @@ public class TeleportSafetyCheckerResolver
         else if (animal instanceof HappyGhast)
             return new GhastTeleportSafetyChecker();
 
-        else if (animal.getNavigation() instanceof FlyingPathNavigation
-        )
-        return new FlyingAnimalTeleportSafetyChecker();
+        else if (animal.getNavigation() instanceof FlyingPathNavigation)
+            return new FlyingAnimalTeleportSafetyChecker();
 
         else if (animal instanceof Strider
                 || (animal.getPathfindingMalus(PathType.LAVA) == 0f && animal.getPathfindingMalus(PathType.WALKABLE) != 0f)
