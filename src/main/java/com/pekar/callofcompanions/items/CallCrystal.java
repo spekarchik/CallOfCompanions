@@ -30,7 +30,7 @@ import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
-import net.minecraft.world.entity.animal.Animal;
+import net.minecraft.world.entity.PathfinderMob;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.TooltipFlag;
@@ -183,7 +183,7 @@ public class CallCrystal extends ModItem implements ITooltipProvider
         if (animalLevel == null) return false;
 
         var entity = animalLevel.getEntity(companionEntry.uuid());
-        Animal animal = entity instanceof Animal a ? a : null;
+        PathfinderMob animal = entity instanceof PathfinderMob a ? a : null;
 
         if (!CallCrystalHelper.canSummonAnimal(entity, companionEntry.ownerUuid().orElse(null), serverPlayer))
         {
