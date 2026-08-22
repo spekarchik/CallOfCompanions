@@ -18,7 +18,7 @@ import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.entity.LivingEntity;
-import net.minecraft.world.entity.animal.Animal;
+import net.minecraft.world.entity.PathfinderMob;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import org.slf4j.Logger;
@@ -44,7 +44,7 @@ public class PlayerEvents implements IEventHandler
             return;
         }
 
-        if (target instanceof Animal animal)
+        if (target instanceof PathfinderMob animal && CallCrystalHelper.canBindEntityType(animal))
         {
             handleAnimalCrystalUse(event, player, itemStack, animal, isDeepCallCrystal);
             return;
@@ -59,7 +59,7 @@ public class PlayerEvents implements IEventHandler
         consumeInteraction(event);
     }
 
-    private void handleAnimalCrystalUse(PlayerInteractEvent.EntityInteractSpecific event, Player player, ItemStack itemStack, Animal animal, boolean isDeepCallCrystal)
+    private void handleAnimalCrystalUse(PlayerInteractEvent.EntityInteractSpecific event, Player player, ItemStack itemStack, PathfinderMob animal, boolean isDeepCallCrystal)
     {
         // Clean crystals may be stackable, but binding must use exactly one item.
         if (itemStack.getCount() != 1)
@@ -203,7 +203,7 @@ public class PlayerEvents implements IEventHandler
         }
     }
 
-    private void playAddAnimalSound(ServerLevel level, Animal animal)
+    private void playAddAnimalSound(ServerLevel level, PathfinderMob animal)
     {
         level.playSound(null, animal.blockPosition(), SoundEvents.PLAYER_LEVELUP, SoundSource.PLAYERS, 0.1F, 1.6F);
     }

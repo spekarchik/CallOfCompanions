@@ -11,11 +11,10 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.core.component.DataComponents;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.tags.FluidTags;
-import net.minecraft.world.entity.Entity;
-import net.minecraft.world.entity.OwnableEntity;
-import net.minecraft.world.entity.TamableAnimal;
-import net.minecraft.world.entity.animal.Animal;
+import net.minecraft.world.entity.*;
 import net.minecraft.world.entity.animal.equine.AbstractHorse;
+import net.minecraft.world.entity.monster.Enemy;
+import net.minecraft.world.entity.npc.villager.AbstractVillager;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
@@ -29,11 +28,18 @@ import static net.minecraft.world.level.material.Fluids.WATER;
 
 public class CallCrystalHelper
 {
-    public static boolean canBindAnimal(Animal animal, boolean allowNamedUntamed)
+    public static boolean canBindAnimal(PathfinderMob animal, boolean allowNamedUntamed)
     {
+        if (!canBindEntityType(animal)) return false;
         boolean isTameAnimal = animal instanceof TamableAnimal tamable && tamable.isTame();
         boolean isTamedHorse = animal instanceof AbstractHorse horse && horse.isTamed();
         return isTameAnimal || isTamedHorse || (allowNamedUntamed && animal.hasCustomName());
+    }
+
+    public static boolean canBindEntityType(Entity entity)
+    {
+        if (entity instanceof Enemy || entity instanceof Bucketable || entity instanceof AbstractVillager) return false;
+        return entity instanceof PathfinderMob;
     }
 
     public static short crystalDataCapacity(boolean isDeepCallCrystal)
@@ -54,7 +60,7 @@ public class CallCrystalHelper
         return crystalId;
     }
 
-    public static CompanionEntry createCompanionEntry(Animal animal, long gameTime)
+    public static CompanionEntry createCompanionEntry(PathfinderMob animal, long gameTime)
     {
         var name = animal.getDisplayName().getString();
         var companionType = getAnimalType(animal);
