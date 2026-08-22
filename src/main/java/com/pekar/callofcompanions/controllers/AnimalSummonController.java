@@ -14,6 +14,7 @@ import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.sounds.SoundEvent;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
+import net.minecraft.world.entity.PathfinderMob;
 import net.minecraft.world.entity.TamableAnimal;
 import net.minecraft.world.entity.animal.Animal;
 import net.minecraft.world.entity.player.Player;
@@ -52,7 +53,7 @@ public abstract class AnimalSummonController
         this.allowCrossDimensionalTeleports = context.allowCrossDimensionalTeleports();
     }
 
-    protected void setGoal(Animal animal, Player player)
+    protected void setGoal(PathfinderMob animal, Player player)
     {
         animal.getNavigation().moveTo(player, 1.4);
     }
@@ -70,7 +71,7 @@ public abstract class AnimalSummonController
         );
     }
 
-    protected void showAnimalTeleportParticles(ServerLevel serverLevel, Animal animal)
+    protected void showAnimalTeleportParticles(ServerLevel serverLevel, PathfinderMob animal)
     {
         var pos = animal.blockPosition();
         serverLevel.sendParticles(
@@ -101,7 +102,7 @@ public abstract class AnimalSummonController
 
         var entity = fromLevel.getEntity(uuid);
         LOGGER.debug("Teleport attempt started: entityId={}, loaded={}", uuid, entity != null);
-        if (entity instanceof Animal animal)
+        if (entity instanceof PathfinderMob animal)
         {
             var randomPos = getRandomPos(pos, animal);
             if (randomPos == null) return false;
@@ -134,7 +135,7 @@ public abstract class AnimalSummonController
         return false;
     }
 
-    private BlockPos getRandomPos(BlockPos pos, Animal animal)
+    private BlockPos getRandomPos(BlockPos pos, PathfinderMob animal)
     {
         final int delta = 3;
 
@@ -221,7 +222,7 @@ public abstract class AnimalSummonController
         return pos.offset(dx, 0, dz);
     }
 
-    protected void orderToStand(Animal animal)
+    protected void orderToStand(PathfinderMob animal)
     {
         if (animal.isPassenger())
         {
@@ -243,7 +244,7 @@ public abstract class AnimalSummonController
         level.playSound(null, pos, sound, SoundSource.PLAYERS, 1.0F, 1.0F);
     }
 
-    protected void playTeleportSound(ServerLevel level, Animal animal)
+    protected void playTeleportSound(ServerLevel level, PathfinderMob animal)
     {
         level.playSound(null, animal.blockPosition(), SoundEvents.CHORUS_FRUIT_TELEPORT, SoundSource.PLAYERS, 0.5F, 0.2F);
     }
