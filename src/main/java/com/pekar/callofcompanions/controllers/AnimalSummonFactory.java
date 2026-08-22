@@ -4,7 +4,7 @@ import com.pekar.callofcompanions.entity.EntityRegistry;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
-import net.minecraft.world.entity.animal.Animal;
+import net.minecraft.world.entity.PathfinderMob;
 import net.minecraft.world.level.Level;
 
 public class AnimalSummonFactory
@@ -29,7 +29,7 @@ public class AnimalSummonFactory
         throw new IllegalStateException("Unexpected teleport type");
     }
 
-    private static TeleportType resolveTeleportType(ServerPlayer player, ServerLevel playerLevel, Animal animal, ResourceKey<Level> animalDimension)
+    private static TeleportType resolveTeleportType(ServerPlayer player, ServerLevel playerLevel, PathfinderMob animal, ResourceKey<Level> animalDimension)
     {
         final double MAX_DIST_FOR_GOAL_SQR = 32 * 32;
         final double MIN_DIST_FOR_VANILLA_TELEPORT_SQR = 11 * 11;
