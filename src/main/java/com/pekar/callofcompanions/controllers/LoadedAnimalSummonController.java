@@ -1,10 +1,10 @@
 package com.pekar.callofcompanions.controllers;
 
-import net.minecraft.world.entity.animal.Animal;
+import net.minecraft.world.entity.PathfinderMob;
 
 abstract class LoadedAnimalSummonController extends AnimalSummonController
 {
-    protected final Animal animal;
+    protected final PathfinderMob animal;
 
     protected LoadedAnimalSummonController(SummonAnimalContext context)
     {
