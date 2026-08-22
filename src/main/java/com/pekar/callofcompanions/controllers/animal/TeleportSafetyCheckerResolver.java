@@ -1,20 +1,24 @@
 package com.pekar.callofcompanions.controllers.animal;
 
+import net.minecraft.world.entity.PathfinderMob;
+import net.minecraft.world.entity.ai.navigation.FlyingPathNavigation;
 import net.minecraft.world.entity.ai.navigation.WaterBoundPathNavigation;
-import net.minecraft.world.entity.animal.Animal;
-import net.minecraft.world.entity.animal.axolotl.Axolotl;
+import net.minecraft.world.entity.animal.WaterAnimal;
 import net.minecraft.world.entity.monster.Strider;
 import net.minecraft.world.level.pathfinder.PathType;
 
 public class TeleportSafetyCheckerResolver
 {
-    public static TeleportSafetyChecker getChecker(Animal animal)
+    public static TeleportSafetyChecker getChecker(PathfinderMob animal)
     {
-        if (animal instanceof Axolotl
+        if (animal instanceof WaterAnimal
                 || animal.getNavigation() instanceof WaterBoundPathNavigation
                 || (animal.getPathfindingMalus(PathType.WATER) == 0f && animal.getPathfindingMalus(PathType.WALKABLE) != 0f)
         )
             return new WaterAnimalTeleportSafetyChecker();
+
+        else if (animal.getNavigation() instanceof FlyingPathNavigation)
+            return new FlyingAnimalTeleportSafetyChecker();
 
         else if (animal instanceof Strider
                 || (animal.getPathfindingMalus(PathType.LAVA) == 0f && animal.getPathfindingMalus(PathType.WALKABLE) != 0f)
@@ -25,7 +29,7 @@ public class TeleportSafetyCheckerResolver
             return new GroundAnimalTeleportSafetyChecker();
     }
 
-    public static TeleportSafetyChecker getAlternativeChecker(Animal animal)
+    public static TeleportSafetyChecker getAlternativeChecker(PathfinderMob animal)
     {
         var primaryChecker = getChecker(animal);
         if (primaryChecker instanceof WaterAnimalTeleportSafetyChecker) return null;
