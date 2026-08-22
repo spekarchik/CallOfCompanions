@@ -11,7 +11,7 @@ import net.minecraft.core.SectionPos;
 import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.network.chat.Component;
 import net.minecraft.server.level.ServerLevel;
-import net.minecraft.world.entity.animal.Animal;
+import net.minecraft.world.entity.PathfinderMob;
 import net.minecraft.world.level.chunk.status.ChunkStatus;
 import org.slf4j.Logger;
 
@@ -133,7 +133,7 @@ class FarTeleportController extends AnimalSummonController
         var teleported = tryTeleportAnimalTo(playerLevel, entry.uuid(), teleportPos, entry.dimension(), true);
         if (teleported)
         {
-            if (playerLevel.getEntity(entry.uuid()) instanceof Animal animal)
+            if (playerLevel.getEntity(entry.uuid()) instanceof PathfinderMob animal)
             {
                 showAnimalTeleportParticles(playerLevel, animal);
                 playTeleportSound(playerLevel, animal);

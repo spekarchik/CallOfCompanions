@@ -12,7 +12,7 @@ import net.minecraft.core.component.DataComponents;
 import net.minecraft.network.chat.Component;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
-import net.minecraft.world.entity.animal.Animal;
+import net.minecraft.world.entity.PathfinderMob;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.item.ItemStack;
 import net.neoforged.bus.api.SubscribeEvent;
@@ -32,8 +32,8 @@ public class AnimalEvents implements IEventHandler
         if (!Config.AUTO_UPDATE_ON_DISMOUNT.get()) return;
         if (event.isMounting()) return;
         if (!(event.getEntityMounting() instanceof ServerPlayer player)) return;
-        if (!(event.getEntityBeingMounted() instanceof Animal animal)) return;
-        if (!isCorrectAnimalForBinding(animal)) return;
+        if (!(event.getEntityBeingMounted() instanceof PathfinderMob animal)) return;
+        if (!isCorrectCompanionForBinding(animal)) return;
 
         boolean updated = updateAnimalPos(player, animal);
         if (updated && Config.SHOW_UPDATE_MESSAGE_ON_DISMOUNT.get())
@@ -47,8 +47,8 @@ public class AnimalEvents implements IEventHandler
     {
         if (!Config.AUTO_UPDATE_ON_INTERACT.get()) return;
         if (!(event.getEntity() instanceof ServerPlayer player)) return;
-        if (!(event.getTarget() instanceof Animal animal)) return;
-        if (!isCorrectAnimalForBinding(animal)) return;
+        if (!(event.getTarget() instanceof PathfinderMob animal)) return;
+        if (!isCorrectCompanionForBinding(animal)) return;
         if (player.getItemInHand(event.getHand()).is(ItemRegistry.CALL_CRYSTALS_TAG)) return;
 
         boolean updated = updateAnimalPos(player, animal);
@@ -58,12 +58,12 @@ public class AnimalEvents implements IEventHandler
         }
     }
 
-    private boolean isCorrectAnimalForBinding(Animal animal)
+    private boolean isCorrectCompanionForBinding(PathfinderMob animal)
     {
         return CallCrystalHelper.canBindAnimal(animal, Config.DEEP_CRYSTAL_ALLOW_UNTAMED.isTrue());
     }
 
-    private boolean updateAnimalPos(ServerPlayer serverPlayer, Animal animal)
+    private boolean updateAnimalPos(ServerPlayer serverPlayer, PathfinderMob animal)
     {
         if (!(animal.level() instanceof ServerLevel animalLevel)) return false;
 
@@ -82,7 +82,7 @@ public class AnimalEvents implements IEventHandler
         return companionUpdated;
     }
 
-    private boolean tryRefreshCrystalData(ServerPlayer serverPlayer, Animal animal, ServerLevel animalLevel, ItemStack itemStack, int slotIdx)
+    private boolean tryRefreshCrystalData(ServerPlayer serverPlayer, PathfinderMob animal, ServerLevel animalLevel, ItemStack itemStack, int slotIdx)
     {
         if (!itemStack.is(ItemRegistry.CALL_CRYSTALS_TAG)) return false;
 
