@@ -16,16 +16,14 @@ public class ItemsClientAccessor implements IItemsClientAccessor
     @Override
     public boolean hasShiftDown()
     {
-        var window = Minecraft.getInstance().getWindow();
-        return InputConstants.isKeyDown(window, InputConstants.KEY_LSHIFT)
-                || InputConstants.isKeyDown(window, InputConstants.KEY_RSHIFT);
+        return InputConstants.isKeyDown(InputConstants.KEY_LSHIFT)
+                || InputConstants.isKeyDown(InputConstants.KEY_RSHIFT);
     }
 
     @Override
     public boolean hasAltDown()
     {
-        var window = Minecraft.getInstance().getWindow();
-        return InputConstants.isKeyDown(window, InputConstants.KEY_LALT)
-                || InputConstants.isKeyDown(window, InputConstants.KEY_RALT);
+        return InputConstants.isKeyDown(InputConstants.KEY_LALT)
+                || InputConstants.isKeyDown(InputConstants.KEY_RALT);
     }
 }

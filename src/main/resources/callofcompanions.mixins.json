@@ -8,7 +8,7 @@
     "ServerPlayerTeleportMixin"
   ],
   "client": [
-    "ItemInHandRendererMixin"
+    "FirstPersonHandsAndItemsMixin"
   ],
   "injectors": {
     "defaultRequire": 1

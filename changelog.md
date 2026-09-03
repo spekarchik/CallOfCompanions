@@ -1,3 +1,9 @@
+## Minecraft 26.3-pre-1 port
+
+- Updated Minecraft, Fabric API, Loom, and Gradle for 26.3-pre-1.
+- Updated Shift/Alt tooltip controls for the new keyboard input API.
+- Adapted the held-crystal animation mixin to the new first-person item state.
+
 ## 📦 Version 1.11.0
 
 ### ✨ New
