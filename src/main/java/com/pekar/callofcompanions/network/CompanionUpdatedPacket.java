@@ -35,7 +35,7 @@ public class CompanionUpdatedPacket extends ServerToClientPacket
 
         if (showMessage)
         {
-            player.sendOverlayMessage(Component.translatable("message.callofcompanions.companion_updated"));
+            player.displayClientMessage(Component.translatable("message.callofcompanions.companion_updated"), true);
         }
     }
 

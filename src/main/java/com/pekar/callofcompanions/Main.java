@@ -40,7 +40,7 @@ public class Main implements ModInitializer
         Networking.init();
         ServerLifecycleEvents.SERVER_STARTING.register(server -> {
             loadServerConfig(configDirectory.resolve(MODID + "-server.toml"));
-            var worldConfig = server.getWorldPath(new LevelResource("serverconfig")).resolve(MODID + "-server.toml");
+            var worldConfig = server.getWorldPath(LevelResource.ROOT).resolve("serverconfig").resolve(MODID + "-server.toml");
             if (Files.exists(worldConfig)) loadServerConfig(worldConfig);
         });
         ServerPlayConnectionEvents.JOIN.register((listener, sender, server) ->
