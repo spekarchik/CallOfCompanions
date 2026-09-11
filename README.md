@@ -168,10 +168,14 @@ Customize the experience:
 
 Make it lightweight… or powerful.
 
-*The configuration file is generated automatically after launching the game and can be found in the standard mod config directory.*
+Configuration is split into two files:
 
-*By default, it is located at:*
-`config/callofcompanions-common.toml`
+- `config/callofcompanions-server.toml` controls gameplay rules, crystal limits, and teleport searches. The server's values are synchronized to connected clients. This config is loaded when a world/server starts; a file with the same name in the world's `serverconfig` folder overrides it for that world.
+- `config/callofcompanions-client.toml` controls automatic tracking, tooltip appearance, and automatic-update notifications. It is loaded on the client, and each player can choose their own preferences.
+
+The client sends its three automatic-tracking preferences to the server on joining and when they change. The server updates crystal data using each player's choices. Disable both `tracking.auto_update_on_dismount` and `tracking.auto_update_on_interact` for manual control of those updates. The distance threshold applies only to automatic updates; manual updates and successful calls can still refresh coordinates. Notification toggles only affect the overlay messages.
+
+When upgrading from `callofcompanions-common.toml`, existing values are copied into each new file if that file does not already exist. NeoForge keeps only the options belonging to that file when it loads. The old common file is retained as a backup and is no longer used as the active configuration.
 
 ---
 

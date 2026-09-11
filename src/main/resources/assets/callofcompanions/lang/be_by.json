@@ -39,8 +39,10 @@
   "message.callofcompanions.single_crystal_only": "Патрабуецца адзін крышталь для прывязкі.",
 
   "callofcompanions.configuration.title": "Налады: %s",
-  "callofcompanions.configuration.section.callofcompanions.common.toml": "Агульныя налады",
-  "callofcompanions.configuration.section.callofcompanions.common.toml.title": "Агульныя налады",
+  "callofcompanions.configuration.section.callofcompanions.server.toml": "Налады сервера",
+  "callofcompanions.configuration.section.callofcompanions.server.toml.title": "Налады сервера",
+  "callofcompanions.configuration.section.callofcompanions.client.toml": "Налады кліента",
+  "callofcompanions.configuration.section.callofcompanions.client.toml.title": "Налады кліента",
   "callofcompanions.configuration.calling": "Заклік",
   "callofcompanions.configuration.call_crystal": "Крышталь клічу",
   "callofcompanions.configuration.deep_call_crystal": "Глыбінны крышталь клічу",

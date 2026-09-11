@@ -39,8 +39,10 @@
   "message.callofcompanions.single_crystal_only": "Single crystal required for binding.",
 
   "callofcompanions.configuration.title": "%s Configuration",
-  "callofcompanions.configuration.section.callofcompanions.common.toml": "Common Configuration",
-  "callofcompanions.configuration.section.callofcompanions.common.toml.title": "Common Configuration",
+  "callofcompanions.configuration.section.callofcompanions.server.toml": "Server Configuration",
+  "callofcompanions.configuration.section.callofcompanions.server.toml.title": "Server Configuration",
+  "callofcompanions.configuration.section.callofcompanions.client.toml": "Client Configuration",
+  "callofcompanions.configuration.section.callofcompanions.client.toml.title": "Client Configuration",
   "callofcompanions.configuration.calling": "Calling",
   "callofcompanions.configuration.call_crystal": "Call Crystal",
   "callofcompanions.configuration.deep_call_crystal": "Deep Call Crystal",
