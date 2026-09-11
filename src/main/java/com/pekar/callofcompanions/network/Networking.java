@@ -19,6 +19,7 @@ public final class Networking
         initialized = true;
 
         register(new SaveCompanionsPacket());
+        register(new CompanionUpdatedPacket());
     }
 
     public static void initClient()

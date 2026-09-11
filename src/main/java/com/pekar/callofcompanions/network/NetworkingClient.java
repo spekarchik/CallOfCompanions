@@ -15,6 +15,7 @@ final class NetworkingClient
     static void initClientReceivers()
     {
         registerClientbound(new SaveCompanionsPacket());
+        registerClientbound(new CompanionUpdatedPacket());
     }
 
     private static <T extends Packet> void registerClientbound(T packet)

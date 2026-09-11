@@ -9,9 +9,8 @@ import com.pekar.callofcompanions.events.params.EntityInteractEvent;
 import com.pekar.callofcompanions.events.params.EntityMountEvent;
 import com.pekar.callofcompanions.items.ItemRegistry;
 import com.pekar.callofcompanions.network.SaveCompanionsPacket;
-import com.pekar.callofcompanions.utils.Players;
+import com.pekar.callofcompanions.network.CompanionUpdatedPacket;
 import net.minecraft.core.component.DataComponents;
-import net.minecraft.network.chat.Component;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.entity.PathfinderMob;
@@ -34,9 +33,9 @@ public class AnimalEvents implements IEventHandler
         if (!isCorrectCompanionForBinding(animal)) return;
 
         boolean updated = updateAnimalPos(player, animal);
-        if (updated && Config.SHOW_UPDATE_MESSAGE_ON_DISMOUNT.get())
+        if (updated)
         {
-            Players.sendOverlayMessage(player, Component.translatable("message.callofcompanions.companion_updated"));
+            new CompanionUpdatedPacket(CompanionUpdatedPacket.Cause.DISMOUNT).sendToPlayer(player);
         }
     }
 
@@ -49,9 +48,9 @@ public class AnimalEvents implements IEventHandler
         if (player.getItemInHand(event.getHand()).is(ItemRegistry.CALL_CRYSTALS_TAG)) return;
 
         boolean updated = updateAnimalPos(player, animal);
-        if (updated && Config.SHOW_UPDATE_MESSAGE_ON_INTERACT.get())
+        if (updated)
         {
-            Players.sendOverlayMessage(player, Component.translatable("message.callofcompanions.companion_updated"));
+            new CompanionUpdatedPacket(CompanionUpdatedPacket.Cause.INTERACT).sendToPlayer(player);
         }
     }
 
