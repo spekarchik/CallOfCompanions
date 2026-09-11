@@ -18,6 +18,11 @@ abstract class Definition<T>
         this.value = defaultValue;
     }
 
+    void reset()
+    {
+        value = defaultValue;
+    }
+
     public T getValue()
     {
         return value;
