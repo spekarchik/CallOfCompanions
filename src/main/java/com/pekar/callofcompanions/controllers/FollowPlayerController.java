@@ -10,7 +10,7 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.network.chat.Component;
 import org.slf4j.Logger;
 
-import static com.pekar.callofcompanions.Config.PREVENT_PETS_INVISIBILITY_WORKAROUND_1_21_1;
+import static com.pekar.callofcompanions.ServerConfig.PREVENT_PETS_INVISIBILITY_WORKAROUND_1_21_1;
 
 class FollowPlayerController extends LoadedAnimalSummonController
 {

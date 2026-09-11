@@ -1,7 +1,7 @@
 package com.pekar.callofcompanions.controllers;
 
 import com.mojang.logging.LogUtils;
-import com.pekar.callofcompanions.Config;
+import com.pekar.callofcompanions.ServerConfig;
 import com.pekar.callofcompanions.data.CompanionEntry;
 import com.pekar.callofcompanions.scheduler.CompanionEntryScheduler;
 import com.pekar.callofcompanions.scheduler.CompanionEntryTask;
@@ -56,7 +56,7 @@ class FarTeleportController extends AnimalSummonController
 
         if (companionEntry != null && !playerLevel.dimension().equals(companionEntry.dimension()) && allowCrossDimensionalTeleports)
         {
-            double multiplier = Config.DEEP_CRYSTAL_CROSS_DIMENSION_DELAY_MULTIPLIER.get();
+            double multiplier = ServerConfig.DEEP_CRYSTAL_CROSS_DIMENSION_DELAY_MULTIPLIER.get();
             int adjusted = Math.max(1, (int)Math.round(postponeTicks * multiplier));
             LOGGER.debug("Applying cross-dimension delay multiplier: original={}, multiplier={}, adjusted={}", postponeTicks, multiplier, adjusted);
             postponeTicks = adjusted;
@@ -66,7 +66,7 @@ class FarTeleportController extends AnimalSummonController
 
     private void createTeleportTask(BlockPos teleportPos, CompanionEntry companionEntry)
     {
-        final int LOAD_CHUNK_RADIUS = Config.FAR_TELEPORT_CHUNK_RADIUS.getAsInt();
+        final int LOAD_CHUNK_RADIUS = ServerConfig.FAR_TELEPORT_CHUNK_RADIUS.getAsInt();
         var animalDimension = companionEntry.dimension();
         boolean isCrossDimensionalTeleport = !playerLevel.dimension().equals(animalDimension);
 
@@ -92,7 +92,7 @@ class FarTeleportController extends AnimalSummonController
         }
 
         var task = new CompanionEntryTask(
-                Config.FAR_TELEPORT_WAIT_TICKS.getAsInt(),
+                ServerConfig.FAR_TELEPORT_WAIT_TICKS.getAsInt(),
                 companionEntry,
                 player,
                 (ticks, entry) -> {

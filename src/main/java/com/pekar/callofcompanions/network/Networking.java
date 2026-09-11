@@ -20,6 +20,8 @@ public final class Networking
 
         register(new SaveCompanionsPacket());
         register(new CompanionUpdatedPacket());
+        register(new TrackingPreferencesPacket());
+        register(new ServerConfigSyncPacket());
     }
 
     public static void initClient()
