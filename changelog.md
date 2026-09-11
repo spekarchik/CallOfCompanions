@@ -1,3 +1,7 @@
+## Minecraft 26.3-rc-1 port
+
+- Updated Minecraft to 26.3-rc-1 and Fabric API to 0.160.3+26.3.
+
 ## Minecraft 26.3-pre-1 port
 
 - Updated Minecraft, Fabric API, Loom, and Gradle for 26.3-pre-1.
