@@ -6,4 +6,5 @@ class Packets
     {}
 
     static final String SaveCompanionsPacketId = "save_companions";
+    static final String CompanionUpdatedPacketId = "companion_updated";
 }
