@@ -1,6 +1,6 @@
 package com.pekar.callofcompanions.controllers;
 
-import com.pekar.callofcompanions.Config;
+import com.pekar.callofcompanions.ServerConfig;
 import com.pekar.callofcompanions.blocks.BlockRegistry;
 import com.pekar.callofcompanions.data.CompanionData;
 import com.pekar.callofcompanions.data.CompanionEntry;
@@ -45,8 +45,8 @@ public class CallCrystalHelper
     public static short crystalDataCapacity(boolean isDeepCallCrystal)
     {
         return isDeepCallCrystal
-                ? (short) Config.DEEP_CRYSTAL_DATA_CAPACITY.getAsInt()
-                : (short) Config.CRYSTAL_DATA_CAPACITY.getAsInt();
+                ? (short) ServerConfig.DEEP_CRYSTAL_DATA_CAPACITY.getAsInt()
+                : (short) ServerConfig.CRYSTAL_DATA_CAPACITY.getAsInt();
     }
 
     public static UUID ensureCrystalId(ItemStack stack)
