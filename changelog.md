@@ -1,3 +1,15 @@
+## 📦 Version 1.12.0
+
+### 📝 Improvements
+
+- Split configuration into **server rules** (`callofcompanions-server.toml`) and **client preferences** (`callofcompanions-client.toml`).
+- Gameplay settings are now controlled by the server and synchronized to connected clients.
+- Tracking options, tooltip appearance, and automatic-update notifications can be configured individually by each player.
+- Each player can now choose whether crystals automatically update companion coordinates on dismount or interaction, and set their own update distance threshold.
+- Tracking preferences are sent to the server on login and when the client config is reloaded, including changes saved through the in-game config screen.
+- Existing settings from `callofcompanions-common.toml` are automatically copied into the new config files if those files do not already exist. The original file is kept as a backup.
+
+
 ## 📦 Version 1.11.0
 
 ### ✨ New

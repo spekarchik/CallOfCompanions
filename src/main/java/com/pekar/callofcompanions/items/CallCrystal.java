@@ -1,7 +1,8 @@
 package com.pekar.callofcompanions.items;
 
 import com.mojang.logging.LogUtils;
-import com.pekar.callofcompanions.Config;
+import com.pekar.callofcompanions.ClientConfig;
+import com.pekar.callofcompanions.ServerConfig;
 import com.pekar.callofcompanions.controllers.*;
 import com.pekar.callofcompanions.data.CompanionData;
 import com.pekar.callofcompanions.data.CompanionEntry;
@@ -259,8 +260,8 @@ public class CallCrystal extends ModItem implements ITooltipProvider
         if (player.isCreative()) return;
 
         int levelsToConsume = isInterDimensionalCall
-                ? Math.min(requiredXpAmountToCall(), Config.XP_LEVELS_TO_CONSUME_CROSS_DIMENSION.getAsInt())
-                : Math.min(requiredXpAmountToCall(), Config.XP_LEVELS_TO_CONSUME.getAsInt());
+                ? Math.min(requiredXpAmountToCall(), ServerConfig.XP_LEVELS_TO_CONSUME_CROSS_DIMENSION.getAsInt())
+                : Math.min(requiredXpAmountToCall(), ServerConfig.XP_LEVELS_TO_CONSUME.getAsInt());
 
         player.giveExperienceLevels(-Math.min(levelsToConsume, player.experienceLevel));
     }
@@ -326,7 +327,7 @@ public class CallCrystal extends ModItem implements ITooltipProvider
 
     protected int crystalCooldown()
     {
-        return Config.CRYSTAL_COOLDOWN.getAsInt();
+        return ServerConfig.CRYSTAL_COOLDOWN.getAsInt();
     }
 
     protected float callDelayFactor()
@@ -360,7 +361,7 @@ public class CallCrystal extends ModItem implements ITooltipProvider
                 {
                     status += getTimeString(level, companionEntry.timestamp(), companionEntry.gameTimestamp());
                 }
-                else if (flag.hasAltDown() && Config.TOOLTIP_SHOW_LAST_POSITION.isTrue())
+                else if (flag.hasAltDown() && ClientConfig.TOOLTIP_SHOW_LAST_POSITION.isTrue())
                 {
                     status += getAnimalLocationString(companionEntry);
                 }
@@ -378,8 +379,8 @@ public class CallCrystal extends ModItem implements ITooltipProvider
 
                 tooltip.addLine(getDescriptionId(), 1)
                         .fillWith(name, ownerName, status)
-                        .withFormatting(ChatFormatting.GREEN, Config.TOOLTIP_AGE_COLORING.isTrue() && ageCategory == AgeCategory.RECENT)
-                        .withFormatting(ChatFormatting.WHITE, Config.TOOLTIP_AGE_COLORING.isTrue() && ageCategory == AgeCategory.MEDIUM)
+                        .withFormatting(ChatFormatting.GREEN, ClientConfig.TOOLTIP_AGE_COLORING.isTrue() && ageCategory == AgeCategory.RECENT)
+                        .withFormatting(ChatFormatting.WHITE, ClientConfig.TOOLTIP_AGE_COLORING.isTrue() && ageCategory == AgeCategory.MEDIUM)
                         .styledAs(TextStyle.DarkGray, companionEntry.positionStatus() == PositionStatus.LOST)
                         .apply();
             }
@@ -410,7 +411,7 @@ public class CallCrystal extends ModItem implements ITooltipProvider
                     .withFormatting(ChatFormatting.DARK_GREEN, true)
                     .apply();
 
-            if (Config.CONSUME_XP_ON_CALL.isTrue())
+            if (ServerConfig.CONSUME_XP_ON_CALL.isTrue())
             {
                 tooltip.addLine(getDescriptionId(), 6)
                         .fillWith(requiredXpAmountToCall())
@@ -418,9 +419,9 @@ public class CallCrystal extends ModItem implements ITooltipProvider
                         .apply();
             }
         }
-        else if (!flag.hasAltDown() || Config.TOOLTIP_SHOW_LAST_POSITION.isFalse())
+        else if (!flag.hasAltDown() || ClientConfig.TOOLTIP_SHOW_LAST_POSITION.isFalse())
         {
-            if (Config.TOOLTIP_SHOW_LAST_POSITION.isTrue())
+            if (ClientConfig.TOOLTIP_SHOW_LAST_POSITION.isTrue())
                 tooltip.addLineById("description.press_shift_or_alt").apply();
             else
                 tooltip.addLineById("description.press_shift").apply();
@@ -445,7 +446,7 @@ public class CallCrystal extends ModItem implements ITooltipProvider
         // If there is no real timestamp, we cannot produce meaningful output (gameTimestamp-only case is invalid here)
         if (timestamp == 0L) return "";
 
-        boolean useReal = Config.TOOLTIP_USE_REALTIME.isTrue();
+        boolean useReal = ClientConfig.TOOLTIP_USE_REALTIME.isTrue();
 
         String relative;
         String absolute = formatAbsolute(timestamp);
@@ -504,7 +505,7 @@ public class CallCrystal extends ModItem implements ITooltipProvider
 
     private String formatAbsolute(long timestamp)
     {
-        String pattern = Config.DATETIME_FORMAT.get();
+        String pattern = ClientConfig.DATETIME_FORMAT.get();
         DateTimeFormatter formatter;
         try
         {
@@ -531,7 +532,7 @@ public class CallCrystal extends ModItem implements ITooltipProvider
 
     protected int crystalDataCapacity()
     {
-        return Config.CRYSTAL_DATA_CAPACITY.getAsInt();
+        return ServerConfig.CRYSTAL_DATA_CAPACITY.getAsInt();
     }
 
     protected boolean allowInterDimensionalTeleports()
@@ -541,14 +542,14 @@ public class CallCrystal extends ModItem implements ITooltipProvider
 
     protected int requiredXpAmountToCall()
     {
-        return Config.CONSUME_XP_ON_CALL.isTrue() ? Config.XP_LEVELS_TO_CONSUME.getAsInt() : 0;
+        return ServerConfig.CONSUME_XP_ON_CALL.isTrue() ? ServerConfig.XP_LEVELS_TO_CONSUME.getAsInt() : 0;
     }
 
     private enum AgeCategory { NONE, RECENT, MEDIUM }
 
     private AgeCategory computeAgeCategory(long realTimestamp, long gameTimestamp, Level level)
     {
-        boolean useReal = Config.TOOLTIP_USE_REALTIME.isTrue();
+        boolean useReal = ClientConfig.TOOLTIP_USE_REALTIME.isTrue();
 
         if (useReal)
         {

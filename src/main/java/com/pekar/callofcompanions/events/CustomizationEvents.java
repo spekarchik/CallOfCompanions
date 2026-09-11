@@ -1,6 +1,6 @@
 package com.pekar.callofcompanions.events;
 
-import com.pekar.callofcompanions.Config;
+import com.pekar.callofcompanions.ServerConfig;
 import com.pekar.callofcompanions.data.DataRegistry;
 import com.pekar.callofcompanions.items.ItemRegistry;
 import net.neoforged.bus.api.SubscribeEvent;
@@ -28,7 +28,7 @@ public class CustomizationEvents implements IEventHandler
                     {
                         result.set(DataRegistry.CRYSTAL_ID, UUID.randomUUID());
                         result.set(DataRegistry.COMPANIONS,
-                                companionData.copyWithCapacity((short) Config.DEEP_CRYSTAL_DATA_CAPACITY.getAsInt()));
+                                companionData.copyWithCapacity((short) ServerConfig.DEEP_CRYSTAL_DATA_CAPACITY.getAsInt()));
                     }
                     break;
                 }

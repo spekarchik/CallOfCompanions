@@ -1,6 +1,6 @@
 package com.pekar.callofcompanions.network;
 
-import com.pekar.callofcompanions.Config;
+import com.pekar.callofcompanions.ClientConfig;
 import com.pekar.callofcompanions.network.base.IPacket;
 import com.pekar.callofcompanions.network.base.ServerToClientPacket;
 import net.minecraft.network.FriendlyByteBuf;
@@ -29,13 +29,13 @@ public class CompanionUpdatedPacket extends ServerToClientPacket
         // Evaluate the receiving client's preference, independently of the data update.
         boolean showMessage = switch (cause)
         {
-            case DISMOUNT -> Config.SHOW_UPDATE_MESSAGE_ON_DISMOUNT.get();
-            case INTERACT -> Config.SHOW_UPDATE_MESSAGE_ON_INTERACT.get();
+            case DISMOUNT -> ClientConfig.SHOW_UPDATE_MESSAGE_ON_DISMOUNT.get();
+            case INTERACT -> ClientConfig.SHOW_UPDATE_MESSAGE_ON_INTERACT.get();
         };
 
         if (showMessage)
         {
-            player.sendOverlayMessage(Component.translatable("message.callofcompanions.companion_updated"));
+            player.displayClientMessage(Component.translatable("message.callofcompanions.companion_updated"), true);
         }
     }
 
