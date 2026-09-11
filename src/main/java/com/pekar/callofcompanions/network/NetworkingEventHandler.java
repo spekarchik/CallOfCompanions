@@ -21,6 +21,7 @@ public final class NetworkingEventHandler implements IEventHandler
                 .executesOn(HandlerThread.NETWORK);
 
         registerPacket(registrar, new SaveCompanionsPacket());
+        registerPacket(registrar, new CompanionUpdatedPacket());
     }
 
     private <T extends Packet> void registerPacket(PayloadRegistrar registrar, T packet)
