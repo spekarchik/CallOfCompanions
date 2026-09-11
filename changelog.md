@@ -1,3 +1,15 @@
+## 📦 Version 1.12.0
+
+### 📝 Improvements
+
+- Split configuration into **server rules** (`callofcompanions-server.toml`) and **client preferences** (`callofcompanions-client.toml`).
+- Gameplay settings are now controlled by the server and synchronized to clients when they connect.
+- Tracking options, tooltip appearance, and automatic-update notifications can be configured individually by each player.
+- Each player can now choose whether crystals automatically update companion coordinates on dismount or interaction, and set their own update distance threshold.
+- Tracking preferences are sent to the server on login. Restart the game after editing the client config to apply changes.
+- Existing settings from `callofcompanions-common.toml` are automatically copied into the new config files if those files do not already exist. The original file is kept as a backup.
+
+
 ## Minecraft 26.3-rc-1 port
 
 - Updated Minecraft to 26.3-rc-1 and Fabric API to 0.160.3+26.3.
@@ -7,6 +19,7 @@
 - Updated Minecraft, Fabric API, Loom, and Gradle for 26.3-pre-1.
 - Updated Shift/Alt tooltip controls for the new keyboard input API.
 - Adapted the held-crystal animation mixin to the new first-person item state.
+
 
 ## 📦 Version 1.11.0
 
