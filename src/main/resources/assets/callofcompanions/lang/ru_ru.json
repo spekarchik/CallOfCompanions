@@ -39,8 +39,10 @@
   "message.callofcompanions.single_crystal_only": "Для привязки требуется один кристалл.",
 
   "callofcompanions.configuration.title": "Настройки: %s",
-  "callofcompanions.configuration.section.callofcompanions.common.toml": "Общие настройки",
-  "callofcompanions.configuration.section.callofcompanions.common.toml.title": "Общие настройки",
+  "callofcompanions.configuration.section.callofcompanions.server.toml": "Настройки сервера",
+  "callofcompanions.configuration.section.callofcompanions.server.toml.title": "Настройки сервера",
+  "callofcompanions.configuration.section.callofcompanions.client.toml": "Настройки клиента",
+  "callofcompanions.configuration.section.callofcompanions.client.toml.title": "Настройки клиента",
   "callofcompanions.configuration.calling": "Призыв",
   "callofcompanions.configuration.call_crystal": "Кристалл зова",
   "callofcompanions.configuration.deep_call_crystal": "Глубинный кристалл зова",

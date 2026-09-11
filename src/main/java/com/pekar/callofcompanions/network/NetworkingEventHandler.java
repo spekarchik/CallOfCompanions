@@ -22,6 +22,7 @@ public final class NetworkingEventHandler implements IEventHandler
 
         registerPacket(registrar, new SaveCompanionsPacket());
         registerPacket(registrar, new CompanionUpdatedPacket());
+        registerPacket(registrar, new TrackingPreferencesPacket());
     }
 
     private <T extends Packet> void registerPacket(PayloadRegistrar registrar, T packet)
