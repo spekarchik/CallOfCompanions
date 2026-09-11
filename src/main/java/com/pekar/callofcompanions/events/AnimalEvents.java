@@ -1,7 +1,8 @@
 package com.pekar.callofcompanions.events;
 
 import com.mojang.logging.LogUtils;
-import com.pekar.callofcompanions.Config;
+import com.pekar.callofcompanions.controllers.config.TrackingPreferencesController;
+import com.pekar.callofcompanions.ServerConfig;
 import com.pekar.callofcompanions.controllers.CallCrystalHelper;
 import com.pekar.callofcompanions.data.CompanionData;
 import com.pekar.callofcompanions.data.DataRegistry;
@@ -26,9 +27,9 @@ public class AnimalEvents implements IEventHandler
 
     public void onEntityMount(EntityMountEvent event)
     {
-        if (!Config.AUTO_UPDATE_ON_DISMOUNT.get()) return;
         if (event.isMounting()) return;
         if (!(event.getEntityMounting() instanceof ServerPlayer player)) return;
+        if (!TrackingPreferencesController.get(player.getUUID()).autoUpdateOnDismount()) return;
         if (!(event.getEntityBeingMounted() instanceof PathfinderMob animal)) return;
         if (!isCorrectCompanionForBinding(animal)) return;
 
@@ -41,8 +42,8 @@ public class AnimalEvents implements IEventHandler
 
     public void onPlayerInteract(EntityInteractEvent event)
     {
-        if (!Config.AUTO_UPDATE_ON_INTERACT.get()) return;
         if (!(event.getEntity() instanceof ServerPlayer player)) return;
+        if (!TrackingPreferencesController.get(player.getUUID()).autoUpdateOnInteract()) return;
         if (!(event.getTarget() instanceof PathfinderMob animal)) return;
         if (!isCorrectCompanionForBinding(animal)) return;
         if (player.getItemInHand(event.getHand()).is(ItemRegistry.CALL_CRYSTALS_TAG)) return;
@@ -56,7 +57,7 @@ public class AnimalEvents implements IEventHandler
 
     private boolean isCorrectCompanionForBinding(PathfinderMob animal)
     {
-        return CallCrystalHelper.canBindAnimal(animal, Config.DEEP_CRYSTAL_ALLOW_UNTAMED.isTrue());
+        return CallCrystalHelper.canBindAnimal(animal, ServerConfig.DEEP_CRYSTAL_ALLOW_UNTAMED.isTrue());
     }
 
     private boolean updateAnimalPos(ServerPlayer serverPlayer, PathfinderMob animal)
@@ -88,7 +89,7 @@ public class AnimalEvents implements IEventHandler
         if (entry == null) return false;
 
         var oldPos = entry.pos();
-        int maxDistance = Config.AUTO_UPDATE_DISTANCE_THRESHOLD.get();
+        int maxDistance = TrackingPreferencesController.get(serverPlayer.getUUID()).distanceThreshold();
         if (entry.dimension().equals(animalLevel.dimension())
                 && animal.distanceToSqr(oldPos.getX(), oldPos.getY(), oldPos.getZ()) < (double) maxDistance * maxDistance)
         {

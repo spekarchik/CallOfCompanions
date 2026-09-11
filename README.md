@@ -168,10 +168,14 @@ Customize the experience:
 
 Make it lightweight… or powerful.
 
-*The configuration file is generated automatically after launching the game and can be found in the standard mod config directory.*
+Configuration is split into two files:
 
-*By default, it is located at:*
-`config/callofcompanions-common.toml`
+- `config/callofcompanions-server.toml` controls gameplay rules, crystal limits, and teleport searches. Server values are sent to clients when they connect. A file with the same name in the world's `serverconfig` folder overrides the global file for that world.
+- `config/callofcompanions-client.toml` controls automatic tracking, tooltips, and update notifications. Each player chooses their own preferences. Disable both automatic-update toggles for manual control of interaction/dismount updates; explicit updates and successful calls can still refresh coordinates.
+
+Existing values migrate from `callofcompanions-common.toml` when the new files do not already exist. The original file remains as a backup. Received server settings apply only for the connection and are never saved over the client's local file.
+
+Fabric loads client preferences at game startup and sends tracking preferences once on connection. Restart the client after editing its config; restart the world/server after changing server settings. There is no config polling or in-game configuration menu.
 
 ---
 
