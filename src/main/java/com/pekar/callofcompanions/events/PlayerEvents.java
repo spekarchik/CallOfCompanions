@@ -1,7 +1,8 @@
 package com.pekar.callofcompanions.events;
 
 import com.mojang.logging.LogUtils;
-import com.pekar.callofcompanions.Config;
+import com.pekar.callofcompanions.ServerConfig;
+import com.pekar.callofcompanions.controllers.config.TrackingPreferencesController;
 import com.pekar.callofcompanions.controllers.CallCrystalHelper;
 import com.pekar.callofcompanions.data.CompanionData;
 import com.pekar.callofcompanions.data.DataRegistry;
@@ -73,7 +74,7 @@ public class PlayerEvents implements IEventHandler
             return;
         }
 
-        boolean allowNamedUntamed = isDeepCallCrystal && Config.DEEP_CRYSTAL_ALLOW_UNTAMED.isTrue();
+        boolean allowNamedUntamed = isDeepCallCrystal && ServerConfig.DEEP_CRYSTAL_ALLOW_UNTAMED.isTrue();
         if (!CallCrystalHelper.canBindAnimal(animal, allowNamedUntamed))
         {
             if (player instanceof ServerPlayer serverPlayer)
@@ -167,6 +168,7 @@ public class PlayerEvents implements IEventHandler
     {
         if (event.getEntity() instanceof ServerPlayer serverPlayer)
         {
+            TrackingPreferencesController.remove(serverPlayer.getUUID());
             cancelTasksFor(serverPlayer);
         }
     }

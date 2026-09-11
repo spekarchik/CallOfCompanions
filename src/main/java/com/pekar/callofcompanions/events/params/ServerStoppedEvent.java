@@ -2,11 +2,11 @@ package com.pekar.callofcompanions.events.params;
 
 import net.minecraft.server.MinecraftServer;
 
-public final class ServerStoppingEvent
+public final class ServerStoppedEvent
 {
     private final MinecraftServer server;
 
-    public ServerStoppingEvent(MinecraftServer server)
+    public ServerStoppedEvent(MinecraftServer server)
     {
         this.server = server;
     }
