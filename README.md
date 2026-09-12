@@ -189,9 +189,11 @@ These settings can be configured individually by each player:
 - Notifications when companion coordinates are updated automatically
 - Tooltip time format and appearance
 
-Make it lightweight… or powerful.
+![Configuration-server](https://github.com/spekarchik/CallOfCompanions/blob/main/docs/images/Configuration-server.png?raw=true)
 
-![Configuration](https://github.com/spekarchik/CallOfCompanions/blob/main/docs/images/Configuration4.png?raw=true)
+![Configuration-client](https://github.com/spekarchik/CallOfCompanions/blob/main/docs/images/Configuration-client.png?raw=true)
+
+Make it lightweight… or powerful.
 
 ### 📁 Config Location
 
