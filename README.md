@@ -165,7 +165,11 @@ A fresh start — without losing the crystal itself.
 
 ## ⚙️ Configurable
 
-Customize the experience:
+Customize the experience with separate (1.12.0+) **server rules** and **client preferences**.
+
+### Server-controlled settings
+
+These settings define gameplay behavior for the whole server and are automatically synchronized to connected clients:
 
 - XP cost for summoning
 - Separate XP cost for cross-dimensional calls
@@ -175,8 +179,15 @@ Customize the experience:
 - Allow/disallow untamed animals in Deep Crystal
 - Enable/disable cross-dimensional summoning
 - Cross-dimensional summon delay
-- Automatic companion tracking behavior
-- Tooltip time format and behavior
+
+### Client preferences
+
+These settings can be configured individually by each player:
+
+- Automatic companion coordinate updates on dismount or interaction
+- Tracking update distance
+- Notifications when companion coordinates are updated automatically
+- Tooltip time format and appearance
 
 Make it lightweight… or powerful.
 
@@ -184,10 +195,22 @@ Make it lightweight… or powerful.
 
 ### 📁 Config Location
 
-*The configuration file is generated automatically after launching the game and can be found in the standard mod config directory.*
+The configuration files are generated automatically after launching the game or server.
 
-*By default, it is located at:*
+Starting with **Call of Companions 1.12.0**, configuration is split into two files:
+
+- `config/callofcompanions-server.toml` — gameplay rules controlled by the server
+- `config/callofcompanions-client.toml` — local preferences for each player
+
+When upgrading from an older version, existing settings from:
+
 `config/callofcompanions-common.toml`
+
+are automatically copied into the appropriate new config files if they do not already exist. The original common config file is kept as a backup, so no manual migration is required.
+
+For **NeoForge**, client-side configuration changes are applied immediately.
+
+For **Fabric**, client-side configuration changes are applied after restarting the client.
 
 Starting from **Call of Companions 1.10.6 for NeoForge**, configuration options can also be changed through the in-game config screen.
 
