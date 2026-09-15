@@ -1,4 +1,4 @@
-## 📦 Version 1.12.0
+## 📦 Version 1.12.0-beta
 
 - Now supports Minecraft 26.3
 
