@@ -1,5 +1,10 @@
 ## 📦 Version 1.12.0
 
+- Now supports Minecraft 26.3
+
+
+## 📦 Version 1.12.0
+
 ### 📝 Improvements
 
 - Split configuration into **server rules** (`callofcompanions-server.toml`) and **client preferences** (`callofcompanions-client.toml`).
