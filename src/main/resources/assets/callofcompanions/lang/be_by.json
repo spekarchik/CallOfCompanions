@@ -68,6 +68,7 @@
   "callofcompanions.configuration.show_last_position": "Паказваць апошнюю пазіцыю",
   "callofcompanions.configuration.far_teleport_chunk_radius": "Радыус далёкай тэлепартацыі ў чанках",
   "callofcompanions.configuration.far_teleport_wait_ticks": "Чаканне далёкай тэлепартацыі ў ціках",
+  "callofcompanions.configuration.prevent_pets_invisibility_workaround_1_21_1": "Прадухіляць нябачнасць гадаванцаў (абыход памылкі 1.21.1)",
 
   "text.callofcompanions.none": "няма",
   "text.callofcompanions.seconds_ago": " сек. таму",

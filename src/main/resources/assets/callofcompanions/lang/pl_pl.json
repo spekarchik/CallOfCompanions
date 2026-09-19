@@ -68,6 +68,7 @@
   "callofcompanions.configuration.show_last_position": "Pokazuj ostatnią pozycję",
   "callofcompanions.configuration.far_teleport_chunk_radius": "Promień dalekiej teleportacji w chunkach",
   "callofcompanions.configuration.far_teleport_wait_ticks": "Limit oczekiwania dalekiej teleportacji w tickach",
+  "callofcompanions.configuration.prevent_pets_invisibility_workaround_1_21_1": "Zapobiegaj niewidzialności zwierząt (obejście błędu 1.21.1)",
 
   "text.callofcompanions.none": "brak",
   "text.callofcompanions.seconds_ago": " s temu",

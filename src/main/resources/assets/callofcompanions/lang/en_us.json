@@ -68,6 +68,7 @@
   "callofcompanions.configuration.show_last_position": "Show Last Position",
   "callofcompanions.configuration.far_teleport_chunk_radius": "Far Teleport Chunk Radius",
   "callofcompanions.configuration.far_teleport_wait_ticks": "Far Teleport Wait Time in Ticks",
+  "callofcompanions.configuration.prevent_pets_invisibility_workaround_1_21_1": "Prevent Pet Invisibility (1.21.1 Workaround)",
 
   "text.callofcompanions.none": "None",
   "text.callofcompanions.seconds_ago": " s ago",
