@@ -49,9 +49,10 @@ class NearTeleportController extends LoadedAnimalSummonController
 
     private void moveAnimalTo(BlockPos teleportPos, CompanionEntry entry)
     {
-        boolean teleported = tryTeleportAnimalTo(playerLevel, entry.uuid(), teleportPos, entry.dimension(), true);
-        if (teleported)
+        var teleportedAnimal = tryTeleportAnimalTo(playerLevel, entry.uuid(), teleportPos, entry.dimension(), true);
+        if (teleportedAnimal != null)
         {
+            animal = teleportedAnimal;
             playTeleportSound(playerLevel, animal);
             showAnimalTeleportParticles(playerLevel, animal);
             setGoal(animal, player);

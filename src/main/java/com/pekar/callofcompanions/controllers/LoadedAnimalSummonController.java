@@ -4,7 +4,7 @@ import net.minecraft.world.entity.PathfinderMob;
 
 abstract class LoadedAnimalSummonController extends AnimalSummonController
 {
-    protected final PathfinderMob animal;
+    protected PathfinderMob animal;
 
     protected LoadedAnimalSummonController(SummonAnimalContext context)
     {

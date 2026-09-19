@@ -19,7 +19,6 @@ import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.PathfinderMob;
 import net.minecraft.world.entity.RelativeMovement;
 import net.minecraft.world.entity.TamableAnimal;
-import net.minecraft.world.entity.animal.Animal;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
@@ -96,23 +95,24 @@ public abstract class AnimalSummonController
         );
     }
 
-    protected boolean tryTeleportAnimalTo(ServerLevel level, UUID uuid, BlockPos pos, ResourceKey<Level> fromDimension, boolean recreate)
+    protected PathfinderMob tryTeleportAnimalTo(ServerLevel level, UUID uuid, BlockPos pos, ResourceKey<Level> fromDimension, boolean recreate)
     {
         var server = level.getServer();
         var fromLevel = server.getLevel(fromDimension);
-        if (fromLevel == null) return false;
+        if (fromLevel == null) return null;
 
         var entity = fromLevel.getEntity(uuid);
         LOGGER.debug("Teleport attempt started: entityId={}, loaded={}", uuid, entity != null);
         if (entity instanceof PathfinderMob animal)
         {
             var randomPos = getRandomPos(pos, animal);
-            if (randomPos == null) return false;
+            if (randomPos == null) return null;
 
             var x = randomPos.getX() + 0.5;
             var y = randomPos.getY();
             var z = randomPos.getZ() + 0.5;
 
+            PathfinderMob teleportedAnimal = animal;
             if (level.dimension().equals(fromDimension))
             {
                 LOGGER.debug("Teleporting to the same dimension: entityId={}, dimension={}", uuid, fromDimension);
@@ -121,43 +121,65 @@ public abstract class AnimalSummonController
             }
             else
             {
-                if (!animal.canChangeDimensions(fromLevel, level)) return false;
+                if (!animal.canChangeDimensions(fromLevel, level)) return null;
 
-                LOGGER.debug("Teleporting across dimensions: entityId={}, fromDimension={}, toDimension={}", uuid, level.dimension(), fromDimension);
+                LOGGER.debug("Teleporting across dimensions: entityId={}, fromDimension={}, toDimension={}", uuid, fromDimension, level.dimension());
                 orderToStand(animal);
 
-                animal.teleportTo(
+                boolean teleported = animal.teleportTo(
                         level,
                         x, y, z,
                         EnumSet.noneOf(RelativeMovement.class),
                         animal.getYRot(), animal.getXRot()
-                        );
+                );
+
+                if (!teleported) return null;
+
+                var targetEntity = level.getEntity(uuid);
+                if (!(targetEntity instanceof PathfinderMob targetAnimal))
+                {
+                    LOGGER.error("Cross-dimensional teleport succeeded but the target entity was not found: entityId={}, targetDimension={}", uuid, level.dimension());
+                    return null;
+                }
+                teleportedAnimal = targetAnimal;
             }
             if (recreate)
-                recreateAnimal(level, animal, x, y, z);
+            {
+                teleportedAnimal = recreateAnimal(level, teleportedAnimal, x, y, z);
+                if (teleportedAnimal == null) return null;
+            }
 
-            return true;
+            return teleportedAnimal;
         }
 
-        return false;
+        return null;
     }
 
-    protected void recreateAnimal(ServerLevel level, PathfinderMob oldAnimal, double x, double y, double z)
+    protected PathfinderMob recreateAnimal(ServerLevel level, PathfinderMob oldAnimal, double x, double y, double z)
     {
         var entityType = oldAnimal.getType();
         var tag = new CompoundTag();
         oldAnimal.saveWithoutId(tag);
-        oldAnimal.remove(Entity.RemovalReason.DISCARDED);
 
         var entity = entityType.create(level);
-        if (entity instanceof Animal newAnimal)
+        if (!(entity instanceof PathfinderMob newAnimal))
         {
-            newAnimal.load(tag);
-            newAnimal.moveTo(x, y, z, oldAnimal.getYRot(), oldAnimal.getXRot());
-
-            level.addFreshEntity(newAnimal);
+            LOGGER.error("Animal recreation failed: entityId={}, type={} did not create a PathfinderMob", oldAnimal.getUUID(), entityType.getDescription().getString());
+            return null;
         }
+
+        newAnimal.load(tag);
+        newAnimal.moveTo(x, y, z, oldAnimal.getYRot(), oldAnimal.getXRot());
+
+        oldAnimal.remove(Entity.RemovalReason.DISCARDED);
+        if (!level.addFreshEntity(newAnimal))
+        {
+            LOGGER.error("Animal recreation failed after discarding the old entity: entityId={}, type={}, pos=({}, {}, {})", oldAnimal.getUUID(), entityType.getDescription().getString(), x, y, z);
+            return null;
+        }
+
         LOGGER.debug("Animal recreated: entityId={}, type={}, pos=({}, {}, {})", oldAnimal.getUUID(), entityType.getDescription().getString(), x, y, z);
+        return newAnimal;
     }
 
     private BlockPos getRandomPos(BlockPos pos, PathfinderMob animal)
