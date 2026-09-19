@@ -6,7 +6,7 @@
 ### ⚙️ Changed
 - **Hoglins** can no longer be bound because they are hostile creatures.
 - **Axolotls** and other creatures that can be transported in buckets can no longer be bound.
-- Flying companions now use dedicated teleport safety checks with additional clearance for **Ghasts**.
+- Flying companions now use dedicated teleport safety checks.
 
 
 ## 📦 Version 1.10.6
