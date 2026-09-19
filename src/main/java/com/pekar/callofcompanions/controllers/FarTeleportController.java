@@ -11,7 +11,6 @@ import net.minecraft.core.SectionPos;
 import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.network.chat.Component;
 import net.minecraft.server.level.ServerLevel;
-import net.minecraft.world.entity.PathfinderMob;
 import net.minecraft.world.level.chunk.status.ChunkStatus;
 import org.slf4j.Logger;
 
@@ -130,15 +129,12 @@ class FarTeleportController extends AnimalSummonController
             return;
         }
 
-        var teleported = tryTeleportAnimalTo(playerLevel, entry.uuid(), teleportPos, entry.dimension(), true);
-        if (teleported)
+        var teleportedAnimal = tryTeleportAnimalTo(playerLevel, entry.uuid(), teleportPos, entry.dimension(), true);
+        if (teleportedAnimal != null)
         {
-            if (playerLevel.getEntity(entry.uuid()) instanceof PathfinderMob animal)
-            {
-                showAnimalTeleportParticles(playerLevel, animal);
-                playTeleportSound(playerLevel, animal);
-                setGoal(animal, player);
-            }
+            showAnimalTeleportParticles(playerLevel, teleportedAnimal);
+            playTeleportSound(playerLevel, teleportedAnimal);
+            setGoal(teleportedAnimal, player);
 
             if (teleportListener != null)
                 teleportListener.onTeleport(isCrossDimensionalTeleport ? TeleportType.CROSS_DIMENSION_TELEPORT : TeleportType.FAR_TELEPORT);

@@ -49,7 +49,9 @@ class VanillaTeleportController extends LoadedAnimalSummonController
                     showAnimalNotRespondParticles(playerLevel, teleportPos.below());
                     if (animal.getType().is(EntityRegistry.ANIMALS_CAN_TELEPORT_TO_PLAYER) && animal.distanceToSqr(player) < 10 * 10)
                     {
-                        recreateAnimal(playerLevel, animal, animal.getX(), animal.getY(), animal.getZ());
+                        var recreatedAnimal = recreateAnimal(playerLevel, animal, animal.getX(), animal.getY(), animal.getZ());
+                        if (recreatedAnimal != null)
+                            animal = recreatedAnimal;
                     }
                 }
         );
@@ -62,9 +64,10 @@ class VanillaTeleportController extends LoadedAnimalSummonController
         LOGGER.debug("Vanilla teleport completing: companionType={}, companionId={}", entry.type(), entry.uuid());
         if (animal.distanceToSqr(player) > MAX_ANIMAL_DISTANCE_TO_AVOID_TELEPORTING * MAX_ANIMAL_DISTANCE_TO_AVOID_TELEPORTING)
         {
-            var teleported = tryTeleportAnimalTo(playerLevel, animal.getUUID(), teleportPos, entry.dimension(), false);
-            if (teleported)
+            var teleportedAnimal = tryTeleportAnimalTo(playerLevel, animal.getUUID(), teleportPos, entry.dimension(), false);
+            if (teleportedAnimal != null)
             {
+                animal = teleportedAnimal;
                 playTeleportSound(playerLevel, animal);
                 showAnimalTeleportParticles(playerLevel, animal);
 
@@ -78,8 +81,12 @@ class VanillaTeleportController extends LoadedAnimalSummonController
                 LOGGER.debug("Vanilla teleport failed: companion couldn't find a safe place to teleport, companionType={}, companionId={}", entry.type(), entry.uuid());
             }
         }
-        recreateAnimal(playerLevel, animal, animal.getX(), animal.getY(), animal.getZ());
-        setGoal(animal, player);
+        var recreatedAnimal = recreateAnimal(playerLevel, animal, animal.getX(), animal.getY(), animal.getZ());
+        if (recreatedAnimal != null)
+        {
+            animal = recreatedAnimal;
+            setGoal(animal, player);
+        }
         CallCrystalHelper.updateCompanionPos(playerLevel, companionData, entry);
     }
 }
