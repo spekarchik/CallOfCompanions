@@ -1,3 +1,9 @@
+## 📦 Version 1.12.1
+
+### 🐞 Fixed
+- Failed cross-dimensional calls are no longer reported as successful or cause companions to be marked as lost.
+
+
 ## 📦 Version 1.12.0-beta
 
 - Now supports Minecraft 26.3
