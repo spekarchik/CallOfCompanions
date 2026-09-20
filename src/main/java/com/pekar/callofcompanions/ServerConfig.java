@@ -117,7 +117,7 @@ public class ServerConfig
                 .comment("Radius in chunks to search around a companion's saved location during a far teleport.")
                 .comment("Increase this value if companions often move away before being teleported.")
                 .comment("Higher values increase chunk loading.")
-                .defineInRange("far_teleport_chunk_radius", 8, 1, 32);
+                .defineInRange("far_teleport_chunk_radius", 10, 1, 32);
 
         // How many ticks the far-teleport task will wait while trying to load/find the companion
         // before giving up. This controls the timeout used when searching for the entity
