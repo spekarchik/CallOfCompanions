@@ -1,7 +1,13 @@
 ## 📦 Version 1.12.1
 
+### ✨ New
+- Crystals can now bind **Dolphins**, **Squids**, **Allays**, and **Golems**.
+- **Hoglins** can no longer be bound because they are hostile creatures.
+- **Axolotls** and other creatures that can be transported in buckets can no longer be bound.
+
 ### 📝 Improvements
 
+- Flying companions now use dedicated teleport safety checks.
 - Split configuration into **server rules** (`callofcompanions-server.toml`) and **client preferences** (`callofcompanions-client.toml`).
 - Gameplay settings are now controlled by the server and synchronized to connected clients.
 - Tracking options, tooltip appearance, and automatic-update notifications can be configured individually by each player.
@@ -14,17 +20,6 @@
 
 ### 🐞 Fixed
 - Failed cross-dimensional calls are no longer reported as successful or cause companions to be marked as lost.
-
-
-## 📦 Version 1.11.0
-
-### ✨ New
-- Crystals can now bind **Dolphins**, **Squids**, **Allays**, and **Golems**.
-
-### ⚙️ Changed
-- **Hoglins** can no longer be bound because they are hostile creatures.
-- **Axolotls** and other creatures that can be transported in buckets can no longer be bound.
-- Flying companions now use dedicated teleport safety checks.
 
 
 ## 📦 Version 1.10.6
