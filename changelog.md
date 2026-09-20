@@ -1,5 +1,8 @@
 ## 📦 Version 1.12.1
 
+### ⚙️ Changed
+- Increased the default value of the `far_teleport_chunk_radius` configuration option from 8 to 10 chunks, helping find companions that moved farther from their saved position.
+
 ### 🐞 Fixed
 - Failed cross-dimensional calls are no longer reported as successful or cause companions to be marked as lost.
 
