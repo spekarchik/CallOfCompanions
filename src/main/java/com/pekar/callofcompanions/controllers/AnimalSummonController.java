@@ -16,7 +16,6 @@ import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.entity.PathfinderMob;
 import net.minecraft.world.entity.TamableAnimal;
-import net.minecraft.world.entity.animal.Animal;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
@@ -117,16 +116,17 @@ public abstract class AnimalSummonController
             {
                 if (!animal.canTeleport(fromLevel, level)) return false;
 
-                LOGGER.debug("Teleporting across dimensions: entityId={}, fromDimension={}, toDimension={}", uuid, level.dimension(), fromDimension);
+                LOGGER.debug("Teleporting across dimensions: entityId={}, fromDimension={}, toDimension={}", uuid, fromDimension, level.dimension());
                 orderToStand(animal);
 
-                animal.teleportTo(
+                boolean teleported = animal.teleportTo(
                         level,
                         randomPos.getX() + 0.5, randomPos.getY(), randomPos.getZ() + 0.5,
                         Set.of(),
                         animal.getYRot(), animal.getXRot(),
                         false
                         );
+                if (!teleported) return false;
             }
 
             return true;
