@@ -1,4 +1,4 @@
-## 📦 Version 1.12.0
+## 📦 Version 1.12.1
 
 ### 📝 Improvements
 
@@ -8,6 +8,9 @@
 - Each player can now choose whether crystals automatically update companion coordinates on dismount or interaction, and set their own update distance threshold.
 - Tracking preferences are sent to the server on login and when the client config is reloaded, including changes saved through the in-game config screen.
 - Existing settings from `callofcompanions-common.toml` are automatically copied into the new config files if those files do not already exist. The original file is kept as a backup.
+
+### 🐞 Fixed
+- Failed cross-dimensional calls are no longer reported as successful or cause companions to be marked as lost.
 
 
 ## 📦 Version 1.11.0
