@@ -210,6 +210,8 @@ When upgrading from an older version, existing settings from:
 
 are automatically copied into the appropriate new config files if they do not already exist. The original common config file is kept as a backup, so no manual migration is required.
 
+Starting with NeoForge **26.3.0.37-beta**, `config/callofcompanions-server.toml` is renamed to `config/callofcompanions-synced.toml`.
+
 For **NeoForge**, client-side configuration changes are applied immediately.
 
 For **Fabric**, client-side configuration changes are applied after restarting the client.
