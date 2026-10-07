@@ -1,3 +1,10 @@
+## 📦 Version 1.12.2
+
+### ⚙️ Updated
+- Updated config registration for compatibility with **NeoForge 26.3.0.37-beta**.
+- Requires NeoForge **26.3.0.37-beta or newer**.
+
+
 ## 📦 Version 1.12.1
 
 ### ⚙️ Changed

@@ -47,7 +47,7 @@ public class Main
         EventRegistry.registerEventsOnModBus(modEventBus);
 
         ConfigMigration.migrate(FMLPaths.CONFIGDIR.get(), "server");
-        modContainer.registerConfig(ModConfig.Type.SERVER, ServerConfig.SPEC);
+        modContainer.registerConfig(ModConfig.Type.SYNCED, ServerConfig.SPEC);
     }
 
     private void initializeRegistry()
