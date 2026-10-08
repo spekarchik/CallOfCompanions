@@ -1,3 +1,9 @@
+## 📦 Version 1.12.3
+
+### 🐞 Fixed
+- Fixed the Server Configuration heading translations in the in-game config screen.
+
+
 ## 📦 Version 1.12.2
 
 ### ⚙️ Updated
