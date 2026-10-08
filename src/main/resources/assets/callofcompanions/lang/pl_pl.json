@@ -39,8 +39,8 @@
   "message.callofcompanions.single_crystal_only": "Wymagany pojedynczy kryształ do powiązania.",
 
   "callofcompanions.configuration.title": "Konfiguracja: %s",
-  "callofcompanions.configuration.section.callofcompanions.server.toml": "Konfiguracja serwera",
-  "callofcompanions.configuration.section.callofcompanions.server.toml.title": "Konfiguracja serwera",
+  "callofcompanions.configuration.section.callofcompanions.synced.toml": "Konfiguracja serwera",
+  "callofcompanions.configuration.section.callofcompanions.synced.toml.title": "Konfiguracja serwera",
   "callofcompanions.configuration.section.callofcompanions.client.toml": "Konfiguracja klienta",
   "callofcompanions.configuration.section.callofcompanions.client.toml.title": "Konfiguracja klienta",
   "callofcompanions.configuration.calling": "Przywoływanie",
