@@ -1,3 +1,10 @@
+## 📦 Version 1.12.4
+
+### 📝 Improvements
+- Optimized texture files by removing unnecessary metadata.
+- No gameplay changes.
+
+
 ## 📦 Version 1.12.1
 
 ### ✨ New
